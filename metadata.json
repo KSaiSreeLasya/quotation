@@ -1,0 +1,5 @@
+{
+  "name": "SolarRoof Planner",
+  "description": "Interactive solar panel placement and quotation tool with satellite imagery.",
+  "requestFramePermissions": ["geolocation"]
+}
