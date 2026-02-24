@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import MapContainer from './components/MapContainer';
-import SolarCanvas from './components/SolarCanvas';
+import SolarCanvas, { SolarCanvasHandle } from './components/SolarCanvas';
 import ControlPanel from './components/ControlPanel';
 import QuotationPreview from './components/QuotationPreview';
 import { Location, Panel, QuotationData, Point } from './types';
@@ -17,6 +17,7 @@ export default function App() {
   const [boundary, setBoundary] = useState<Point[]>([]);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<SolarCanvasHandle>(null);
 
   // Update canvas dimensions on resize
   useEffect(() => {
@@ -56,7 +57,8 @@ export default function App() {
   }, [selectedId]);
 
   const handleGenerateQuotation = (data: QuotationData) => {
-    setQuotation(data);
+    const designImage = canvasRef.current?.toDataURL();
+    setQuotation({ ...data, designImage });
     confetti({
       particleCount: 100,
       spread: 70,
@@ -89,6 +91,7 @@ export default function App() {
         
         {dimensions.width > 0 && (
           <SolarCanvas
+            ref={canvasRef}
             panels={panels}
             setPanels={setPanels}
             selectedId={selectedId}

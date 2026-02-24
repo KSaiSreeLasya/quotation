@@ -28,6 +28,8 @@ export interface QuotationData {
   finalAmount: number;
   orientation: number; // 0-360
   efficiencyFactor: number;
+  shadeFactor: number; // 0-1
+  designImage?: string; // Base64 data URL
   breakdown: {
     panels: number;
     inverter: number;

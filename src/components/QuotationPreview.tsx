@@ -80,7 +80,26 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 <p className="text-sm text-slate-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
               </div>
 
-              <div>
+              {data.designImage && (
+                <div className="mt-8">
+                  <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Roof Design Layout</h3>
+                  <div className="relative aspect-video bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
+                    <img 
+                      src={data.designImage} 
+                      alt="Solar Design" 
+                      className="w-full h-full object-contain"
+                    />
+                    <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-slate-500">
+                      DESIGN PREVIEW
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-400 mt-2 italic">
+                    * Layout shows panels relative to the defined roof boundary.
+                  </p>
+                </div>
+              )}
+
+              <div className="mt-8">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">System Specification</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between py-2 border-b border-slate-50">
@@ -94,6 +113,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   <div className="flex justify-between py-2 border-b border-slate-50">
                     <span className="text-slate-600">Roof Orientation</span>
                     <span className="font-bold text-slate-900">{data.orientation}° ({(data.efficiencyFactor * 100).toFixed(0)}% efficiency)</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-slate-50">
+                    <span className="text-slate-600">Shading Factor</span>
+                    <span className="font-bold text-slate-900">{(data.shadeFactor * 100).toFixed(0)}% exposure</span>
                   </div>
                   <div className="flex justify-between py-2 border-b border-slate-50">
                     <span className="text-slate-600">Est. Annual Generation</span>

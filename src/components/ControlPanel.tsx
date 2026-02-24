@@ -30,6 +30,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 }) => {
   const [addressInput, setAddressInput] = useState(location.address);
   const [orientation, setOrientation] = useState(180); // Default South
+  const [shadeFactor, setShadeFactor] = useState(0); // 0% shading = 1.0 factor
 
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
@@ -38,8 +39,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   };
 
   const efficiencyFactor = getEfficiencyFactor(orientation);
+  const actualShadeFactor = 1 - (shadeFactor / 100);
   const systemSizeKw = panelCount * PANEL_KW;
-  const annualGenerationKwh = systemSizeKw * AVG_SUN_HOURS_PER_DAY * 365 * efficiencyFactor;
+  const annualGenerationKwh = systemSizeKw * AVG_SUN_HOURS_PER_DAY * 365 * efficiencyFactor * actualShadeFactor;
   const annualSavings = annualGenerationKwh * ELECTRICITY_RATE;
 
   const calculateQuotation = () => {
@@ -61,6 +63,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       finalAmount,
       orientation,
       efficiencyFactor,
+      shadeFactor: actualShadeFactor,
       breakdown: {
         panels: panelsCost,
         inverter: inverterCost,
@@ -180,6 +183,31 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <span>W</span>
               <span>N</span>
             </div>
+          </div>
+        </section>
+
+        {/* Shading Selector */}
+        <section>
+          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+            Shading Analysis
+          </label>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-slate-600 font-medium">Est. Shading</span>
+              <span className="text-sm font-bold text-slate-900">{shadeFactor}%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              value={shadeFactor}
+              onChange={(e) => setShadeFactor(parseInt(e.target.value))}
+              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
+            />
+            <p className="text-[10px] text-slate-400">
+              {shadeFactor === 0 ? 'Full sun exposure' : shadeFactor < 30 ? 'Partial shading (trees/buildings)' : 'Significant shading'}
+            </p>
           </div>
         </section>
 

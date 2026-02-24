@@ -1,8 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
 import { Stage, Layer, Rect, Group, Transformer, Line, Circle } from 'react-konva';
 import { PANEL_WIDTH, PANEL_HEIGHT } from '../constants';
 import { Panel, Point } from '../types';
 import { isPointInPolygon, getPanelCorners, doPolygonsIntersect } from '../utils/geometry';
+
+export interface SolarCanvasHandle {
+  toDataURL: () => string;
+}
 
 interface SolarCanvasProps {
   panels: Panel[];
@@ -16,7 +20,7 @@ interface SolarCanvasProps {
   isDrawingMode: boolean;
 }
 
-const SolarCanvas: React.FC<SolarCanvasProps> = ({
+const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   panels,
   setPanels,
   selectedId,
@@ -26,8 +30,23 @@ const SolarCanvas: React.FC<SolarCanvasProps> = ({
   boundary,
   setBoundary,
   isDrawingMode,
-}) => {
+}, ref) => {
+  const stageRef = React.useRef<any>(null);
   const trRef = React.useRef<any>(null);
+
+  useImperativeHandle(ref, () => ({
+    toDataURL: () => {
+      if (stageRef.current) {
+        // Temporarily hide transformer for clean capture
+        const oldSelected = selectedId;
+        setSelectedId(null);
+        const dataUrl = stageRef.current.toDataURL();
+        setSelectedId(oldSelected);
+        return dataUrl;
+      }
+      return '';
+    }
+  }));
 
   const validatePanels = useCallback(() => {
     setPanels(prev => prev.map(panel => {
@@ -102,6 +121,7 @@ const SolarCanvas: React.FC<SolarCanvasProps> = ({
   return (
     <div className="absolute inset-0 pointer-events-auto z-20">
       <Stage
+        ref={stageRef}
         width={width}
         height={height}
         onMouseDown={handleStageMouseDown}
@@ -211,6 +231,6 @@ const SolarCanvas: React.FC<SolarCanvasProps> = ({
       </Stage>
     </div>
   );
-};
+});
 
 export default SolarCanvas;
