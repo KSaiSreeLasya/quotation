@@ -96,7 +96,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ lat, lng, onMapLoad }) => {
       googleMap.current.setCenter({ lat, lng });
     }
     if (marker.current) {
-      marker.current.setPosition({ lat, lng });
+      if (typeof marker.current.setPosition === 'function') {
+        marker.current.setPosition({ lat, lng });
+      } else {
+        marker.current.position = { lat, lng };
+      }
     }
   }, [lat, lng]);
 
