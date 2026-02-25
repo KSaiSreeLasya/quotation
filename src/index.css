@@ -53,3 +53,61 @@
   --color-rose-900: #881337;
   --color-rose-950: #4c0519;
 }
+
+/* PDF Capture Overrides to prevent oklab/oklch errors in html2canvas */
+.pdf-capture {
+  background-color: white !important;
+  color: #0f172a !important;
+}
+
+.pdf-capture * {
+  /* Force standard color space for capture */
+  color-interpolation: sRGB !important;
+  /* Disable problematic filters */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: none !important;
+  animation: none !important;
+  /* Force standard color space for all properties */
+  color-scheme: light !important;
+}
+
+.pdf-capture .bg-slate-50 { background-color: #f8fafc !important; }
+.pdf-capture .bg-slate-100 { background-color: #f1f5f9 !important; }
+.pdf-capture .bg-slate-900 { background-color: #0f172a !important; }
+.pdf-capture .bg-white { background-color: #ffffff !important; }
+.pdf-capture .text-slate-400 { color: #94a3b8 !important; }
+.pdf-capture .text-slate-500 { color: #64748b !important; }
+.pdf-capture .text-slate-600 { color: #475569 !important; }
+.pdf-capture .text-slate-700 { color: #334155 !important; }
+.pdf-capture .text-slate-800 { color: #1e293b !important; }
+.pdf-capture .text-slate-900 { color: #0f172a !important; }
+.pdf-capture .text-emerald-600 { color: #059669 !important; }
+.pdf-capture .text-emerald-700 { color: #047857 !important; }
+.pdf-capture .bg-emerald-50 { background-color: #ecfdf5 !important; }
+.pdf-capture .border-emerald-100 { border-color: #d1fae5 !important; }
+.pdf-capture .bg-amber-500 { background-color: #f59e0b !important; }
+.pdf-capture .bg-amber-50 { background-color: #fffbeb !important; }
+.pdf-capture .text-amber-700 { color: #b45309 !important; }
+.pdf-capture .text-amber-600 { color: #d97706 !important; }
+.pdf-capture .border-amber-100 { border-color: #fde68a !important; }
+.pdf-capture .border-slate-50 { border-color: #f8fafc !important; }
+.pdf-capture .border-slate-100 { border-color: #f1f5f9 !important; }
+.pdf-capture .border-slate-200 { border-color: #e2e8f0 !important; }
+
+/* Global reset for any remaining oklab colors */
+.pdf-capture * {
+  color-scheme: light !important;
+  color: #0f172a; /* Fallback text color */
+  border-color: #e2e8f0; /* Fallback border color */
+}
+
+.pdf-capture h1, .pdf-capture h2, .pdf-capture h3, .pdf-capture h4, .pdf-capture p, .pdf-capture span {
+  color: inherit !important;
+}
+.pdf-capture .shadow-2xl, .pdf-capture .shadow-lg, .pdf-capture .shadow-md, .pdf-capture .shadow-sm { shadow: none !important; box-shadow: none !important; }
+
+/* Force standard colors on all text and backgrounds if they are still using oklab */
+.pdf-capture [class*="text-"] { color: currentColor; }
+.pdf-capture [class*="bg-"] { background-color: inherit; }
+.pdf-capture [class*="border-"] { border-color: inherit; }

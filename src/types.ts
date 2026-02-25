@@ -10,6 +10,8 @@ export interface Panel {
   rotation: number;
   isLandscape: boolean;
   isValid: boolean;
+  lat: number;
+  lng: number;
 }
 
 export interface Location {
@@ -19,6 +21,8 @@ export interface Location {
 }
 
 export interface QuotationData {
+  customerName: string;
+  customerContact: string;
   panelCount: number;
   systemSizeKw: number;
   annualGenerationKwh: number;

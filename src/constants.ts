@@ -1,5 +1,5 @@
-export const PANEL_WIDTH = 40; // portrait width
-export const PANEL_HEIGHT = 65; // portrait height
+export const PANEL_WIDTH_METERS = 1.134; // standard 550W panel width in meters
+export const PANEL_HEIGHT_METERS = 2.278; // standard 550W panel height in meters
 
 export const PANEL_WATTAGE = 550; // 550W per panel
 export const PANEL_KW = PANEL_WATTAGE / 1000; 

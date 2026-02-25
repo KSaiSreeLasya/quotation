@@ -9,6 +9,7 @@ interface MapContainerProps {
 const MapContainer: React.FC<MapContainerProps> = ({ lat, lng, onMapLoad }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const googleMap = useRef<google.maps.Map | null>(null);
+  const marker = useRef<any>(null);
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -31,29 +32,59 @@ const MapContainer: React.FC<MapContainerProps> = ({ lat, lng, onMapLoad }) => {
       }
 
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,marker&callback=initMapCallback&v=weekly`;
       script.async = true;
       script.defer = true;
-      script.onload = initMap;
+      
+      // Define global callback for Google Maps
+      (window as any).initMapCallback = () => {
+        initMap();
+      };
+      
       document.head.appendChild(script);
     };
 
     const initMap = () => {
-      if (mapRef.current && !googleMap.current) {
-        googleMap.current = new window.google.maps.Map(mapRef.current, {
-          center: { lat, lng },
-          zoom: 20,
-          mapTypeId: 'satellite',
-          tilt: 45,
-          heading: 0,
-          disableDefaultUI: false,
-          mapTypeControl: false,
-          streetViewControl: false,
-          rotateControl: true,
-          fullscreenControl: false,
-          gestureHandling: 'greedy',
-        });
-        onMapLoad(googleMap.current);
+      if (mapRef.current && !googleMap.current && window.google && window.google.maps) {
+        try {
+          const Map = window.google.maps.Map;
+          // AdvancedMarkerElement is in the 'marker' library
+          const AdvancedMarkerElement = (window.google.maps as any).marker?.AdvancedMarkerElement;
+
+          googleMap.current = new Map(mapRef.current, {
+            center: { lat, lng },
+            zoom: 21,
+            mapTypeId: 'satellite',
+            tilt: 45,
+            heading: 0,
+            disableDefaultUI: false,
+            mapTypeControl: false,
+            streetViewControl: false,
+            rotateControl: true,
+            fullscreenControl: false,
+            gestureHandling: 'greedy',
+            mapId: 'DEMO_MAP_ID', // Required for AdvancedMarkerElement
+          });
+
+          if (AdvancedMarkerElement) {
+            marker.current = new AdvancedMarkerElement({
+              position: { lat, lng },
+              map: googleMap.current,
+              title: "Selected Location",
+            });
+          } else {
+            // Fallback to legacy marker if AdvancedMarkerElement is not available
+            marker.current = new (window.google.maps as any).Marker({
+              position: { lat, lng },
+              map: googleMap.current,
+              title: "Selected Location",
+            });
+          }
+
+          onMapLoad(googleMap.current);
+        } catch (error) {
+          console.error("Error initializing map:", error);
+        }
       }
     };
 
@@ -63,6 +94,9 @@ const MapContainer: React.FC<MapContainerProps> = ({ lat, lng, onMapLoad }) => {
   useEffect(() => {
     if (googleMap.current) {
       googleMap.current.setCenter({ lat, lng });
+    }
+    if (marker.current) {
+      marker.current.setPosition({ lat, lng });
     }
   }, [lat, lng]);
 

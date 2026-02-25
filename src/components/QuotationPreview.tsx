@@ -15,19 +15,95 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
 
+  const [isDownloading, setIsDownloading] = useState(false);
+
   const downloadPDF = async () => {
     const element = document.getElementById('quotation-content');
     if (!element) return;
 
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
+    setIsDownloading(true);
+    try {
+      // Add a temporary class to handle problematic CSS during capture
+      element.classList.add('pdf-capture');
+      
+      const canvas = await html2canvas(element, { 
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: true,
+        backgroundColor: '#ffffff',
+        ignoreElements: (el) => el.classList.contains('no-pdf'),
+        onclone: (clonedDoc) => {
+          const clonedElement = clonedDoc.getElementById('quotation-content');
+          if (clonedElement) {
+            const allElements = clonedElement.getElementsByTagName('*');
+            for (let i = 0; i < allElements.length; i++) {
+              const el = allElements[i] as HTMLElement;
+              try {
+                // Remove problematic filters
+                el.style.backdropFilter = 'none';
+                (el.style as any).webkitBackdropFilter = 'none';
+                el.style.filter = 'none';
+                el.style.transition = 'none';
+                el.style.animation = 'none';
+                
+                // Get computed style to check for oklab/oklch
+                const computed = window.getComputedStyle(el);
+                
+                // Check color
+                if (computed.color.includes('okl')) {
+                  el.style.color = '#0f172a'; // Default slate-900
+                }
+                
+                // Check background
+                if (computed.backgroundColor.includes('okl')) {
+                  if (el.classList.contains('bg-amber-500')) el.style.backgroundColor = '#f59e0b';
+                  else if (el.classList.contains('bg-slate-50')) el.style.backgroundColor = '#f8fafc';
+                  else if (el.classList.contains('bg-slate-900')) el.style.backgroundColor = '#0f172a';
+                  else if (el.classList.contains('bg-emerald-50')) el.style.backgroundColor = '#ecfdf5';
+                  else el.style.backgroundColor = 'transparent';
+                }
+                
+                // Check border
+                if (computed.borderColor.includes('okl')) {
+                  el.style.borderColor = '#e2e8f0'; // Default slate-200
+                }
+
+                // Check fill/stroke for SVG elements
+                if (el instanceof SVGElement) {
+                  const fill = el.getAttribute('fill');
+                  if (fill && fill.includes('okl')) el.setAttribute('fill', 'currentColor');
+                  const stroke = el.getAttribute('stroke');
+                  if (stroke && stroke.includes('okl')) el.setAttribute('stroke', 'currentColor');
+                }
+              } catch (e) {
+                // Ignore errors for individual elements
+              }
+            }
+          }
+        }
+      });
+
+      element.classList.remove('pdf-capture');
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgWidth = pdfWidth - 20; // 10mm margin on each side
+      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+      
+      // Add image with margins
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
+    } catch (error) {
+      console.error("PDF Generation Error:", error);
+      alert("Failed to generate PDF. Please try again or check the console for details.");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleSendEmail = async (e: React.FormEvent) => {
@@ -76,7 +152,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="space-y-8">
               <div>
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Customer Details</h3>
-                <p className="text-lg font-semibold text-slate-900">{address}</p>
+                <p className="text-lg font-semibold text-slate-900">{data.customerName || 'N/A'}</p>
+                <p className="text-sm text-slate-600">{data.customerContact || 'N/A'}</p>
+                <p className="text-sm text-slate-500 mt-2">{address}</p>
                 <p className="text-sm text-slate-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
               </div>
 
@@ -176,10 +254,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           <div className="flex gap-3">
             <button
               onClick={downloadPDF}
-              className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all"
+              disabled={isDownloading}
+              className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all disabled:opacity-50"
             >
-              <Download size={18} />
-              Download PDF
+              {isDownloading ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Download size={18} />
+              )}
+              {isDownloading ? 'Generating...' : 'Download PDF'}
             </button>
           </div>
 

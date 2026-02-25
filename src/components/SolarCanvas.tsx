@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
-import { Stage, Layer, Rect, Group, Transformer, Line, Circle } from 'react-konva';
-import { PANEL_WIDTH, PANEL_HEIGHT } from '../constants';
+import { Stage, Layer, Rect, Group, Transformer, Line, Circle, Image as KonvaImage } from 'react-konva';
+import { PANEL_WIDTH_METERS, PANEL_HEIGHT_METERS } from '../constants';
 import { Panel, Point } from '../types';
 import { isPointInPolygon, getPanelCorners, doPolygonsIntersect } from '../utils/geometry';
+import useImage from 'use-image';
 
 export interface SolarCanvasHandle {
   toDataURL: () => string;
@@ -17,7 +18,12 @@ interface SolarCanvasProps {
   height: number;
   boundary: Point[];
   setBoundary: React.Dispatch<React.SetStateAction<Point[]>>;
+  setBoundaryLatLng: React.Dispatch<React.SetStateAction<google.maps.LatLng[]>>;
   isDrawingMode: boolean;
+  isPanningMode: boolean;
+  screenToLatLng: (x: number, y: number) => google.maps.LatLng | null;
+  pixelsPerMeter: number;
+  backgroundImageUrl?: string | null;
 }
 
 const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
@@ -29,20 +35,49 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   height,
   boundary,
   setBoundary,
+  setBoundaryLatLng,
   isDrawingMode,
+  isPanningMode,
+  screenToLatLng,
+  pixelsPerMeter,
+  backgroundImageUrl,
 }, ref) => {
   const stageRef = React.useRef<any>(null);
   const trRef = React.useRef<any>(null);
+  const [bgImage] = useImage(backgroundImageUrl || '', 'anonymous');
+
+  useEffect(() => {
+    if (bgImage && stageRef.current) {
+      stageRef.current.getLayer().batchDraw();
+    }
+  }, [bgImage]);
+
+  const PANEL_WIDTH = PANEL_WIDTH_METERS * pixelsPerMeter;
+  const PANEL_HEIGHT = PANEL_HEIGHT_METERS * pixelsPerMeter;
 
   useImperativeHandle(ref, () => ({
     toDataURL: () => {
       if (stageRef.current) {
-        // Temporarily hide transformer for clean capture
-        const oldSelected = selectedId;
-        setSelectedId(null);
-        const dataUrl = stageRef.current.toDataURL();
-        setSelectedId(oldSelected);
-        return dataUrl;
+        try {
+          // Temporarily hide transformer for clean capture
+          const oldSelected = selectedId;
+          setSelectedId(null);
+          
+          // Force a redraw to ensure everything is up to date
+          stageRef.current.batchDraw();
+          
+          const dataUrl = stageRef.current.toDataURL({
+            pixelRatio: 2,
+            mimeType: 'image/png',
+            quality: 1
+          });
+          
+          setSelectedId(oldSelected);
+          return dataUrl;
+        } catch (err) {
+          console.error("Error in toDataURL:", err);
+          return stageRef.current.toDataURL();
+        }
       }
       return '';
     }
@@ -72,7 +107,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
       
       return { ...panel, isValid: isInside && !hasCollision };
     }));
-  }, [boundary, setPanels]);
+  }, [boundary, setPanels, PANEL_WIDTH, PANEL_HEIGHT]);
 
   useEffect(() => {
     validatePanels();
@@ -81,7 +116,11 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   const handleStageMouseDown = (e: any) => {
     if (isDrawingMode) {
       const pos = e.target.getStage().getPointerPosition();
-      setBoundary(prev => [...prev, pos]);
+      const latLng = screenToLatLng(pos.x, pos.y);
+      if (latLng) {
+        setBoundaryLatLng(prev => [...prev, latLng]);
+        setBoundary(prev => [...prev, pos]);
+      }
       return;
     }
 
@@ -119,7 +158,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   }, [selectedId]);
 
   return (
-    <div className="absolute inset-0 pointer-events-auto z-20">
+    <div className={`absolute inset-0 z-20 ${isPanningMode ? 'pointer-events-none' : 'pointer-events-auto'}`}>
       <Stage
         ref={stageRef}
         width={width}
@@ -128,6 +167,17 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
         onTouchStart={handleStageMouseDown}
       >
         <Layer>
+          {/* Background Image for Export */}
+          {bgImage && (
+            <KonvaImage
+              image={bgImage}
+              width={width}
+              height={height}
+              opacity={1}
+              imageSmoothingEnabled={true}
+            />
+          )}
+          
           {/* Boundary Line */}
           {boundary.length > 0 && (
             <Line
@@ -135,7 +185,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
               stroke="#fbbf24"
               strokeWidth={3}
               closed={!isDrawingMode}
-              fill="rgba(251, 191, 36, 0.1)"
+              fill={backgroundImageUrl ? "transparent" : "rgba(251, 191, 36, 0.1)"}
               dash={isDrawingMode ? [10, 5] : []}
             />
           )}
@@ -156,9 +206,14 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                 rotation={panel.rotation}
                 draggable={!isDrawingMode}
                 onDragEnd={(e) => {
+                  const x = e.target.x();
+                  const y = e.target.y();
+                  const latLng = screenToLatLng(x, y);
                   updatePanel(panel.id, {
-                    x: e.target.x(),
-                    y: e.target.y(),
+                    x,
+                    y,
+                    lat: latLng ? latLng.lat() : panel.lat,
+                    lng: latLng ? latLng.lng() : panel.lng,
                   });
                   validatePanels();
                 }}
@@ -166,10 +221,15 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                 onTap={() => setSelectedId(panel.id)}
                 onTransformEnd={(e) => {
                   const node = e.target;
+                  const x = node.x();
+                  const y = node.y();
+                  const latLng = screenToLatLng(x, y);
                   updatePanel(panel.id, {
-                    x: node.x(),
-                    y: node.y(),
+                    x,
+                    y,
                     rotation: node.rotation(),
+                    lat: latLng ? latLng.lat() : panel.lat,
+                    lng: latLng ? latLng.lng() : panel.lng,
                   });
                   validatePanels();
                 }}

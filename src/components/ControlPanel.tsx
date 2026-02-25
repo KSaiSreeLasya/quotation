@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw } from 'lucide-react';
+import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw, Move, Loader2 } from 'lucide-react';
 import { Location, QuotationData } from '../types';
 import { PANEL_KW, ELECTRICITY_RATE, AVG_SUN_HOURS_PER_DAY, PANEL_COST, INVERTER_BASE_COST, INVERTER_KW_COST, INSTALLATION_BASE_COST, SUBSIDY_PERCENTAGE, ORIENTATION_EFFICIENCY, STRUCTURE_COST_PER_PANEL } from '../constants';
 
@@ -13,7 +13,10 @@ interface ControlPanelProps {
   hasSelected: boolean;
   isDrawingMode: boolean;
   setIsDrawingMode: (mode: boolean) => void;
+  isPanningMode: boolean;
+  setIsPanningMode: (mode: boolean) => void;
   onClearBoundary: () => void;
+  isGenerating: boolean;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -26,11 +29,26 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   hasSelected,
   isDrawingMode,
   setIsDrawingMode,
+  isPanningMode,
+  setIsPanningMode,
   onClearBoundary,
+  isGenerating,
 }) => {
   const [addressInput, setAddressInput] = useState(location.address);
+  const [latInput, setLatInput] = useState(location.lat.toString());
+  const [lngInput, setLngInput] = useState(location.lng.toString());
+
+  // Sync inputs when location prop changes (e.g. from address search)
+  React.useEffect(() => {
+    setLatInput(location.lat.toString());
+    setLngInput(location.lng.toString());
+    setAddressInput(location.address);
+  }, [location]);
+
   const [orientation, setOrientation] = useState(180); // Default South
   const [shadeFactor, setShadeFactor] = useState(0); // 0% shading = 1.0 factor
+  const [customerName, setCustomerName] = useState('');
+  const [customerContact, setCustomerContact] = useState('');
 
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
@@ -54,6 +72,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     const finalAmount = totalCost - subsidy;
 
     onGenerateQuotation({
+      customerName,
+      customerContact,
       panelCount,
       systemSizeKw,
       annualGenerationKwh,
@@ -103,6 +123,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }
   };
 
+  const handleCoordinateSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const lat = parseFloat(latInput);
+    const lng = parseFloat(lngInput);
+    if (!isNaN(lat) && !isNaN(lng)) {
+      setLocation({
+        lat,
+        lng,
+        address: `Coordinates: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
+      });
+    }
+  };
+
   return (
     <div className="w-96 h-full bg-white border-r border-slate-200 flex flex-col shadow-xl z-30">
       <div className="p-6 border-b border-slate-100">
@@ -114,6 +147,33 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       </div>
 
       <div className="p-6 flex-1 overflow-y-auto space-y-8">
+        {/* Customer Details */}
+        <section className="space-y-4">
+          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Customer Details
+          </label>
+          <div className="space-y-3">
+            <div className="relative">
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="Customer Name"
+                className="w-full pl-4 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm transition-all"
+              />
+            </div>
+            <div className="relative">
+              <input
+                type="text"
+                value={customerContact}
+                onChange={(e) => setCustomerContact(e.target.value)}
+                placeholder="Contact Number"
+                className="w-full pl-4 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none text-sm transition-all"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* Address Search */}
         <section>
           <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -131,14 +191,53 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           </form>
         </section>
 
+        {/* Coordinates Search */}
+        <section>
+          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            Exact Coordinates
+          </label>
+          <form onSubmit={handleCoordinateSubmit} className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={latInput}
+                  onChange={(e) => setLatInput(e.target.value)}
+                  placeholder="Latitude"
+                  className="w-full pl-3 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none text-sm"
+                />
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={lngInput}
+                  onChange={(e) => setLngInput(e.target.value)}
+                  placeholder="Longitude"
+                  className="w-full pl-3 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none text-sm"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="w-full py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold hover:bg-slate-200 transition-all"
+            >
+              Go to Coordinates
+            </button>
+          </form>
+        </section>
+
         {/* Roof Boundary Controls */}
+        {/* Design Tools */}
         <section>
           <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            Roof Boundary
+            Design Tools
           </label>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => setIsDrawingMode(!isDrawingMode)}
+              onClick={() => {
+                setIsDrawingMode(!isDrawingMode);
+                if (!isDrawingMode) setIsPanningMode(false);
+              }}
               className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border transition-all ${
                 isDrawingMode 
                 ? 'bg-amber-500 text-white border-amber-600 shadow-lg shadow-amber-100' 
@@ -149,13 +248,28 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="text-sm font-medium">{isDrawingMode ? 'Finish' : 'Draw Roof'}</span>
             </button>
             <button
-              onClick={onClearBoundary}
-              className="flex items-center justify-center gap-2 py-2.5 bg-white text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-all"
+              onClick={() => {
+                setIsPanningMode(!isPanningMode);
+                if (!isPanningMode) setIsDrawingMode(false);
+              }}
+              className={`flex items-center justify-center gap-2 py-2.5 rounded-xl border transition-all ${
+                isPanningMode 
+                ? 'bg-slate-900 text-white border-slate-950 shadow-lg shadow-slate-200' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+              }`}
             >
-              <Trash2 size={16} />
-              <span className="text-sm font-medium">Clear</span>
+              <Move size={16} />
+              <span className="text-sm font-medium">{isPanningMode ? 'Stop Pan' : 'Pan Map'}</span>
             </button>
           </div>
+          {isDrawingMode && (
+            <button
+              onClick={onClearBoundary}
+              className="w-full mt-2 py-2 text-[10px] font-bold text-rose-500 uppercase tracking-wider hover:bg-rose-50 rounded-lg transition-colors"
+            >
+              Clear Boundary
+            </button>
+          )}
         </section>
 
         {/* Orientation Selector */}
@@ -279,15 +393,24 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="p-6 border-top border-slate-100 bg-slate-50">
         <button
           onClick={calculateQuotation}
-          disabled={panelCount === 0 || isDrawingMode}
+          disabled={panelCount === 0 || isDrawingMode || isGenerating}
           className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl ${
-            panelCount > 0 && !isDrawingMode
+            panelCount > 0 && !isDrawingMode && !isGenerating
             ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-amber-200' 
             : 'bg-slate-200 text-slate-400 cursor-not-allowed'
           }`}
         >
-          <FileText size={20} />
-          Generate Quotation
+          {isGenerating ? (
+            <>
+              <Loader2 className="animate-spin" size={20} />
+              Generating...
+            </>
+          ) : (
+            <>
+              <FileText size={20} />
+              Generate Quotation
+            </>
+          )}
         </button>
       </div>
     </div>
