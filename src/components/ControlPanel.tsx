@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw, Move, Loader2, Sparkles, TrendingUp } from 'lucide-react';
-import { Location, QuotationData } from '../types';
+import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw, Move, Loader2, Sparkles, TrendingUp, ChevronDown } from 'lucide-react';
+import { Location, QuotationData, Point } from '../types';
 import { PANEL_KW, ELECTRICITY_RATE, AVG_SUN_HOURS_PER_DAY, PANEL_COST, INVERTER_BASE_COST, INVERTER_KW_COST, INSTALLATION_BASE_COST, SUBSIDY_PERCENTAGE, ORIENTATION_EFFICIENCY, STRUCTURE_COST_PER_PANEL, ANNUAL_DEGRADATION, MAINTENANCE_COST_YEARLY } from '../constants';
+import SmartOrientationSelector from './SmartOrientationSelector';
+import EfficiencyComparison from './EfficiencyComparison';
+import RooftopAnalysis from './RooftopAnalysis';
+import ShadingAnalysis from './ShadingAnalysis';
 
 interface ControlPanelProps {
   location: Location;
@@ -18,6 +22,8 @@ interface ControlPanelProps {
   onClearBoundary: () => void;
   onAutoFill: (orientation: number, targetKw?: number) => void;
   isGenerating: boolean;
+  boundary?: Point[];
+  pixelsPerMeter?: number;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -35,6 +41,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   onClearBoundary,
   onAutoFill,
   isGenerating,
+  boundary = [],
+  pixelsPerMeter = 1,
 }) => {
   const [addressInput, setAddressInput] = useState(location.address);
   const [latInput, setLatInput] = useState(location.lat.toString());
@@ -52,6 +60,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [targetKw, setTargetKw] = useState<string>('');
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
+  const [showAdvancedAnalysis, setShowAdvancedAnalysis] = useState(false);
 
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
@@ -283,57 +292,66 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           )}
         </section>
 
-        {/* Orientation Selector */}
+        {/* Smart Analysis Tools */}
         <section>
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            Roof Orientation
-          </label>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-600 font-medium">Facing Direction</span>
-              <span className="text-sm font-bold text-slate-900">{orientation}° ({orientation >= 135 && orientation <= 225 ? 'South' : orientation >= 315 || orientation <= 45 ? 'North' : 'East/West'})</span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="359"
-              value={orientation}
-              onChange={(e) => setOrientation(parseInt(e.target.value))}
-              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
+          <button
+            onClick={() => setShowAdvancedAnalysis(!showAdvancedAnalysis)}
+            className="w-full flex items-center justify-between p-3 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl hover:bg-indigo-100 transition-all"
+          >
+            <span className="text-xs font-bold text-indigo-900 uppercase tracking-wider">Smart Solar Analysis</span>
+            <ChevronDown
+              size={16}
+              className={`text-indigo-600 transition-transform ${showAdvancedAnalysis ? 'rotate-180' : ''}`}
             />
-            <div className="flex justify-between text-[10px] text-slate-400 font-bold">
-              <span>N</span>
-              <span>E</span>
-              <span>S</span>
-              <span>W</span>
-              <span>N</span>
-            </div>
-          </div>
-        </section>
+          </button>
 
-        {/* Shading Selector */}
-        <section>
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
-            Shading Analysis
-          </label>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-600 font-medium">Est. Shading</span>
-              <span className="text-sm font-bold text-slate-900">{shadeFactor}%</span>
+          {showAdvancedAnalysis && (
+            <div className="mt-3 space-y-6 pb-4">
+              {/* Smart Orientation Selector */}
+              <div className="border-t-2 border-indigo-100 pt-4">
+                <SmartOrientationSelector
+                  latitude={location.lat}
+                  currentOrientation={orientation}
+                  onOrientationChange={setOrientation}
+                  boundaryPoints={boundary}
+                  pixelsPerMeter={pixelsPerMeter}
+                  shadeFactor={shadeFactor}
+                />
+              </div>
+
+              {/* Efficiency Comparison */}
+              <div className="border-t-2 border-indigo-100 pt-4">
+                <EfficiencyComparison
+                  latitude={location.lat}
+                  systemSizeKw={panelCount * PANEL_KW}
+                  currentAzimuth={orientation}
+                  currentTiltAngle={30}
+                  shadingFactor={shadeFactor}
+                />
+              </div>
+
+              {/* Rooftop Analysis */}
+              <div className="border-t-2 border-indigo-100 pt-4">
+                <RooftopAnalysis
+                  boundaryPoints={boundary}
+                  pixelsPerMeter={pixelsPerMeter}
+                  latitude={location.lat}
+                  currentOrientation={orientation}
+                  currentPanelCount={panelCount}
+                  shadingPercentage={shadeFactor}
+                />
+              </div>
+
+              {/* Shading Analysis */}
+              <div className="border-t-2 border-indigo-100 pt-4">
+                <ShadingAnalysis
+                  shadingPercentage={shadeFactor}
+                  onShadingChange={setShadeFactor}
+                  latitude={location.lat}
+                />
+              </div>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="5"
-              value={shadeFactor}
-              onChange={(e) => setShadeFactor(parseInt(e.target.value))}
-              className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500"
-            />
-            <p className="text-[10px] text-slate-400">
-              {shadeFactor === 0 ? 'Full sun exposure' : shadeFactor < 30 ? 'Partial shading (trees/buildings)' : 'Significant shading'}
-            </p>
-          </div>
+          )}
         </section>
 
         {/* Panel Controls */}

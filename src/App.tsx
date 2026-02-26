@@ -298,6 +298,8 @@ export default function App() {
         }}
         onAutoFill={handleAutoFill}
         isGenerating={isGenerating}
+        boundary={boundary}
+        pixelsPerMeter={pixelsPerMeter}
       />
 
       <main className="flex-1 relative" ref={containerRef}>
