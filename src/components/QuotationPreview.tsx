@@ -245,6 +245,17 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                     <p className="text-3xl font-black text-slate-900">${data.finalAmount.toLocaleString()}</p>
                   </div>
                 </div>
+
+                <div className="pt-6 border-t border-slate-200 grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payback Period</p>
+                    <p className="text-lg font-bold text-slate-900">~{(data.finalAmount / data.annualSavings).toFixed(1)} Years</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">25-Year Savings</p>
+                    <p className="text-lg font-bold text-emerald-700">${(data.annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw, Move, Loader2 } from 'lucide-react';
+import { Search, Plus, Trash2, FileText, Zap, DollarSign, Sun, MousePointer2, PenTool, RotateCw, Move, Loader2, Sparkles, TrendingUp } from 'lucide-react';
 import { Location, QuotationData } from '../types';
-import { PANEL_KW, ELECTRICITY_RATE, AVG_SUN_HOURS_PER_DAY, PANEL_COST, INVERTER_BASE_COST, INVERTER_KW_COST, INSTALLATION_BASE_COST, SUBSIDY_PERCENTAGE, ORIENTATION_EFFICIENCY, STRUCTURE_COST_PER_PANEL } from '../constants';
+import { PANEL_KW, ELECTRICITY_RATE, AVG_SUN_HOURS_PER_DAY, PANEL_COST, INVERTER_BASE_COST, INVERTER_KW_COST, INSTALLATION_BASE_COST, SUBSIDY_PERCENTAGE, ORIENTATION_EFFICIENCY, STRUCTURE_COST_PER_PANEL, ANNUAL_DEGRADATION, MAINTENANCE_COST_YEARLY } from '../constants';
 
 interface ControlPanelProps {
   location: Location;
@@ -16,6 +16,7 @@ interface ControlPanelProps {
   isPanningMode: boolean;
   setIsPanningMode: (mode: boolean) => void;
   onClearBoundary: () => void;
+  onAutoFill: (orientation: number, targetKw?: number) => void;
   isGenerating: boolean;
 }
 
@@ -32,6 +33,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   isPanningMode,
   setIsPanningMode,
   onClearBoundary,
+  onAutoFill,
   isGenerating,
 }) => {
   const [addressInput, setAddressInput] = useState(location.address);
@@ -47,6 +49,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
   const [orientation, setOrientation] = useState(180); // Default South
   const [shadeFactor, setShadeFactor] = useState(0); // 0% shading = 1.0 factor
+  const [targetKw, setTargetKw] = useState<string>('');
   const [customerName, setCustomerName] = useState('');
   const [customerContact, setCustomerContact] = useState('');
 
@@ -62,15 +65,23 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const annualGenerationKwh = systemSizeKw * AVG_SUN_HOURS_PER_DAY * 365 * efficiencyFactor * actualShadeFactor;
   const annualSavings = annualGenerationKwh * ELECTRICITY_RATE;
 
-  const calculateQuotation = () => {
-    const panelsCost = panelCount * PANEL_COST;
-    const structureCost = panelCount * STRUCTURE_COST_PER_PANEL;
-    const inverterCost = INVERTER_BASE_COST + (systemSizeKw * INVERTER_KW_COST);
-    const installationCost = INSTALLATION_BASE_COST;
-    const totalCost = panelsCost + structureCost + inverterCost + installationCost;
-    const subsidy = totalCost * SUBSIDY_PERCENTAGE;
-    const finalAmount = totalCost - subsidy;
+  const efficiencyScore = efficiencyFactor * actualShadeFactor;
+  const getEfficiencyLabel = (score: number) => {
+    if (score >= 0.9) return { label: 'Excellent', color: 'text-emerald-500', bg: 'bg-emerald-50' };
+    if (score >= 0.75) return { label: 'Good', color: 'text-amber-500', bg: 'bg-amber-50' };
+    return { label: 'Average', color: 'text-rose-500', bg: 'bg-rose-50' };
+  };
+  const scoreData = getEfficiencyLabel(efficiencyScore);
 
+  const panelsCost = panelCount * PANEL_COST;
+  const structureCost = panelCount * STRUCTURE_COST_PER_PANEL;
+  const inverterCost = INVERTER_BASE_COST + (systemSizeKw * INVERTER_KW_COST);
+  const installationCost = INSTALLATION_BASE_COST;
+  const totalCost = panelsCost + structureCost + inverterCost + installationCost;
+  const subsidy = totalCost * SUBSIDY_PERCENTAGE;
+  const finalAmount = totalCost - subsidy;
+
+  const calculateQuotation = () => {
     onGenerateQuotation({
       customerName,
       customerContact,
@@ -356,13 +367,40 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <span className="font-medium">Remove</span>
             </button>
           </div>
+          <button
+            onClick={() => onAutoFill(orientation, targetKw ? parseFloat(targetKw) : undefined)}
+            disabled={isDrawingMode}
+            className={`w-full mt-3 flex items-center justify-center gap-2 py-3 rounded-xl transition-all border-2 border-dashed ${
+              isDrawingMode
+              ? 'bg-slate-50 text-slate-300 border-slate-100 cursor-not-allowed'
+              : 'bg-white text-amber-600 border-amber-200 hover:bg-amber-50 hover:border-amber-300'
+            }`}
+          >
+            <Sparkles size={18} />
+            <span className="font-bold">Auto-Fill Roof</span>
+          </button>
+          <div className="mt-3 relative">
+            <input
+              type="number"
+              value={targetKw}
+              onChange={(e) => setTargetKw(e.target.value)}
+              placeholder="Target kW (Optional)"
+              className="w-full pl-4 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-xs transition-all"
+            />
+            <div className="absolute right-3 top-2 text-[10px] font-bold text-slate-400 uppercase">kW</div>
+          </div>
         </section>
 
         {/* Real-time Stats */}
         <section className="space-y-4">
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            System Estimates
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              System Estimates
+            </label>
+            <div className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${scoreData.bg} ${scoreData.color}`}>
+              {scoreData.label} Efficiency
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 gap-3">
             <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-center gap-4">
@@ -383,7 +421,18 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <div>
                 <p className="text-xs text-emerald-700 font-medium uppercase">Est. Annual Savings</p>
                 <p className="text-xl font-bold text-slate-900">${annualSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
-                <p className="text-[10px] text-emerald-600">Efficiency: {(efficiencyFactor * 100).toFixed(0)}%</p>
+                <p className="text-[10px] text-emerald-600">ROI: ~{(finalAmount / annualSavings).toFixed(1)} years</p>
+              </div>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center gap-4">
+              <div className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center text-white">
+                <TrendingUp size={20} />
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 font-medium uppercase">25-Year Savings</p>
+                <p className="text-xl font-bold text-slate-900">${(annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-[10px] text-slate-400">Incl. degradation & maintenance</p>
               </div>
             </div>
           </div>

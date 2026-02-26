@@ -4,14 +4,15 @@ import SolarCanvas, { SolarCanvasHandle } from './components/SolarCanvas';
 import ControlPanel from './components/ControlPanel';
 import QuotationPreview from './components/QuotationPreview';
 import { Location, Panel, QuotationData, Point } from './types';
-import { DEFAULT_LOCATION } from './constants';
+import { DEFAULT_LOCATION, PANEL_WIDTH_METERS, PANEL_HEIGHT_METERS, PANEL_SPACING_METERS, ROW_SPACING_METERS } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
+import { autoFillPanels } from './utils/geometry';
 import confetti from 'canvas-confetti';
 
 export default function App() {
   const [location, setLocation] = useState<Location>(DEFAULT_LOCATION);
   const [panels, setPanels] = useState<Panel[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [quotation, setQuotation] = useState<QuotationData | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [boundary, setBoundary] = useState<Point[]>([]);
@@ -111,15 +112,64 @@ export default function App() {
       lng,
     };
     setPanels((prev) => [...prev, newPanel]);
-    setSelectedId(id);
+    setSelectedIds([id]);
   }, [dimensions, location]);
 
   const removeSelected = useCallback(() => {
-    if (selectedId) {
-      setPanels((prev) => prev.filter((p) => p.id !== selectedId));
-      setSelectedId(null);
+    if (selectedIds.length > 0) {
+      setPanels((prev) => prev.filter((p) => !selectedIds.includes(p.id)));
+      setSelectedIds([]);
     }
-  }, [selectedId]);
+  }, [selectedIds]);
+
+  const handleAutoFill = useCallback((orientation: number, targetKw?: number) => {
+    if (boundary.length < 3) {
+      alert("Please draw a roof boundary first!");
+      return;
+    }
+
+    const pWidth = PANEL_WIDTH_METERS * pixelsPerMeter;
+    const pHeight = PANEL_HEIGHT_METERS * pixelsPerMeter;
+    const spacing = PANEL_SPACING_METERS * pixelsPerMeter;
+    const rowSpacing = ROW_SPACING_METERS * pixelsPerMeter;
+
+    let positions = autoFillPanels(
+      boundary,
+      pWidth,
+      pHeight,
+      spacing,
+      rowSpacing,
+      orientation,
+      false // default to portrait for auto-fill
+    );
+
+    if (positions.length === 0) {
+      alert("No panels could fit in the current boundary.");
+      return;
+    }
+
+    // Limit based on targetKw if provided
+    if (targetKw && targetKw > 0) {
+      const maxPanels = Math.ceil(targetKw / 0.55); // 550W = 0.55kW
+      positions = positions.slice(0, maxPanels);
+    }
+
+    const newPanels: Panel[] = positions.map((pos, index) => {
+      const latLng = screenToLatLng(pos.x, pos.y);
+      return {
+        id: `panel-auto-${Date.now()}-${index}`,
+        x: pos.x,
+        y: pos.y,
+        rotation: orientation,
+        isLandscape: false,
+        isValid: true,
+        lat: latLng ? latLng.lat() : location.lat,
+        lng: latLng ? latLng.lng() : location.lng,
+      };
+    });
+
+    setPanels(prev => [...prev, ...newPanels]);
+  }, [boundary, pixelsPerMeter, screenToLatLng, location]);
 
   const handleGenerateQuotation = async (data: QuotationData) => {
     setIsGenerating(true);
@@ -237,7 +287,7 @@ export default function App() {
         onAddPanel={addPanel}
         onRemoveSelected={removeSelected}
         onGenerateQuotation={handleGenerateQuotation}
-        hasSelected={!!selectedId}
+        hasSelected={selectedIds.length > 0}
         isDrawingMode={isDrawingMode}
         setIsDrawingMode={setIsDrawingMode}
         isPanningMode={isPanningMode}
@@ -246,6 +296,7 @@ export default function App() {
           setBoundary([]);
           setBoundaryLatLng([]);
         }}
+        onAutoFill={handleAutoFill}
         isGenerating={isGenerating}
       />
 
@@ -261,8 +312,8 @@ export default function App() {
             ref={canvasRef}
             panels={panels}
             setPanels={setPanels}
-            selectedId={selectedId}
-            setSelectedId={setSelectedId}
+            selectedIds={selectedIds}
+            setSelectedIds={setSelectedIds}
             width={dimensions.width}
             height={dimensions.height}
             boundary={boundary}

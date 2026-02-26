@@ -68,3 +68,61 @@ export function doPolygonsIntersect(polyA: Point[], polyB: Point[]): boolean {
   }
   return true;
 }
+
+export function autoFillPanels(
+  boundary: Point[],
+  panelWidth: number,
+  panelHeight: number,
+  spacing: number,
+  rowSpacing: number,
+  rotation: number,
+  isLandscape: boolean
+): { x: number, y: number }[] {
+  if (boundary.length < 3) return [];
+
+  const pWidth = isLandscape ? panelHeight : panelWidth;
+  const pHeight = isLandscape ? panelWidth : panelHeight;
+
+  // Find bounding box
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  boundary.forEach(p => {
+    minX = Math.min(minX, p.x);
+    maxX = Math.max(maxX, p.x);
+    minY = Math.min(minY, p.y);
+    maxY = Math.max(maxY, p.y);
+  });
+
+  const results: { x: number, y: number }[] = [];
+  const rad = (rotation * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+
+  // Step through the bounding box with a grid
+  // We use a larger grid and rotate the points to check
+  const stepX = pWidth + spacing;
+  const stepY = pHeight + rowSpacing;
+
+  // For simplicity, we'll use a dense grid and check each point
+  for (let y = minY - stepY; y <= maxY + stepY; y += stepY) {
+    for (let x = minX - stepX; x <= maxX + stepX; x += stepX) {
+      const corners = getPanelCorners({ x, y, rotation, width: pWidth, height: pHeight });
+      
+      // Check if all corners are inside the boundary
+      const isInside = corners.every(c => isPointInPolygon(c, boundary));
+      
+      if (isInside) {
+        // Check for collisions with already placed panels
+        const hasCollision = results.some(r => {
+          const otherCorners = getPanelCorners({ x: r.x, y: r.y, rotation, width: pWidth, height: pHeight });
+          return doPolygonsIntersect(corners, otherCorners);
+        });
+
+        if (!hasCollision) {
+          results.push({ x, y });
+        }
+      }
+    }
+  }
+
+  return results;
+}

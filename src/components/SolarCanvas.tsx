@@ -12,8 +12,8 @@ export interface SolarCanvasHandle {
 interface SolarCanvasProps {
   panels: Panel[];
   setPanels: React.Dispatch<React.SetStateAction<Panel[]>>;
-  selectedId: string | null;
-  setSelectedId: (id: string | null) => void;
+  selectedIds: string[];
+  setSelectedIds: (ids: string[]) => void;
   width: number;
   height: number;
   boundary: Point[];
@@ -29,8 +29,8 @@ interface SolarCanvasProps {
 const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   panels,
   setPanels,
-  selectedId,
-  setSelectedId,
+  selectedIds,
+  setSelectedIds,
   width,
   height,
   boundary,
@@ -60,8 +60,8 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
       if (stageRef.current) {
         try {
           // Temporarily hide transformer for clean capture
-          const oldSelected = selectedId;
-          setSelectedId(null);
+          const oldSelected = [...selectedIds];
+          setSelectedIds([]);
           
           // Force a redraw to ensure everything is up to date
           stageRef.current.batchDraw();
@@ -72,7 +72,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
             quality: 1
           });
           
-          setSelectedId(oldSelected);
+          setSelectedIds(oldSelected);
           return dataUrl;
         } catch (err) {
           console.error("Error in toDataURL:", err);
@@ -125,7 +125,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
     }
 
     if (e.target === e.target.getStage()) {
-      setSelectedId(null);
+      setSelectedIds([]);
       return;
     }
   };
@@ -139,7 +139,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   const duplicatePanel = (panel: Panel) => {
     const id = `panel-${Date.now()}`;
     setPanels(prev => [...prev, { ...panel, id, x: panel.x + 20, y: panel.y + 20 }]);
-    setSelectedId(id);
+    setSelectedIds([id]);
   };
 
   const toggleOrientation = (panel: Panel) => {
@@ -147,15 +147,29 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   };
 
   React.useEffect(() => {
-    if (selectedId && trRef.current) {
+    if (selectedIds.length > 0 && trRef.current) {
       const stage = trRef.current.getStage();
-      const selectedNode = stage.findOne('#' + selectedId);
-      if (selectedNode) {
-        trRef.current.nodes([selectedNode]);
-        trRef.current.getLayer().batchDraw();
-      }
+      const selectedNodes = selectedIds.map(id => stage.findOne('#' + id)).filter(Boolean);
+      trRef.current.nodes(selectedNodes);
+      trRef.current.getLayer().batchDraw();
+    } else if (trRef.current) {
+      trRef.current.nodes([]);
+      trRef.current.getLayer().batchDraw();
     }
-  }, [selectedId]);
+  }, [selectedIds]);
+
+  const handlePanelClick = (e: any, id: string) => {
+    const isShiftPressed = e.evt.shiftKey;
+    if (isShiftPressed) {
+      if (selectedIds.includes(id)) {
+        setSelectedIds(selectedIds.filter(sid => sid !== id));
+      } else {
+        setSelectedIds([...selectedIds, id]);
+      }
+    } else {
+      setSelectedIds([id]);
+    }
+  };
 
   return (
     <div className={`absolute inset-0 z-20 ${isPanningMode ? 'pointer-events-none' : 'pointer-events-auto'}`}>
@@ -182,12 +196,34 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
           {boundary.length > 0 && (
             <Line
               points={boundary.flatMap(p => [p.x, p.y])}
-              stroke="#fbbf24"
+              stroke={isDrawingMode ? "#fbbf24" : "#10b981"}
               strokeWidth={3}
               closed={!isDrawingMode}
-              fill={backgroundImageUrl ? "transparent" : "rgba(251, 191, 36, 0.1)"}
+              fill={backgroundImageUrl ? "transparent" : (isDrawingMode ? "rgba(251, 191, 36, 0.1)" : "rgba(16, 185, 129, 0.05)")}
               dash={isDrawingMode ? [10, 5] : []}
             />
+          )}
+          
+          {/* North Indicator */}
+          {!isDrawingMode && (
+            <Group x={width - 60} y={60}>
+              <Circle radius={25} fill="white" shadowBlur={5} opacity={0.8} />
+              <Line
+                points={[0, -15, 0, 15]}
+                stroke="#ef4444"
+                strokeWidth={3}
+                lineCap="round"
+              />
+              <Line
+                points={[-8, -5, 0, -15, 8, -5]}
+                stroke="#ef4444"
+                strokeWidth={3}
+                lineCap="round"
+              />
+              <Rect x={-5} y={18} width={10} height={10} fill="transparent" />
+              {/* Text "N" is hard to do in Konva without Text component, skipping for now or using lines */}
+              <Line points={[-4, 25, -4, 15, 4, 25, 4, 15]} stroke="#475569" strokeWidth={2} />
+            </Group>
           )}
           {isDrawingMode && boundary.map((p, i) => (
             <Circle key={i} x={p.x} y={p.y} radius={5} fill="#fbbf24" />
@@ -205,6 +241,33 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                 y={panel.y}
                 rotation={panel.rotation}
                 draggable={!isDrawingMode}
+                onDragStart={(e) => {
+                  const id = panel.id;
+                  const isSelected = selectedIds.includes(id);
+                  if (!isSelected) {
+                    setSelectedIds([id]);
+                  }
+                }}
+                onDragMove={(e) => {
+                  if (selectedIds.length <= 1) return;
+                  
+                  const id = panel.id;
+                  const stage = e.target.getStage();
+                  const dx = e.target.x() - panel.x;
+                  const dy = e.target.y() - panel.y;
+
+                  // Move all other selected panels by the same delta
+                  setPanels(prev => prev.map(p => {
+                    if (selectedIds.includes(p.id) && p.id !== id) {
+                      return {
+                        ...p,
+                        x: p.x + dx,
+                        y: p.y + dy
+                      };
+                    }
+                    return p;
+                  }));
+                }}
                 onDragEnd={(e) => {
                   const x = e.target.x();
                   const y = e.target.y();
@@ -215,10 +278,25 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                     lat: latLng ? latLng.lat() : panel.lat,
                     lng: latLng ? latLng.lng() : panel.lng,
                   });
+                  
+                  // Update all other selected panels' lat/lng
+                  if (selectedIds.length > 1) {
+                    setPanels(prev => prev.map(p => {
+                      if (selectedIds.includes(p.id)) {
+                        const pLatLng = screenToLatLng(p.x, p.y);
+                        return {
+                          ...p,
+                          lat: pLatLng ? pLatLng.lat() : p.lat,
+                          lng: pLatLng ? pLatLng.lng() : p.lng,
+                        };
+                      }
+                      return p;
+                    }));
+                  }
                   validatePanels();
                 }}
-                onClick={() => setSelectedId(panel.id)}
-                onTap={() => setSelectedId(panel.id)}
+                onClick={(e) => handlePanelClick(e, panel.id)}
+                onTap={(e) => handlePanelClick(e, panel.id)}
                 onTransformEnd={(e) => {
                   const node = e.target;
                   const x = node.x();
@@ -238,7 +316,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                   width={pWidth}
                   height={pHeight}
                   fill={panel.isValid ? "#1e293b" : "rgba(225, 29, 72, 0.8)"}
-                  stroke={panel.isValid ? (selectedId === panel.id ? "#38bdf8" : "#334155") : "#e11d48"}
+                  stroke={panel.isValid ? (selectedIds.includes(panel.id) ? "#38bdf8" : "#334155") : "#e11d48"}
                   strokeWidth={2}
                   cornerRadius={2}
                   opacity={0.9}
@@ -255,7 +333,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                   strokeWidth={1}
                 />
 
-                {selectedId === panel.id && (
+                {selectedIds.length === 1 && selectedIds[0] === panel.id && (
                   <Group y={pHeight / 2 + 25}>
                     <Rect
                       x={-40}
@@ -279,10 +357,10 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
               </Group>
             );
           })}
-          {selectedId && !isDrawingMode && (
+          {selectedIds.length > 0 && !isDrawingMode && (
             <Transformer
               ref={trRef}
-              rotateEnabled={true}
+              rotateEnabled={selectedIds.length === 1}
               enabledAnchors={[]}
               boundBoxFunc={(oldBox, newBox) => newBox}
             />
