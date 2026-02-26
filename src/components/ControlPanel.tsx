@@ -6,6 +6,8 @@ import SmartOrientationSelector from './SmartOrientationSelector';
 import EfficiencyComparison from './EfficiencyComparison';
 import RooftopAnalysis from './RooftopAnalysis';
 import ShadingAnalysis from './ShadingAnalysis';
+import PlacementAdvisor from './PlacementAdvisor';
+import { Panel } from '../types';
 
 interface ControlPanelProps {
   location: Location;
@@ -24,6 +26,9 @@ interface ControlPanelProps {
   isGenerating: boolean;
   boundary?: Point[];
   pixelsPerMeter?: number;
+  panels?: Panel[];
+  selectedIds?: string[];
+  onPanelSelect?: (panelId: string) => void;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -43,6 +48,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   isGenerating,
   boundary = [],
   pixelsPerMeter = 1,
+  panels = [],
+  selectedIds = [],
+  onPanelSelect,
 }) => {
   const [addressInput, setAddressInput] = useState(location.address);
   const [latInput, setLatInput] = useState(location.lat.toString());
@@ -350,6 +358,20 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                   latitude={location.lat}
                 />
               </div>
+
+              {/* Panel Placement Advisor */}
+              {panels.length > 0 && (
+                <div className="border-t-2 border-indigo-100 pt-4">
+                  <PlacementAdvisor
+                    panels={panels}
+                    latitude={location.lat}
+                    boundaryPoints={boundary}
+                    pixelsPerMeter={pixelsPerMeter}
+                    selectedIds={selectedIds}
+                    onPanelSelect={onPanelSelect}
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>

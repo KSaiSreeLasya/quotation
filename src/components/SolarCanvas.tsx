@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useImperativeHandle, forwardRef } from 'react';
-import { Stage, Layer, Rect, Group, Transformer, Line, Circle, Image as KonvaImage } from 'react-konva';
+import { Stage, Layer, Rect, Group, Transformer, Line, Circle, Image as KonvaImage, Text } from 'react-konva';
 import { PANEL_WIDTH_METERS, PANEL_HEIGHT_METERS } from '../constants';
 import { Panel, Point } from '../types';
 import { isPointInPolygon, getPanelCorners, doPolygonsIntersect } from '../utils/geometry';
 import useImage from 'use-image';
+import { usePanelValidation } from '../hooks/usePanelValidation';
 
 export interface SolarCanvasHandle {
   toDataURL: () => string;
@@ -24,6 +25,7 @@ interface SolarCanvasProps {
   screenToLatLng: (x: number, y: number) => google.maps.LatLng | null;
   pixelsPerMeter: number;
   backgroundImageUrl?: string | null;
+  latitude?: number;
 }
 
 const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
@@ -41,10 +43,14 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
   screenToLatLng,
   pixelsPerMeter,
   backgroundImageUrl,
+  latitude = 37.7749,
 }, ref) => {
   const stageRef = React.useRef<any>(null);
   const trRef = React.useRef<any>(null);
   const [bgImage] = useImage(backgroundImageUrl || '', 'anonymous');
+
+  // Get real-time validation for all panels
+  const panelValidations = usePanelValidation(panels, latitude, boundary, pixelsPerMeter);
 
   useEffect(() => {
     if (bgImage && stageRef.current) {
@@ -232,6 +238,45 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
           {panels.map((panel) => {
             const pWidth = panel.isLandscape ? PANEL_HEIGHT : PANEL_WIDTH;
             const pHeight = panel.isLandscape ? PANEL_WIDTH : PANEL_HEIGHT;
+            const validation = panelValidations.get(panel.id);
+
+            // Determine panel colors based on validation severity
+            let panelColor = "#1e293b";
+            let borderColor = "#334155";
+            let borderWidth = 2;
+            let shadowColor = "black";
+            let shadowBlur = 5;
+
+            if (!panel.isValid) {
+              panelColor = "rgba(225, 29, 72, 0.8)";
+              borderColor = "#e11d48";
+              shadowColor = "#e11d48";
+              shadowBlur = 10;
+            } else if (validation) {
+              switch (validation.severityLevel) {
+                case 'good':
+                  panelColor = "#10b981";
+                  borderColor = "#059669";
+                  shadowColor = "#10b981";
+                  break;
+                case 'fair':
+                  panelColor = "#f59e0b";
+                  borderColor = "#d97706";
+                  shadowColor = "#f59e0b";
+                  break;
+                case 'poor':
+                  panelColor = "#ef4444";
+                  borderColor = "#dc2626";
+                  shadowColor = "#ef4444";
+                  break;
+              }
+            }
+
+            // Highlight selected panels
+            if (selectedIds.includes(panel.id)) {
+              borderColor = "#38bdf8";
+              borderWidth = 3;
+            }
 
             return (
               <Group
@@ -250,7 +295,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                 }}
                 onDragMove={(e) => {
                   if (selectedIds.length <= 1) return;
-                  
+
                   const id = panel.id;
                   const stage = e.target.getStage();
                   const dx = e.target.x() - panel.x;
@@ -278,7 +323,7 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                     lat: latLng ? latLng.lat() : panel.lat,
                     lng: latLng ? latLng.lng() : panel.lng,
                   });
-                  
+
                   // Update all other selected panels' lat/lng
                   if (selectedIds.length > 1) {
                     setPanels(prev => prev.map(p => {
@@ -315,23 +360,76 @@ const SolarCanvas = forwardRef<SolarCanvasHandle, SolarCanvasProps>(({
                 <Rect
                   width={pWidth}
                   height={pHeight}
-                  fill={panel.isValid ? "#1e293b" : "rgba(225, 29, 72, 0.8)"}
-                  stroke={panel.isValid ? (selectedIds.includes(panel.id) ? "#38bdf8" : "#334155") : "#e11d48"}
-                  strokeWidth={2}
+                  fill={panelColor}
+                  stroke={borderColor}
+                  strokeWidth={borderWidth}
                   cornerRadius={2}
                   opacity={0.9}
-                  shadowBlur={panel.isValid ? 5 : 10}
-                  shadowColor={panel.isValid ? "black" : "#e11d48"}
+                  shadowBlur={shadowBlur}
+                  shadowColor={shadowColor}
                   offsetX={pWidth / 2}
                   offsetY={pHeight / 2}
                 />
-                
+
                 {/* Panel Details */}
                 <Line
                   points={[-pWidth/2 + 5, -pHeight/2 + 5, pWidth/2 - 5, -pHeight/2 + 5]}
                   stroke="rgba(255,255,255,0.1)"
                   strokeWidth={1}
                 />
+
+                {/* Validation Quality Badge */}
+                {validation && (
+                  <Group x={pWidth / 2 - 12} y={-pHeight / 2 + 12}>
+                    <Circle
+                      radius={8}
+                      fill={validation.severityLevel === 'good' ? '#10b981' : validation.severityLevel === 'fair' ? '#f59e0b' : '#ef4444'}
+                      shadowBlur={3}
+                      shadowColor="black"
+                    />
+                    <Text
+                      text={validation.severityLevel === 'good' ? '✓' : validation.severityLevel === 'fair' ? '~' : '⚠'}
+                      fontSize={12}
+                      fontFamily="Arial"
+                      fontStyle="bold"
+                      fill="white"
+                      align="center"
+                      verticalAlign="middle"
+                      x={-6}
+                      y={-6}
+                      width={12}
+                      height={12}
+                    />
+                  </Group>
+                )}
+
+                {/* Efficiency percentage for poor/fair panels */}
+                {validation && validation.severityLevel !== 'good' && (
+                  <Group x={-pWidth / 2 + 12} y={pHeight / 2 - 12}>
+                    <Rect
+                      x={-18}
+                      y={-9}
+                      width={36}
+                      height={18}
+                      fill="black"
+                      cornerRadius={4}
+                      opacity={0.7}
+                    />
+                    <Text
+                      text={Math.round(validation.efficiency * 100) + '%'}
+                      fontSize={10}
+                      fontFamily="Arial"
+                      fontStyle="bold"
+                      fill="white"
+                      align="center"
+                      verticalAlign="middle"
+                      x={-18}
+                      y={-9}
+                      width={36}
+                      height={18}
+                    />
+                  </Group>
+                )}
 
                 {selectedIds.length === 1 && selectedIds[0] === panel.id && (
                   <Group y={pHeight / 2 + 25}>
