@@ -270,22 +270,4 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
   );
 };
 
-// Helper function (re-export from solarCalculations)
-function getDirectionEfficiency(azimuth: number, latitude: number): number {
-  const normalizedAzimuth = ((azimuth % 360) + 360) % 360;
-  const optimalAzimuth = latitude >= 0 ? 180 : 0;
-  
-  let angleDiff = Math.abs(normalizedAzimuth - optimalAzimuth);
-  if (angleDiff > 180) {
-    angleDiff = 360 - angleDiff;
-  }
-  
-  return Math.max(0.2, Math.cos((angleDiff * Math.PI) / 180));
-}
-
-function getTiltEfficiency(tiltAngle: number, optimalTilt: number): number {
-  const angleDiff = Math.abs(tiltAngle - optimalTilt);
-  return Math.max(0.7, 1 - (angleDiff / 90) * 0.2);
-}
-
 export default EfficiencyComparison;
