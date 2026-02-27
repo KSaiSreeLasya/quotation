@@ -40,4 +40,17 @@ export interface QuotationData {
     structure: number;
     installation: number;
   };
+  // Pricing Configuration
+  panelCapacityWatts?: number;
+  costPerWatt?: number;
+  panelGstPercent?: number;
+  netMeterCost?: number;
+  netMeterGstPercent?: number;
+  subsidyCharges?: number;
+  subsidyGstPercent?: number;
+  // Calculated pricing
+  panelCost?: number;
+  panelCostWithGst?: number;
+  netMeterCostWithGst?: number;
+  subsidyCostWithGst?: number;
 }
