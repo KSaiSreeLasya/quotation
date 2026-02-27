@@ -64,7 +64,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     setAddressInput(location.address);
   }, [location]);
 
-  const [orientation, setOrientation] = useState(45); // Default Northeast
+  const [orientation, setOrientation] = useState(180); // Default South
   const [shadeFactor, setShadeFactor] = useState(0); // 0% shading = 1.0 factor
   const [targetKw, setTargetKw] = useState<string>('');
   const [customerName, setCustomerName] = useState('');
