@@ -17,6 +17,34 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // Editable quotation fields
+  const [panelDescription, setPanelDescription] = useState('Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant');
+  const [panelQty, setPanelQty] = useState(data.panelCount);
+  const [panelPrice, setPanelPrice] = useState(data.panelCost ? data.panelCost / data.panelCount : 0);
+  const [panelGst, setPanelGst] = useState(data.panelGstPercent);
+
+  const [netMeterDescription, setNetMeterDescription] = useState('Net-Meter Application Fee');
+  const [netMeterQty, setNetMeterQty] = useState(1);
+  const [netMeterPrice, setNetMeterPrice] = useState(data.netMeterCost || 0);
+  const [netMeterGst, setNetMeterGst] = useState(data.netMeterGstPercent);
+
+  const [subsidyDescription, setSubsidyDescription] = useState('Subsidy Application Charges');
+  const [subsidyQty, setSubsidyQty] = useState(1);
+  const [subsidyPrice, setSubsidyPrice] = useState(data.subsidyCharges || 0);
+  const [subsidyGst, setSubsidyGst] = useState(data.subsidyGstPercent);
+
+  // Calculate totals
+  const panelSubTotal = panelPrice * panelQty;
+  const panelTotal = panelSubTotal * (1 + panelGst / 100);
+
+  const netMeterSubTotal = netMeterPrice * netMeterQty;
+  const netMeterTotal = netMeterSubTotal * (1 + netMeterGst / 100);
+
+  const subsidySubTotal = subsidyPrice * subsidyQty;
+  const subsidyTotal = subsidySubTotal * (1 + subsidyGst / 100);
+
+  const grandTotal = panelTotal + netMeterTotal + subsidyTotal;
+
   const downloadPDF = async () => {
     const element = document.getElementById('quotation-content');
     if (!element) return;
@@ -46,7 +74,14 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 el.style.filter = 'none';
                 el.style.transition = 'none';
                 el.style.animation = 'none';
-                
+
+                // Style input fields for PDF
+                if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+                  el.style.border = '1px solid #cbd5e1';
+                  el.style.backgroundColor = '#ffffff';
+                  el.style.color = '#0f172a';
+                }
+
                 // Get computed style to check for oklab/oklch
                 const computed = window.getComputedStyle(el);
                 
@@ -215,59 +250,142 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   <>
                     <h3 className="text-lg font-bold text-slate-900 text-center">QUOTATION</h3>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse text-sm">
+                    <div className="w-full overflow-x-auto">
+                      <table className="w-full border-collapse text-xs">
                         <thead>
                           <tr className="bg-slate-200 border border-slate-300">
-                            <th className="border border-slate-300 p-3 text-left font-bold text-slate-900">Description</th>
-                            <th className="border border-slate-300 p-3 text-center font-bold text-slate-900 w-16">Qty</th>
-                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-24">Price(₹)</th>
-                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-24">Sub Total(₹)</th>
-                            <th className="border border-slate-300 p-3 text-center font-bold text-slate-900 w-20">GST(%)</th>
-                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-28">Total Price(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-left font-bold text-slate-900 w-32">Description</th>
+                            <th className="border border-slate-300 px-2 py-1 text-center font-bold text-slate-900 w-10">Qty</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Price(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Sub(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-center font-bold text-slate-900 w-10">GST%</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Total(₹)</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {/* Solar Panels Row */}
+                          {/* Solar Panels Row - Editable */}
                           <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-3 text-slate-900">
-                              <div className="font-semibold">Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant</div>
-                              <div className="text-xs text-slate-600 mt-1">Solar Plant Capacity: {data.systemSizeKw.toFixed(2)}kWp</div>
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
+                              <textarea
+                                value={panelDescription}
+                                onChange={(e) => setPanelDescription(e.target.value)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs resize-none font-semibold"
+                                rows={2}
+                              />
+                              <div className="text-[10px] text-slate-600 mt-1">Cap: {data.systemSizeKw.toFixed(2)}kWp</div>
                             </td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.panelCount}</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.panelCapacityWatts ? (data.panelCost! / data.panelCount) : 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.panelCost || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.panelGstPercent}%</td>
-                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.panelCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                          </tr>
-
-                          {/* Net Meter Row */}
-                          <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-3 text-slate-900 font-semibold">Net-Meter Application Fee</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">1</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.netMeterCost || 0).toLocaleString()}</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.netMeterCost || 0).toLocaleString()}</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.netMeterGstPercent}%</td>
-                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.netMeterCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                          </tr>
-
-                          {/* Subsidy Row */}
-                          <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-3 text-slate-900 font-semibold">Subsidy Application Charges</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">1.0</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.subsidyCharges || 0).toLocaleString()}</td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.subsidyCharges || 0).toLocaleString()}</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.subsidyGstPercent}%</td>
-                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.subsidyCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                          </tr>
-
-                          {/* Total Row */}
-                          <tr className="bg-slate-100 border border-slate-300 font-bold">
-                            <td colSpan={4} className="border border-slate-300 p-3 text-right text-slate-900">Total</td>
-                            <td className="border border-slate-300 p-3 text-center text-slate-900"></td>
-                            <td className="border border-slate-300 p-3 text-right text-slate-900">
-                              {((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={panelQty}
+                                onChange={(e) => setPanelQty(parseInt(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                              />
                             </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right">
+                              <input
+                                type="number"
+                                value={panelPrice}
+                                onChange={(e) => setPanelPrice(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={panelGst}
+                                onChange={(e) => setPanelGst(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                                step="0.1"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                          </tr>
+
+                          {/* Net Meter Row - Editable */}
+                          <tr className="border border-slate-300">
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
+                              <input
+                                type="text"
+                                value={netMeterDescription}
+                                onChange={(e) => setNetMeterDescription(e.target.value)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs font-semibold"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={netMeterQty}
+                                onChange={(e) => setNetMeterQty(parseInt(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right">
+                              <input
+                                type="number"
+                                value={netMeterPrice}
+                                onChange={(e) => setNetMeterPrice(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={netMeterGst}
+                                onChange={(e) => setNetMeterGst(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                                step="0.1"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                          </tr>
+
+                          {/* Subsidy Row - Editable */}
+                          <tr className="border border-slate-300">
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
+                              <input
+                                type="text"
+                                value={subsidyDescription}
+                                onChange={(e) => setSubsidyDescription(e.target.value)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs font-semibold"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={subsidyQty}
+                                onChange={(e) => setSubsidyQty(parseInt(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right">
+                              <input
+                                type="number"
+                                value={subsidyPrice}
+                                onChange={(e) => setSubsidyPrice(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
+                              <input
+                                type="number"
+                                value={subsidyGst}
+                                onChange={(e) => setSubsidyGst(parseFloat(e.target.value) || 0)}
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
+                                step="0.1"
+                              />
+                            </td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                          </tr>
+
+                          {/* Total Row - Read Only */}
+                          <tr className="bg-amber-50 border border-slate-300 font-bold">
+                            <td colSpan={4} className="border border-slate-300 px-2 py-1 text-right text-slate-900 text-xs">TOTAL</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-slate-900"></td>
+                            <td className="border border-slate-300 px-2 py-1 text-right text-amber-700 bg-amber-100 text-xs">{grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -282,7 +400,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                       <div className="flex justify-between text-base bg-amber-50 p-3 rounded-lg border border-amber-200">
                         <span className="font-bold text-slate-900">Net Amount to Customer on Solar Investment</span>
                         <span className="font-bold text-amber-700">
-                          {(((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0)) - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                          {(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })}
                         </span>
                       </div>
                     </div>
@@ -291,7 +409,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                     <div className="pt-4 border-t border-slate-200 grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payback Period</p>
-                        <p className="text-lg font-bold text-slate-900">~{(((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0) - (data.subsidy || 0)) / data.annualSavings).toFixed(1)} Years</p>
+                        <p className="text-lg font-bold text-slate-900">~{((grandTotal - (data.subsidy || 0)) / data.annualSavings).toFixed(1)} Years</p>
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">25-Year Savings</p>

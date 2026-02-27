@@ -111,3 +111,44 @@
 .pdf-capture [class*="text-"] { color: currentColor; }
 .pdf-capture [class*="bg-"] { background-color: inherit; }
 .pdf-capture [class*="border-"] { border-color: inherit; }
+
+/* Quotation Table Input Styles */
+#quotation-content input[type="number"],
+#quotation-content input[type="text"],
+#quotation-content textarea {
+  font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.25rem 0.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.25rem;
+  background-color: #ffffff;
+  color: #0f172a;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+#quotation-content input[type="number"]:focus,
+#quotation-content input[type="text"]:focus,
+#quotation-content textarea:focus {
+  outline: none;
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2);
+}
+
+#quotation-content textarea {
+  resize: vertical;
+  min-height: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+/* Print styles for inputs */
+@media print {
+  #quotation-content input[type="number"],
+  #quotation-content input[type="text"],
+  #quotation-content textarea {
+    border: 1px solid #e2e8f0 !important;
+    background-color: transparent !important;
+  }
+}

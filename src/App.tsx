@@ -302,7 +302,13 @@ export default function App() {
         pixelsPerMeter={pixelsPerMeter}
         panels={panels}
         selectedIds={selectedIds}
-        onPanelSelect={(panelId) => setSelectedIds([panelId])}
+        onPanelSelect={(panelId) => {
+          setSelectedIds(prev =>
+            prev.includes(panelId)
+              ? prev.filter(id => id !== panelId)
+              : [...prev, panelId]
+          );
+        }}
       />
 
       <main className="flex-1 relative" ref={containerRef}>
