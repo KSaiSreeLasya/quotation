@@ -1,11 +1,18 @@
 import React, { useMemo } from 'react';
-import { BarChart3, Info } from 'lucide-react';
-import { 
+import { BarChart3, Info, AlertTriangle, TrendingUp } from 'lucide-react';
+import {
   calculateOptimalTiltAngle,
   getDirectionEfficiency,
   getTiltEfficiency,
   calculateSystemEfficiency
 } from '../utils/solarCalculations';
+import {
+  getEfficiencyColor,
+  getEfficiencyBgColor,
+  getSeverityColor,
+  getEfficiencyMetrics,
+  getSeverityHexColor,
+} from '../utils/efficiencyUtils';
 
 interface EfficiencyComparisonProps {
   latitude: number;
@@ -150,13 +157,16 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
 
   const getBarColor = (scenario: EnergyScenario) => {
     if (scenario.isOptimal) return 'bg-emerald-500';
-    if (scenario.isCurrent) return 'bg-amber-500';
+    if (scenario.isCurrent) {
+      const metrics = getEfficiencyMetrics(scenario.efficiency);
+      return getSeverityColor(metrics.severity);
+    }
     return 'bg-slate-400';
   };
 
   const getTextColor = (scenario: EnergyScenario) => {
     if (scenario.isOptimal) return 'text-emerald-700';
-    if (scenario.isCurrent) return 'text-amber-700';
+    if (scenario.isCurrent) return getEfficiencyColor(scenario.efficiency);
     return 'text-slate-700';
   };
 
@@ -179,16 +189,36 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
       <div className="space-y-3">
         {scenarios.map((scenario, idx) => {
           const barWidth = ((scenario.annualKwh - minAnnual) / range) * 100;
+          const optimalScenario = scenarios.find(s => s.isOptimal)!;
           const percentageVsOptimal = scenario.isOptimal
             ? 100
-            : (scenario.annualKwh / scenarios.find(s => s.isOptimal)!.annualKwh) * 100;
+            : (scenario.annualKwh / optimalScenario.annualKwh) * 100;
+          const currentMetrics = scenario.isCurrent ? getEfficiencyMetrics(scenario.efficiency) : null;
+          const isSuboptimal = scenario.isCurrent && percentageVsOptimal < 85;
 
           return (
-            <div key={idx} className="space-y-1">
+            <div key={idx} className={`space-y-1 p-2 rounded-lg transition-all ${
+              isSuboptimal ? 'bg-rose-50 border border-rose-200' : 'bg-transparent'
+            }`}>
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold text-slate-900">{scenario.name}</p>
-                  <p className="text-[10px] text-slate-500">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-semibold text-slate-900">{scenario.name}</p>
+                    {scenario.isOptimal && (
+                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded">BEST</span>
+                    )}
+                    {scenario.isCurrent && currentMetrics && (
+                      <span className={`text-[10px] font-bold ${currentMetrics.color} ${currentMetrics.bgColor} px-2 py-0.5 rounded`}>
+                        CURRENT
+                      </span>
+                    )}
+                    {isSuboptimal && (
+                      <span className="text-[10px] font-bold text-rose-600 bg-rose-100 px-2 py-0.5 rounded flex items-center gap-1">
+                        <AlertTriangle size={8} /> WARN
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-1">
                     {Math.round(scenario.azimuth)}° | Tilt: {Math.round(scenario.tiltAngle)}°
                   </p>
                 </div>
@@ -209,8 +239,10 @@ const EfficiencyComparison: React.FC<EfficiencyComparisonProps> = ({
                     opacity: scenario.isCurrent || scenario.isOptimal ? 1 : 0.7,
                   }}
                 />
-                {scenario.isCurrent && (
-                  <div className="absolute inset-0 border-2 border-amber-500 rounded-full" />
+                {scenario.isCurrent && currentMetrics && (
+                  <div className="absolute inset-0 border-2 rounded-full" style={{
+                    borderColor: getSeverityHexColor(currentMetrics.severity)
+                  }} />
                 )}
               </div>
             </div>
