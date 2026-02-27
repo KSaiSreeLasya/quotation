@@ -460,7 +460,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               </div>
               <div>
                 <p className="text-xs text-emerald-700 font-medium uppercase">Est. Annual Savings</p>
-                <p className="text-xl font-bold text-slate-900">${annualSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-xl font-bold text-slate-900">₹{annualSavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 <p className="text-[10px] text-emerald-600">ROI: ~{(finalAmount / annualSavings).toFixed(1)} years</p>
               </div>
             </div>
@@ -471,7 +471,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               </div>
               <div>
                 <p className="text-xs text-slate-500 font-medium uppercase">25-Year Savings</p>
-                <p className="text-xl font-bold text-slate-900">${(annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                <p className="text-xl font-bold text-slate-900">₹{(annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                 <p className="text-[10px] text-slate-400">Incl. degradation & maintenance</p>
               </div>
             </div>
