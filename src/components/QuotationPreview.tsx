@@ -210,26 +210,79 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
             <div className="bg-slate-50 rounded-3xl p-8 space-y-6">
               <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Investment Breakdown</h3>
-              
+
               <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Solar Panels ({data.panelCount} units)</span>
-                  <span className="font-medium text-slate-900">₹{data.breakdown.panels.toLocaleString()}</span>
+                {/* Standard Breakdown */}
+                <div className="border-b border-slate-200 pb-4">
+                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Standard Components</p>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-600">Solar Panels ({data.panelCount} units)</span>
+                      <span className="font-medium text-slate-900">₹{data.breakdown.panels.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-600">Mounting Structure</span>
+                      <span className="font-medium text-slate-900">₹{data.breakdown.structure.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-600">Inverter & Components</span>
+                      <span className="font-medium text-slate-900">₹{data.breakdown.inverter.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-600">Installation & Labor</span>
+                      <span className="font-medium text-slate-900">₹{data.breakdown.installation.toLocaleString()}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Mounting Structure</span>
-                  <span className="font-medium text-slate-900">₹{data.breakdown.structure.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Inverter & Components</span>
-                  <span className="font-medium text-slate-900">₹{data.breakdown.inverter.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-600">Installation & Labor</span>
-                  <span className="font-medium text-slate-900">₹{data.breakdown.installation.toLocaleString()}</span>
-                </div>
-                
-                <div className="pt-4 border-t border-slate-200 flex justify-between">
+
+                {/* Quotation Pricing Configuration Breakdown */}
+                {data.panelCost !== undefined && (
+                  <div className="border-b border-slate-200 pb-4">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Quotation Pricing</p>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600">Solar Panels ({data.panelCapacityWatts}W × {data.panelCount} units)</span>
+                        <span className="font-medium text-slate-900">₹{(data.panelCost || 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600">Panel GST ({data.panelGstPercent}%)</span>
+                        <span className="font-medium text-slate-900">₹{((data.panelCostWithGst || 0) - (data.panelCost || 0)).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm bg-amber-50 p-2 rounded border border-amber-100">
+                        <span className="text-slate-600 font-medium">Solar Panels (with GST)</span>
+                        <span className="font-bold text-amber-700">₹{(data.panelCostWithGst || 0).toLocaleString()}</span>
+                      </div>
+
+                      <div className="flex justify-between text-sm mt-3">
+                        <span className="text-slate-600">Net Meter Cost</span>
+                        <span className="font-medium text-slate-900">₹{(data.netMeterCost || 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600">Net Meter GST ({data.netMeterGstPercent}%)</span>
+                        <span className="font-medium text-slate-900">₹{((data.netMeterCostWithGst || 0) - (data.netMeterCost || 0)).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm bg-blue-50 p-2 rounded border border-blue-100">
+                        <span className="text-slate-600 font-medium">Net Meter (with GST)</span>
+                        <span className="font-bold text-blue-700">₹{(data.netMeterCostWithGst || 0).toLocaleString()}</span>
+                      </div>
+
+                      <div className="flex justify-between text-sm mt-3">
+                        <span className="text-slate-600">Subsidy Charges</span>
+                        <span className="font-medium text-slate-900">₹{(data.subsidyCharges || 0).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-slate-600">Subsidy GST ({data.subsidyGstPercent}%)</span>
+                        <span className="font-medium text-slate-900">₹{((data.subsidyCostWithGst || 0) - (data.subsidyCharges || 0)).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between text-sm bg-purple-50 p-2 rounded border border-purple-100">
+                        <span className="text-slate-600 font-medium">Subsidy Charges (with GST)</span>
+                        <span className="font-bold text-purple-700">₹{(data.subsidyCostWithGst || 0).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pt-2 flex justify-between">
                   <span className="font-bold text-slate-900">Total System Cost</span>
                   <span className="font-bold text-slate-900">₹{data.totalCost.toLocaleString()}</span>
                 </div>

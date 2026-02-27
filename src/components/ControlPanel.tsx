@@ -7,6 +7,7 @@ import EfficiencyComparison from './EfficiencyComparison';
 import RooftopAnalysis from './RooftopAnalysis';
 import ShadingAnalysis from './ShadingAnalysis';
 import PlacementAdvisor from './PlacementAdvisor';
+import QuotationPricingConfig from './QuotationPricingConfig';
 import { Panel } from '../types';
 
 interface ControlPanelProps {
@@ -70,6 +71,15 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [customerContact, setCustomerContact] = useState('');
   const [showAdvancedAnalysis, setShowAdvancedAnalysis] = useState(false);
 
+  // Pricing Configuration
+  const [panelCapacityWatts, setPanelCapacityWatts] = useState(550); // Default 550W
+  const [costPerWatt, setCostPerWatt] = useState(53.5); // Default ₹53.5/watt
+  const [panelGstPercent, setPanelGstPercent] = useState(8.9);
+  const [netMeterCost, setNetMeterCost] = useState(1500);
+  const [netMeterGstPercent, setNetMeterGstPercent] = useState(18);
+  const [subsidyCharges, setSubsidyCharges] = useState(1500);
+  const [subsidyGstPercent, setSubsidyGstPercent] = useState(18);
+
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
     if (deg >= 315 || deg <= 45) return ORIENTATION_EFFICIENCY.NORTH;
@@ -98,6 +108,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const subsidy = totalCost * SUBSIDY_PERCENTAGE;
   const finalAmount = totalCost - subsidy;
 
+  // Calculate pricing based on configuration
+  const panelCostByConfig = panelCapacityWatts * costPerWatt * panelCount;
+  const panelCostByConfigWithGst = panelCostByConfig * (1 + panelGstPercent / 100);
+  const netMeterWithGst = netMeterCost * (1 + netMeterGstPercent / 100);
+  const subsidyWithGst = subsidyCharges * (1 + subsidyGstPercent / 100);
+
   const calculateQuotation = () => {
     onGenerateQuotation({
       customerName,
@@ -117,7 +133,20 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         inverter: inverterCost,
         structure: structureCost,
         installation: installationCost,
-      }
+      },
+      // Pricing Configuration
+      panelCapacityWatts,
+      costPerWatt,
+      panelGstPercent,
+      netMeterCost,
+      netMeterGstPercent,
+      subsidyCharges,
+      subsidyGstPercent,
+      // Calculated pricing
+      panelCost: panelCostByConfig,
+      panelCostWithGst: panelCostByConfigWithGst,
+      netMeterCostWithGst: netMeterWithGst,
+      subsidyCostWithGst: subsidyWithGst,
     });
   };
 
@@ -298,6 +327,28 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               Clear Boundary
             </button>
           )}
+        </section>
+
+        {/* Quotation Pricing Configuration */}
+        <section>
+          <QuotationPricingConfig
+            panelCapacityWatts={panelCapacityWatts}
+            costPerWatt={costPerWatt}
+            panelGstPercent={panelGstPercent}
+            netMeterCost={netMeterCost}
+            netMeterGstPercent={netMeterGstPercent}
+            subsidyCharges={subsidyCharges}
+            subsidyGstPercent={subsidyGstPercent}
+            onUpdate={(config) => {
+              setPanelCapacityWatts(config.panelCapacityWatts);
+              setCostPerWatt(config.costPerWatt);
+              setPanelGstPercent(config.panelGstPercent);
+              setNetMeterCost(config.netMeterCost);
+              setNetMeterGstPercent(config.netMeterGstPercent);
+              setSubsidyCharges(config.subsidyCharges);
+              setSubsidyGstPercent(config.subsidyGstPercent);
+            }}
+          />
         </section>
 
         {/* Smart Analysis Tools */}
