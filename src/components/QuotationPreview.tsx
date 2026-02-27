@@ -208,107 +208,125 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
               </div>
             </div>
 
-            <div className="bg-slate-50 rounded-3xl p-8 space-y-6">
-              <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Investment Breakdown</h3>
+            <div className="bg-white rounded-3xl p-8 space-y-6">
+              <div className="space-y-6">
+                {/* Quotation Table */}
+                {data.panelCost !== undefined ? (
+                  <>
+                    <h3 className="text-lg font-bold text-slate-900 text-center">QUOTATION</h3>
 
-              <div className="space-y-4">
-                {/* Standard Breakdown */}
-                <div className="border-b border-slate-200 pb-4">
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Standard Components</p>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Solar Panels ({data.panelCount} units)</span>
-                      <span className="font-medium text-slate-900">₹{data.breakdown.panels.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Mounting Structure</span>
-                      <span className="font-medium text-slate-900">₹{data.breakdown.structure.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Inverter & Components</span>
-                      <span className="font-medium text-slate-900">₹{data.breakdown.inverter.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Installation & Labor</span>
-                      <span className="font-medium text-slate-900">₹{data.breakdown.installation.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse text-sm">
+                        <thead>
+                          <tr className="bg-slate-200 border border-slate-300">
+                            <th className="border border-slate-300 p-3 text-left font-bold text-slate-900">Description</th>
+                            <th className="border border-slate-300 p-3 text-center font-bold text-slate-900 w-16">Qty</th>
+                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-24">Price(₹)</th>
+                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-24">Sub Total(₹)</th>
+                            <th className="border border-slate-300 p-3 text-center font-bold text-slate-900 w-20">GST(%)</th>
+                            <th className="border border-slate-300 p-3 text-right font-bold text-slate-900 w-28">Total Price(₹)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {/* Solar Panels Row */}
+                          <tr className="border border-slate-300">
+                            <td className="border border-slate-300 p-3 text-slate-900">
+                              <div className="font-semibold">Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant</div>
+                              <div className="text-xs text-slate-600 mt-1">Solar Plant Capacity: {data.systemSizeKw.toFixed(2)}kWp</div>
+                            </td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.panelCount}</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.panelCapacityWatts ? (data.panelCost! / data.panelCount) : 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.panelCost || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.panelGstPercent}%</td>
+                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.panelCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                          </tr>
 
-                {/* Quotation Pricing Configuration Breakdown */}
-                {data.panelCost !== undefined && (
-                  <div className="border-b border-slate-200 pb-4">
-                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Quotation Pricing</p>
+                          {/* Net Meter Row */}
+                          <tr className="border border-slate-300">
+                            <td className="border border-slate-300 p-3 text-slate-900 font-semibold">Net-Meter Application Fee</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">1</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.netMeterCost || 0).toLocaleString()}</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.netMeterCost || 0).toLocaleString()}</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.netMeterGstPercent}%</td>
+                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.netMeterCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                          </tr>
+
+                          {/* Subsidy Row */}
+                          <tr className="border border-slate-300">
+                            <td className="border border-slate-300 p-3 text-slate-900 font-semibold">Subsidy Application Charges</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">1.0</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.subsidyCharges || 0).toLocaleString()}</td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">{(data.subsidyCharges || 0).toLocaleString()}</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900">{data.subsidyGstPercent}%</td>
+                            <td className="border border-slate-300 p-3 text-right font-bold text-slate-900">{(data.subsidyCostWithGst || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                          </tr>
+
+                          {/* Total Row */}
+                          <tr className="bg-slate-100 border border-slate-300 font-bold">
+                            <td colSpan={4} className="border border-slate-300 p-3 text-right text-slate-900">Total</td>
+                            <td className="border border-slate-300 p-3 text-center text-slate-900"></td>
+                            <td className="border border-slate-300 p-3 text-right text-slate-900">
+                              {((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Summary Section */}
+                    <div className="space-y-2 mt-6">
+                      <div className="flex justify-between text-base">
+                        <span className="font-semibold text-slate-900">Subsidy will be credited in you Bank account</span>
+                        <span className="font-bold text-emerald-600">{(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+                      </div>
+                      <div className="flex justify-between text-base bg-amber-50 p-3 rounded-lg border border-amber-200">
+                        <span className="font-bold text-slate-900">Net Amount to Customer on Solar Investment</span>
+                        <span className="font-bold text-amber-700">
+                          {(((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0)) - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Additional Metrics */}
+                    <div className="pt-4 border-t border-slate-200 grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payback Period</p>
+                        <p className="text-lg font-bold text-slate-900">~{(((data.panelCostWithGst || 0) + (data.netMeterCostWithGst || 0) + (data.subsidyCostWithGst || 0) - (data.subsidy || 0)) / data.annualSavings).toFixed(1)} Years</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">25-Year Savings</p>
+                        <p className="text-lg font-bold text-emerald-700">₹{(data.annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Fallback for when pricing config is not available */
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Investment Breakdown</h3>
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Solar Panels ({data.panelCapacityWatts}W × {data.panelCount} units)</span>
-                        <span className="font-medium text-slate-900">₹{(data.panelCost || 0).toLocaleString()}</span>
+                        <span className="text-slate-600">Solar Panels ({data.panelCount} units)</span>
+                        <span className="font-medium text-slate-900">₹{data.breakdown.panels.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Panel GST ({data.panelGstPercent}%)</span>
-                        <span className="font-medium text-slate-900">₹{((data.panelCostWithGst || 0) - (data.panelCost || 0)).toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between text-sm bg-amber-50 p-2 rounded border border-amber-100">
-                        <span className="text-slate-600 font-medium">Solar Panels (with GST)</span>
-                        <span className="font-bold text-amber-700">₹{(data.panelCostWithGst || 0).toLocaleString()}</span>
-                      </div>
-
-                      <div className="flex justify-between text-sm mt-3">
-                        <span className="text-slate-600">Net Meter Cost</span>
-                        <span className="font-medium text-slate-900">₹{(data.netMeterCost || 0).toLocaleString()}</span>
+                        <span className="text-slate-600">Mounting Structure</span>
+                        <span className="font-medium text-slate-900">₹{data.breakdown.structure.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Net Meter GST ({data.netMeterGstPercent}%)</span>
-                        <span className="font-medium text-slate-900">₹{((data.netMeterCostWithGst || 0) - (data.netMeterCost || 0)).toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between text-sm bg-blue-50 p-2 rounded border border-blue-100">
-                        <span className="text-slate-600 font-medium">Net Meter (with GST)</span>
-                        <span className="font-bold text-blue-700">₹{(data.netMeterCostWithGst || 0).toLocaleString()}</span>
-                      </div>
-
-                      <div className="flex justify-between text-sm mt-3">
-                        <span className="text-slate-600">Subsidy Charges</span>
-                        <span className="font-medium text-slate-900">₹{(data.subsidyCharges || 0).toLocaleString()}</span>
+                        <span className="text-slate-600">Inverter & Components</span>
+                        <span className="font-medium text-slate-900">₹{data.breakdown.inverter.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-600">Subsidy GST ({data.subsidyGstPercent}%)</span>
-                        <span className="font-medium text-slate-900">₹{((data.subsidyCostWithGst || 0) - (data.subsidyCharges || 0)).toLocaleString()}</span>
+                        <span className="text-slate-600">Installation & Labor</span>
+                        <span className="font-medium text-slate-900">₹{data.breakdown.installation.toLocaleString()}</span>
                       </div>
-                      <div className="flex justify-between text-sm bg-purple-50 p-2 rounded border border-purple-100">
-                        <span className="text-slate-600 font-medium">Subsidy Charges (with GST)</span>
-                        <span className="font-bold text-purple-700">₹{(data.subsidyCostWithGst || 0).toLocaleString()}</span>
+                      <div className="pt-2 border-t flex justify-between font-bold">
+                        <span className="text-slate-900">Total System Cost</span>
+                        <span className="text-slate-900">₹{data.totalCost.toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
                 )}
-
-                <div className="pt-2 flex justify-between">
-                  <span className="font-bold text-slate-900">Total System Cost</span>
-                  <span className="font-bold text-slate-900">₹{data.totalCost.toLocaleString()}</span>
-                </div>
-
-                <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 p-3 rounded-xl border border-emerald-100">
-                  <span>Government Subsidy (30%)</span>
-                  <span>-₹{data.subsidy.toLocaleString()}</span>
-                </div>
-
-                <div className="pt-6 flex justify-between items-end">
-                  <div>
-                    <p className="text-xs text-slate-400 font-bold uppercase">Final Amount</p>
-                    <p className="text-3xl font-black text-slate-900">₹{data.finalAmount.toLocaleString()}</p>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-slate-200 grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Payback Period</p>
-                    <p className="text-lg font-bold text-slate-900">~{(data.finalAmount / data.annualSavings).toFixed(1)} Years</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">25-Year Savings</p>
-                    <p className="text-lg font-bold text-emerald-700">₹{(data.annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
