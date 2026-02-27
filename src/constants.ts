@@ -3,7 +3,7 @@ export const PANEL_HEIGHT_METERS = 2.278; // standard 550W panel height in meter
 
 export const PANEL_WATTAGE = 550; // 550W per panel
 export const PANEL_KW = PANEL_WATTAGE / 1000; 
-export const PANEL_COST = 450; // $ per panel
+export const PANEL_COST = 450; // ₹ per panel
 export const STRUCTURE_COST_PER_PANEL = 80;
 export const INVERTER_BASE_COST = 1500;
 export const INVERTER_KW_COST = 300;
@@ -11,9 +11,9 @@ export const INSTALLATION_BASE_COST = 3000;
 export const SUBSIDY_PERCENTAGE = 0.30; // 30% federal credit
 
 export const AVG_SUN_HOURS_PER_DAY = 4.5;
-export const ELECTRICITY_RATE = 0.18; // $ per kWh
+export const ELECTRICITY_RATE = 0.18; // ₹ per kWh
 export const ANNUAL_DEGRADATION = 0.005; // 0.5% per year
-export const MAINTENANCE_COST_YEARLY = 150; // $ per year
+export const MAINTENANCE_COST_YEARLY = 150; // ₹ per year
 
 export const PANEL_SPACING_METERS = 0.05; // 5cm between panels in a row
 export const ROW_SPACING_METERS = 0.5; // 50cm between rows for maintenance/shading

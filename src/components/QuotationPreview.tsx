@@ -202,7 +202,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   </div>
                   <div className="flex justify-between py-2 border-b border-slate-50">
                     <span className="text-slate-600">Est. Annual Savings</span>
-                    <span className="font-bold text-emerald-600">${data.annualSavings.toLocaleString()}</span>
+                    <span className="font-bold text-emerald-600">₹{data.annualSavings.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -214,35 +214,35 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
               <div className="space-y-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Solar Panels ({data.panelCount} units)</span>
-                  <span className="font-medium text-slate-900">${data.breakdown.panels.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">₹{data.breakdown.panels.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Mounting Structure</span>
-                  <span className="font-medium text-slate-900">${data.breakdown.structure.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">₹{data.breakdown.structure.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Inverter & Components</span>
-                  <span className="font-medium text-slate-900">${data.breakdown.inverter.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">₹{data.breakdown.inverter.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-600">Installation & Labor</span>
-                  <span className="font-medium text-slate-900">${data.breakdown.installation.toLocaleString()}</span>
+                  <span className="font-medium text-slate-900">₹{data.breakdown.installation.toLocaleString()}</span>
                 </div>
                 
                 <div className="pt-4 border-t border-slate-200 flex justify-between">
                   <span className="font-bold text-slate-900">Total System Cost</span>
-                  <span className="font-bold text-slate-900">${data.totalCost.toLocaleString()}</span>
+                  <span className="font-bold text-slate-900">₹{data.totalCost.toLocaleString()}</span>
                 </div>
 
                 <div className="flex justify-between text-emerald-600 font-medium bg-emerald-50 p-3 rounded-xl border border-emerald-100">
                   <span>Government Subsidy (30%)</span>
-                  <span>-${data.subsidy.toLocaleString()}</span>
+                  <span>-₹{data.subsidy.toLocaleString()}</span>
                 </div>
 
                 <div className="pt-6 flex justify-between items-end">
                   <div>
                     <p className="text-xs text-slate-400 font-bold uppercase">Final Amount</p>
-                    <p className="text-3xl font-black text-slate-900">${data.finalAmount.toLocaleString()}</p>
+                    <p className="text-3xl font-black text-slate-900">₹{data.finalAmount.toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -253,7 +253,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mb-1">25-Year Savings</p>
-                    <p className="text-lg font-bold text-emerald-700">${(data.annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+                    <p className="text-lg font-bold text-emerald-700">₹{(data.annualSavings * 25 * 0.9).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
                   </div>
                 </div>
               </div>
