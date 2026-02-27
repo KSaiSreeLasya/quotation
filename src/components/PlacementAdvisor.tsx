@@ -132,7 +132,11 @@ const PlacementAdvisor: React.FC<PlacementAdvisorProps> = ({
                 <div
                   key={panel.panelId}
                   onClick={() => onPanelSelect?.(panel.panelId)}
-                  className="p-2 bg-rose-50 border border-rose-200 rounded-lg cursor-pointer hover:bg-rose-100 transition-all text-xs"
+                  className={`p-2 border-2 rounded-lg cursor-pointer transition-all text-xs ${
+                    selectedIds.includes(panel.panelId)
+                      ? 'bg-rose-200 border-rose-600 shadow-md'
+                      : 'bg-rose-50 border-rose-200 hover:bg-rose-100'
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -163,7 +167,11 @@ const PlacementAdvisor: React.FC<PlacementAdvisorProps> = ({
                 <div
                   key={panel.panelId}
                   onClick={() => onPanelSelect?.(panel.panelId)}
-                  className="p-2 bg-amber-50 border border-amber-200 rounded-lg cursor-pointer hover:bg-amber-100 transition-all text-xs"
+                  className={`p-2 border-2 rounded-lg cursor-pointer transition-all text-xs ${
+                    selectedIds.includes(panel.panelId)
+                      ? 'bg-amber-200 border-amber-600 shadow-md'
+                      : 'bg-amber-50 border-amber-200 hover:bg-amber-100'
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -193,7 +201,12 @@ const PlacementAdvisor: React.FC<PlacementAdvisorProps> = ({
               {goodPanels.map(panel => (
                 <div
                   key={panel.panelId}
-                  className="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-xs"
+                  onClick={() => onPanelSelect?.(panel.panelId)}
+                  className={`p-2 border-2 rounded-lg cursor-pointer transition-all text-xs ${
+                    selectedIds.includes(panel.panelId)
+                      ? 'bg-emerald-200 border-emerald-600 shadow-md'
+                      : 'bg-emerald-50 border-emerald-200 hover:bg-emerald-100'
+                  }`}
                 >
                   <div className="flex items-start justify-between">
                     <div>
