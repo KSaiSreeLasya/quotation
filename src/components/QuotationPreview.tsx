@@ -250,142 +250,142 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   <>
                     <h3 className="text-lg font-bold text-slate-900 text-center">QUOTATION</h3>
 
-                    <div className="w-full">
-                      <table className="w-full border-collapse text-sm">
+                    <div className="w-full overflow-x-auto">
+                      <table className="w-full border-collapse text-xs">
                         <thead>
                           <tr className="bg-slate-200 border border-slate-300">
-                            <th className="border border-slate-300 p-2 text-left font-bold text-slate-900 min-w-56">Description</th>
-                            <th className="border border-slate-300 p-2 text-center font-bold text-slate-900 min-w-12">Qty</th>
-                            <th className="border border-slate-300 p-2 text-right font-bold text-slate-900 min-w-20">Price(₹)</th>
-                            <th className="border border-slate-300 p-2 text-right font-bold text-slate-900 min-w-20">Sub Total(₹)</th>
-                            <th className="border border-slate-300 p-2 text-center font-bold text-slate-900 min-w-16">GST(%)</th>
-                            <th className="border border-slate-300 p-2 text-right font-bold text-slate-900 min-w-24">Total Price(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-left font-bold text-slate-900 w-32">Description</th>
+                            <th className="border border-slate-300 px-2 py-1 text-center font-bold text-slate-900 w-10">Qty</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Price(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Sub(₹)</th>
+                            <th className="border border-slate-300 px-2 py-1 text-center font-bold text-slate-900 w-10">GST%</th>
+                            <th className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 w-16">Total(₹)</th>
                           </tr>
                         </thead>
                         <tbody>
                           {/* Solar Panels Row - Editable */}
                           <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-2 text-slate-900">
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
                               <textarea
                                 value={panelDescription}
                                 onChange={(e) => setPanelDescription(e.target.value)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm resize-none font-semibold"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs resize-none font-semibold"
                                 rows={2}
                               />
-                              <div className="text-xs text-slate-600 mt-1">Solar Plant Capacity: {data.systemSizeKw.toFixed(2)}kWp</div>
+                              <div className="text-[10px] text-slate-600 mt-1">Cap: {data.systemSizeKw.toFixed(2)}kWp</div>
                             </td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={panelQty}
                                 onChange={(e) => setPanelQty(parseInt(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right">
+                            <td className="border border-slate-300 px-2 py-1 text-right">
                               <input
                                 type="number"
                                 value={panelPrice}
                                 onChange={(e) => setPanelPrice(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-right"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right text-slate-900 font-semibold">{panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={panelGst}
                                 onChange={(e) => setPanelGst(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                                 step="0.1"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right font-bold text-slate-900">{panelTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                           </tr>
 
                           {/* Net Meter Row - Editable */}
                           <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-2 text-slate-900">
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
                               <input
                                 type="text"
                                 value={netMeterDescription}
                                 onChange={(e) => setNetMeterDescription(e.target.value)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm font-semibold"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs font-semibold"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={netMeterQty}
                                 onChange={(e) => setNetMeterQty(parseInt(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right">
+                            <td className="border border-slate-300 px-2 py-1 text-right">
                               <input
                                 type="number"
                                 value={netMeterPrice}
                                 onChange={(e) => setNetMeterPrice(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-right"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right text-slate-900 font-semibold">{netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={netMeterGst}
                                 onChange={(e) => setNetMeterGst(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                                 step="0.1"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right font-bold text-slate-900">{netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                           </tr>
 
                           {/* Subsidy Row - Editable */}
                           <tr className="border border-slate-300">
-                            <td className="border border-slate-300 p-2 text-slate-900">
+                            <td className="border border-slate-300 px-2 py-1 text-slate-900">
                               <input
                                 type="text"
                                 value={subsidyDescription}
                                 onChange={(e) => setSubsidyDescription(e.target.value)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm font-semibold"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs font-semibold"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={subsidyQty}
                                 onChange={(e) => setSubsidyQty(parseInt(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right">
+                            <td className="border border-slate-300 px-2 py-1 text-right">
                               <input
                                 type="number"
                                 value={subsidyPrice}
                                 onChange={(e) => setSubsidyPrice(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-right"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-right"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right text-slate-900 font-semibold">{subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
-                            <td className="border border-slate-300 p-2 text-center">
+                            <td className="border border-slate-300 px-2 py-1 text-right text-slate-900 font-semibold text-xs">{subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center">
                               <input
                                 type="number"
                                 value={subsidyGst}
                                 onChange={(e) => setSubsidyGst(parseFloat(e.target.value) || 0)}
-                                className="w-full p-1 border border-slate-300 rounded text-sm text-center"
+                                className="w-full p-0.5 border border-slate-300 rounded text-xs text-center"
                                 step="0.1"
                               />
                             </td>
-                            <td className="border border-slate-300 p-2 text-right font-bold text-slate-900">{subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td className="border border-slate-300 px-2 py-1 text-right font-bold text-slate-900 text-xs">{subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                           </tr>
 
                           {/* Total Row - Read Only */}
                           <tr className="bg-amber-50 border border-slate-300 font-bold">
-                            <td colSpan={4} className="border border-slate-300 p-2 text-right text-slate-900">TOTAL AMOUNT</td>
-                            <td className="border border-slate-300 p-2 text-center text-slate-900"></td>
-                            <td className="border border-slate-300 p-2 text-right text-amber-700 bg-amber-100">{grandTotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}</td>
+                            <td colSpan={4} className="border border-slate-300 px-2 py-1 text-right text-slate-900 text-xs">TOTAL</td>
+                            <td className="border border-slate-300 px-2 py-1 text-center text-slate-900"></td>
+                            <td className="border border-slate-300 px-2 py-1 text-right text-amber-700 bg-amber-100 text-xs">{grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                           </tr>
                         </tbody>
                       </table>
