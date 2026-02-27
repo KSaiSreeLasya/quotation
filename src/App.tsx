@@ -300,6 +300,9 @@ export default function App() {
         isGenerating={isGenerating}
         boundary={boundary}
         pixelsPerMeter={pixelsPerMeter}
+        panels={panels}
+        selectedIds={selectedIds}
+        onPanelSelect={(panelId) => setSelectedIds([panelId])}
       />
 
       <main className="flex-1 relative" ref={containerRef}>
@@ -326,6 +329,7 @@ export default function App() {
             screenToLatLng={screenToLatLng}
             pixelsPerMeter={pixelsPerMeter}
             backgroundImageUrl={backgroundImageUrl}
+            latitude={location.lat}
           />
         )}
 
