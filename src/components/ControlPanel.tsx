@@ -147,6 +147,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       panelCostWithGst: panelCostByConfigWithGst,
       netMeterCostWithGst: netMeterWithGst,
       subsidyCostWithGst: subsidyWithGst,
+      // Electricity and Profit Analysis
+      monthlyUnitsConsumedBefore: 360,
+      monthlyUnitsConsumedAfter: 50,
+      monthlyBillBefore: 2330,
+      monthlyBillAfter: 97.5,
+      tariffIncrement: 2,
     });
   };
 
