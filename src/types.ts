@@ -20,6 +20,22 @@ export interface Location {
   address: string;
 }
 
+export interface ElectricityTariff {
+  range: string;
+  tariff: number;
+  units: number;
+}
+
+export interface BillOfMaterial {
+  id: string;
+  sNo: number;
+  description: string;
+  specifications: string;
+  make: string;
+  uom: string;
+  quantity: number;
+}
+
 export interface QuotationData {
   customerName: string;
   customerContact: string;
@@ -53,4 +69,15 @@ export interface QuotationData {
   panelCostWithGst?: number;
   netMeterCostWithGst?: number;
   subsidyCostWithGst?: number;
+  // Electricity and Profit Analysis
+  electricityBeforeTariffs?: ElectricityTariff[];
+  electricityAfterTariffs?: ElectricityTariff[];
+  monthlyUnitsConsumedBefore?: number;
+  monthlyUnitsConsumedAfter?: number;
+  monthlyBillBefore?: number;
+  monthlyBillAfter?: number;
+  annualBill?: number;
+  powerBillNext25Years?: number;
+  tariffIncrement?: number;
+  billOfMaterials?: BillOfMaterial[];
 }
