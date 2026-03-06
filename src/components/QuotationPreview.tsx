@@ -97,89 +97,91 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
     setIsDownloading(true);
     try {
-      element.classList.add('pdf-capture');
-      
-      const canvas = await html2canvas(element, { 
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: true,
-        backgroundColor: '#ffffff',
-        ignoreElements: (el) => el.classList.contains('no-pdf'),
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.getElementById('quotation-content');
-          if (clonedElement) {
-            const allElements = clonedElement.getElementsByTagName('*');
-            for (let i = 0; i < allElements.length; i++) {
-              const el = allElements[i] as HTMLElement;
-              try {
-                el.style.backdropFilter = 'none';
-                (el.style as any).webkitBackdropFilter = 'none';
-                el.style.filter = 'none';
-                el.style.transition = 'none';
-                el.style.animation = 'none';
+      // Create a temporary print-friendly container
+      const printContainer = document.createElement('div');
+      printContainer.style.position = 'absolute';
+      printContainer.style.left = '-9999px';
+      printContainer.style.top = '-9999px';
+      printContainer.style.width = '1200px';
+      printContainer.style.backgroundColor = '#ffffff';
+      printContainer.innerHTML = element.innerHTML;
 
-                if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-                  el.style.border = '1px solid #cbd5e1';
-                  el.style.backgroundColor = '#ffffff';
-                  el.style.color = '#0f172a';
-                }
-
-                const computed = window.getComputedStyle(el);
-                
-                if (computed.color.includes('okl')) {
-                  el.style.color = '#0f172a';
-                }
-                
-                if (computed.backgroundColor.includes('okl')) {
-                  if (el.classList.contains('bg-amber-500')) el.style.backgroundColor = '#f59e0b';
-                  else if (el.classList.contains('bg-slate-50')) el.style.backgroundColor = '#f8fafc';
-                  else if (el.classList.contains('bg-slate-900')) el.style.backgroundColor = '#0f172a';
-                  else if (el.classList.contains('bg-emerald-50')) el.style.backgroundColor = '#ecfdf5';
-                  else if (el.classList.contains('bg-green-100')) el.style.backgroundColor = '#dcfce7';
-                  else el.style.backgroundColor = 'transparent';
-                }
-                
-                if (computed.borderColor.includes('okl')) {
-                  el.style.borderColor = '#e2e8f0';
-                }
-
-                if (el instanceof SVGElement) {
-                  const fill = el.getAttribute('fill');
-                  if (fill && fill.includes('okl')) el.setAttribute('fill', 'currentColor');
-                  const stroke = el.getAttribute('stroke');
-                  if (stroke && stroke.includes('okl')) el.setAttribute('stroke', 'currentColor');
-                }
-              } catch (e) {
-                // Ignore errors for individual elements
-              }
-            }
-          }
+      // Replace all input values with text
+      const inputs = printContainer.querySelectorAll('input, textarea');
+      inputs.forEach((input) => {
+        const span = document.createElement('span');
+        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
+          span.textContent = input.value;
+          span.style.color = '#0f172a';
+          span.style.fontWeight = input.className.includes('font-bold') ? 'bold' : 'normal';
+          (input.parentNode as HTMLElement)?.replaceChild(span, input);
         }
       });
 
-      element.classList.remove('pdf-capture');
+      // Replace select elements with their selected text
+      const selects = printContainer.querySelectorAll('select');
+      selects.forEach((select) => {
+        const span = document.createElement('span');
+        span.textContent = select.value;
+        span.style.color = '#0f172a';
+        (select.parentNode as HTMLElement)?.replaceChild(span, select);
+      });
+
+      // Remove buttons
+      const buttons = printContainer.querySelectorAll('button');
+      buttons.forEach(btn => btn.remove());
+
+      document.body.appendChild(printContainer);
+
+      // Wait for DOM update
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const canvas = await html2canvas(printContainer, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        windowHeight: printContainer.scrollHeight,
+        windowWidth: 1200,
+      });
+
+      document.body.removeChild(printContainer);
 
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+      });
+
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      
+
       const imgProps = pdf.getImageProperties(imgData);
-      const imgWidth = pdfWidth - 20;
-      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-      
-      let currentHeight = 10;
-      pdf.addImage(imgData, 'PNG', 10, currentHeight, imgWidth, imgHeight);
-      
-      let remainingHeight = imgHeight;
-      while (remainingHeight > pdfHeight - 20) {
-        pdf.addPage();
-        currentHeight = -remainingHeight + pdfHeight - 20;
-        pdf.addImage(imgData, 'PNG', 10, currentHeight, imgWidth, imgHeight);
-        remainingHeight -= pdfHeight - 20;
+      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      let position = 0;
+      let pageCount = 1;
+
+      while (position < imgHeight) {
+        if (position > 0) {
+          pdf.addPage();
+          pageCount++;
+        }
+
+        pdf.addImage(
+          imgData,
+          'PNG',
+          0,
+          -(position),
+          pdfWidth,
+          imgHeight
+        );
+
+        position += pdfHeight;
       }
-      
+
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
     } catch (error) {
       console.error("PDF Generation Error:", error);
