@@ -91,6 +91,62 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
     );
   };
 
+  const convertOklabToHex = (computedStyle: CSSStyleDeclaration): void => {
+    // Color mappings for common Tailwind colors used in the quotation
+    const oklabToHex: { [key: string]: string } = {
+      'oklab(0.972 -0.016 -0.038)': '#f8fafc', // slate-50
+      'oklab(0.991 -0.002 0.01)': '#ffffff', // white
+      'oklab(0.1 0 0)': '#000000', // black
+      'oklab(0.096 0 0)': '#0f172a', // slate-900
+      'oklab(0.155 0 0)': '#1e293b', // slate-800
+      'oklab(0.965 -0.015 -0.035)': '#f1f5f9', // slate-100
+      'oklab(0.944 -0.014 -0.032)': '#e2e8f0', // slate-200
+      'oklab(0.965 -0.007 0.02)': '#ecfdf5', // emerald-50
+      'oklab(0.955 -0.011 0.024)': '#d1fae5', // emerald-100
+      'oklab(0.855 -0.019 0.044)': '#10b981', // emerald-500
+      'oklab(0.155 0.007 0.044)': '#065f46', // emerald-900
+      'oklab(0.975 -0.008 0.028)': '#dcfce7', // green-100
+      'oklab(0.855 -0.014 0.036)': '#22c55e', // green-500
+      'oklab(0.976 -0.006 0.032)': '#fef3c7', // amber-100
+      'oklab(0.964 0.018 0.101)': '#f59e0b', // amber-500
+      'oklab(0.143 0.064 0.109)': '#92400e', // amber-900
+    };
+
+    const style = computedStyle.color + (computedStyle.backgroundColor ? ',' + computedStyle.backgroundColor : '');
+
+    // Try to replace oklab colors
+    for (const [oklab, hex] of Object.entries(oklabToHex)) {
+      if (computedStyle.color.includes('oklab')) {
+        // Map common oklab values to hex
+        if (computedStyle.color.includes('0.096')) {
+          (computedStyle as any).color = '#0f172a';
+        } else if (computedStyle.color.includes('0.155')) {
+          (computedStyle as any).color = '#1e293b';
+        } else {
+          (computedStyle as any).color = '#000000';
+        }
+      }
+
+      if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('oklab')) {
+        if (computedStyle.backgroundColor.includes('0.965') && computedStyle.backgroundColor.includes('-0.015')) {
+          (computedStyle as any).backgroundColor = '#f8fafc';
+        } else if (computedStyle.backgroundColor.includes('0.944')) {
+          (computedStyle as any).backgroundColor = '#e2e8f0';
+        } else if (computedStyle.backgroundColor.includes('0.965') && computedStyle.backgroundColor.includes('-0.007')) {
+          (computedStyle as any).backgroundColor = '#ecfdf5';
+        } else if (computedStyle.backgroundColor.includes('0.976') && computedStyle.backgroundColor.includes('-0.008')) {
+          (computedStyle as any).backgroundColor = '#dcfce7';
+        } else if (computedStyle.backgroundColor.includes('0.964') && computedStyle.backgroundColor.includes('0.018')) {
+          (computedStyle as any).backgroundColor = '#f59e0b';
+        } else if (computedStyle.backgroundColor.includes('0.975') && computedStyle.backgroundColor.includes('-0.006')) {
+          (computedStyle as any).backgroundColor = '#fef3c7';
+        } else {
+          (computedStyle as any).backgroundColor = '#ffffff';
+        }
+      }
+    }
+  };
+
   const downloadPDF = async () => {
     const element = document.getElementById('quotation-content');
     if (!element) return;
@@ -106,6 +162,48 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       printContainer.style.backgroundColor = '#ffffff';
       printContainer.innerHTML = element.innerHTML;
 
+      // Process all elements to fix oklab colors and convert inputs
+      const allElements = printContainer.querySelectorAll('*');
+      allElements.forEach((el) => {
+        const htmlEl = el as HTMLElement;
+        const computed = window.getComputedStyle(htmlEl);
+
+        // Fix oklab colors
+        if (computed.color.includes('oklab')) {
+          if (computed.color.includes('0.096')) {
+            htmlEl.style.color = '#0f172a';
+          } else if (computed.color.includes('0.155')) {
+            htmlEl.style.color = '#1e293b';
+          } else if (computed.color.includes('0.972')) {
+            htmlEl.style.color = '#64748b';
+          } else {
+            htmlEl.style.color = '#000000';
+          }
+        }
+
+        if (computed.backgroundColor.includes('oklab')) {
+          if (computed.backgroundColor.includes('0.972') || computed.backgroundColor.includes('0.975')) {
+            htmlEl.style.backgroundColor = '#f8fafc';
+          } else if (computed.backgroundColor.includes('0.965') && computed.backgroundColor.includes('-0.015')) {
+            htmlEl.style.backgroundColor = '#f8fafc';
+          } else if (computed.backgroundColor.includes('0.944')) {
+            htmlEl.style.backgroundColor = '#e2e8f0';
+          } else if (computed.backgroundColor.includes('0.965') && computed.backgroundColor.includes('-0.007')) {
+            htmlEl.style.backgroundColor = '#ecfdf5';
+          } else if (computed.backgroundColor.includes('0.976') && computed.backgroundColor.includes('-0.008')) {
+            htmlEl.style.backgroundColor = '#dcfce7';
+          } else if (computed.backgroundColor.includes('0.964') && computed.backgroundColor.includes('0.018')) {
+            htmlEl.style.backgroundColor = '#f59e0b';
+          } else {
+            htmlEl.style.backgroundColor = '#ffffff';
+          }
+        }
+
+        if (computed.borderColor.includes('oklab')) {
+          htmlEl.style.borderColor = '#e2e8f0';
+        }
+      });
+
       // Replace all input values with text
       const inputs = printContainer.querySelectorAll('input, textarea');
       inputs.forEach((input) => {
@@ -114,6 +212,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           span.textContent = input.value;
           span.style.color = '#0f172a';
           span.style.fontWeight = input.className.includes('font-bold') ? 'bold' : 'normal';
+          span.style.display = 'block';
+          span.style.padding = '4px 8px';
+          span.style.border = '1px solid #cbd5e1';
+          span.style.borderRadius = '4px';
+          span.style.backgroundColor = '#ffffff';
           (input.parentNode as HTMLElement)?.replaceChild(span, input);
         }
       });
@@ -124,6 +227,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         const span = document.createElement('span');
         span.textContent = select.value;
         span.style.color = '#0f172a';
+        span.style.display = 'block';
+        span.style.padding = '4px 8px';
+        span.style.border = '1px solid #cbd5e1';
+        span.style.borderRadius = '4px';
+        span.style.backgroundColor = '#ffffff';
         (select.parentNode as HTMLElement)?.replaceChild(span, select);
       });
 
@@ -134,7 +242,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       document.body.appendChild(printContainer);
 
       // Wait for DOM update
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const canvas = await html2canvas(printContainer, {
         scale: 2,
@@ -162,12 +270,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
       let position = 0;
-      let pageCount = 1;
 
       while (position < imgHeight) {
         if (position > 0) {
           pdf.addPage();
-          pageCount++;
         }
 
         pdf.addImage(
