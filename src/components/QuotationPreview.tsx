@@ -91,170 +91,244 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
     );
   };
 
-  const convertOklabToHex = (computedStyle: CSSStyleDeclaration): void => {
-    // Color mappings for common Tailwind colors used in the quotation
-    const oklabToHex: { [key: string]: string } = {
-      'oklab(0.972 -0.016 -0.038)': '#f8fafc', // slate-50
-      'oklab(0.991 -0.002 0.01)': '#ffffff', // white
-      'oklab(0.1 0 0)': '#000000', // black
-      'oklab(0.096 0 0)': '#0f172a', // slate-900
-      'oklab(0.155 0 0)': '#1e293b', // slate-800
-      'oklab(0.965 -0.015 -0.035)': '#f1f5f9', // slate-100
-      'oklab(0.944 -0.014 -0.032)': '#e2e8f0', // slate-200
-      'oklab(0.965 -0.007 0.02)': '#ecfdf5', // emerald-50
-      'oklab(0.955 -0.011 0.024)': '#d1fae5', // emerald-100
-      'oklab(0.855 -0.019 0.044)': '#10b981', // emerald-500
-      'oklab(0.155 0.007 0.044)': '#065f46', // emerald-900
-      'oklab(0.975 -0.008 0.028)': '#dcfce7', // green-100
-      'oklab(0.855 -0.014 0.036)': '#22c55e', // green-500
-      'oklab(0.976 -0.006 0.032)': '#fef3c7', // amber-100
-      'oklab(0.964 0.018 0.101)': '#f59e0b', // amber-500
-      'oklab(0.143 0.064 0.109)': '#92400e', // amber-900
-    };
-
-    const style = computedStyle.color + (computedStyle.backgroundColor ? ',' + computedStyle.backgroundColor : '');
-
-    // Try to replace oklab colors
-    for (const [oklab, hex] of Object.entries(oklabToHex)) {
-      if (computedStyle.color.includes('oklab')) {
-        // Map common oklab values to hex
-        if (computedStyle.color.includes('0.096')) {
-          (computedStyle as any).color = '#0f172a';
-        } else if (computedStyle.color.includes('0.155')) {
-          (computedStyle as any).color = '#1e293b';
-        } else {
-          (computedStyle as any).color = '#000000';
-        }
-      }
-
-      if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('oklab')) {
-        if (computedStyle.backgroundColor.includes('0.965') && computedStyle.backgroundColor.includes('-0.015')) {
-          (computedStyle as any).backgroundColor = '#f8fafc';
-        } else if (computedStyle.backgroundColor.includes('0.944')) {
-          (computedStyle as any).backgroundColor = '#e2e8f0';
-        } else if (computedStyle.backgroundColor.includes('0.965') && computedStyle.backgroundColor.includes('-0.007')) {
-          (computedStyle as any).backgroundColor = '#ecfdf5';
-        } else if (computedStyle.backgroundColor.includes('0.976') && computedStyle.backgroundColor.includes('-0.008')) {
-          (computedStyle as any).backgroundColor = '#dcfce7';
-        } else if (computedStyle.backgroundColor.includes('0.964') && computedStyle.backgroundColor.includes('0.018')) {
-          (computedStyle as any).backgroundColor = '#f59e0b';
-        } else if (computedStyle.backgroundColor.includes('0.975') && computedStyle.backgroundColor.includes('-0.006')) {
-          (computedStyle as any).backgroundColor = '#fef3c7';
-        } else {
-          (computedStyle as any).backgroundColor = '#ffffff';
-        }
-      }
-    }
-  };
-
   const downloadPDF = async () => {
-    const element = document.getElementById('quotation-content');
-    if (!element) return;
-
     setIsDownloading(true);
     try {
-      // Create a temporary print-friendly container
-      const printContainer = document.createElement('div');
-      printContainer.style.position = 'absolute';
-      printContainer.style.left = '-9999px';
-      printContainer.style.top = '-9999px';
-      printContainer.style.width = '1200px';
-      printContainer.style.backgroundColor = '#ffffff';
-      printContainer.innerHTML = element.innerHTML;
+      // Create a clean, simple HTML structure for PDF
+      const pdfContainer = document.createElement('div');
+      pdfContainer.style.position = 'absolute';
+      pdfContainer.style.left = '-9999px';
+      pdfContainer.style.width = '900px';
+      pdfContainer.style.backgroundColor = '#ffffff';
+      pdfContainer.style.padding = '40px';
+      pdfContainer.style.fontFamily = 'Arial, sans-serif';
+      pdfContainer.style.color = '#0f172a';
+      pdfContainer.style.fontSize = '12px';
+      pdfContainer.style.lineHeight = '1.6';
 
-      // Process all elements to fix oklab colors and convert inputs
-      const allElements = printContainer.querySelectorAll('*');
-      allElements.forEach((el) => {
-        const htmlEl = el as HTMLElement;
-        const computed = window.getComputedStyle(htmlEl);
+      let html = `
+        <div style="margin-bottom: 30px;">
+          <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 10px 0;">Solar Quotation</h1>
+          <p style="font-size: 11px; color: #666; margin: 0;">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)}</p>
+        </div>
 
-        // Fix oklab colors
-        if (computed.color.includes('oklab')) {
-          if (computed.color.includes('0.096')) {
-            htmlEl.style.color = '#0f172a';
-          } else if (computed.color.includes('0.155')) {
-            htmlEl.style.color = '#1e293b';
-          } else if (computed.color.includes('0.972')) {
-            htmlEl.style.color = '#64748b';
-          } else {
-            htmlEl.style.color = '#000000';
-          }
-        }
+        <div style="margin-bottom: 30px; display: flex; gap: 40px;">
+          <div style="flex: 1;">
+            <h3 style="font-weight: bold; font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 15px;">Customer Details</h3>
+            <p style="margin: 5px 0; font-weight: bold;">${data.customerName || 'N/A'}</p>
+            <p style="margin: 5px 0;">${data.customerContact || 'N/A'}</p>
+            <p style="margin: 5px 0; color: #666;">${address}</p>
+            <p style="margin: 5px 0; color: #666;">Date: ${new Date().toLocaleDateString()}</p>
+          </div>
+        </div>
 
-        if (computed.backgroundColor.includes('oklab')) {
-          if (computed.backgroundColor.includes('0.972') || computed.backgroundColor.includes('0.975')) {
-            htmlEl.style.backgroundColor = '#f8fafc';
-          } else if (computed.backgroundColor.includes('0.965') && computed.backgroundColor.includes('-0.015')) {
-            htmlEl.style.backgroundColor = '#f8fafc';
-          } else if (computed.backgroundColor.includes('0.944')) {
-            htmlEl.style.backgroundColor = '#e2e8f0';
-          } else if (computed.backgroundColor.includes('0.965') && computed.backgroundColor.includes('-0.007')) {
-            htmlEl.style.backgroundColor = '#ecfdf5';
-          } else if (computed.backgroundColor.includes('0.976') && computed.backgroundColor.includes('-0.008')) {
-            htmlEl.style.backgroundColor = '#dcfce7';
-          } else if (computed.backgroundColor.includes('0.964') && computed.backgroundColor.includes('0.018')) {
-            htmlEl.style.backgroundColor = '#f59e0b';
-          } else {
-            htmlEl.style.backgroundColor = '#ffffff';
-          }
-        }
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">ELECTRICITY BILL ANALYSIS</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+            <tr style="background-color: #f0f0f0;">
+              <td colspan="2" style="border: 1px solid #ccc; padding: 10px; font-weight: bold;">Before Solar</td>
+              <td colspan="2" style="border: 1px solid #ccc; padding: 10px; font-weight: bold;">After Solar</td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Units (kWh)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${monthlyUnitsBefore}
+              </td>
+              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Units (kWh)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${monthlyUnitsAfter}
+              </td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Bill (₹)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${monthlyBillBefore.toLocaleString()}
+              </td>
+              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Bill (₹)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${monthlyBillAfter.toLocaleString()}
+              </td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">Avg Price/Unit (₹)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${avgPriceBeforeSolar}
+              </td>
+              <td style="border: 1px solid #ccc; padding: 8px;">Avg Price/Unit (₹)</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
+                ${avgPriceAfterSolar}
+              </td>
+            </tr>
+          </table>
 
-        if (computed.borderColor.includes('oklab')) {
-          htmlEl.style.borderColor = '#e2e8f0';
-        }
-      });
+          <div style="background-color: #dcfce7; border: 1px solid #86efac; padding: 15px; border-radius: 5px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span style="font-weight: bold;">Monthly Savings</span>
+              <span style="font-weight: bold;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+              <span style="font-weight: bold;">Annual Savings</span>
+              <span style="font-weight: bold;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="font-weight: bold;">Tariff Increment/Year</span>
+              <span style="font-weight: bold;">${tariffIncrement}%</span>
+            </div>
+          </div>
+        </div>
 
-      // Replace all input values with text
-      const inputs = printContainer.querySelectorAll('input, textarea');
-      inputs.forEach((input) => {
-        const span = document.createElement('span');
-        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) {
-          span.textContent = input.value;
-          span.style.color = '#0f172a';
-          span.style.fontWeight = input.className.includes('font-bold') ? 'bold' : 'normal';
-          span.style.display = 'block';
-          span.style.padding = '4px 8px';
-          span.style.border = '1px solid #cbd5e1';
-          span.style.borderRadius = '4px';
-          span.style.backgroundColor = '#ffffff';
-          (input.parentNode as HTMLElement)?.replaceChild(span, input);
-        }
-      });
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">SYSTEM SPECIFICATION</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px;">Number of Panels</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.panelCount}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px;">Total System Size</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kW</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px;">Roof Orientation</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.orientation}° (${(data.efficiencyFactor * 100).toFixed(0)}%)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #eee;">
+              <td style="padding: 8px;">Est. Annual Generation</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
+            </tr>
+          </table>
+        </div>
 
-      // Replace select elements with their selected text
-      const selects = printContainer.querySelectorAll('select');
-      selects.forEach((select) => {
-        const span = document.createElement('span');
-        span.textContent = select.value;
-        span.style.color = '#0f172a';
-        span.style.display = 'block';
-        span.style.padding = '4px 8px';
-        span.style.border = '1px solid #cbd5e1';
-        span.style.borderRadius = '4px';
-        span.style.backgroundColor = '#ffffff';
-        (select.parentNode as HTMLElement)?.replaceChild(span, select);
-      });
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">QUOTATION</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+            <tr style="background-color: #d3d3d3;">
+              <th style="border: 1px solid #999; padding: 8px; text-align: left;">Description</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: center; width: 60px;">Qty</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Price(₹)</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Sub(₹)</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: center; width: 50px;">GST%</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Total(₹)</th>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">${panelDescription}<br><span style="font-size: 10px; color: #666;">Cap: ${data.systemSizeKw.toFixed(2)}kWp</span></td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${panelQty}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${panelPrice.toLocaleString()}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${panelGst}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">${netMeterDescription}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${netMeterQty}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${netMeterPrice.toLocaleString()}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${netMeterGst}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #ccc; padding: 8px;">${subsidyDescription}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${subsidyQty}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${subsidyPrice.toLocaleString()}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${subsidyGst}</td>
+              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr style="background-color: #ffe6cc;">
+              <td colspan="4" style="border: 1px solid #999; padding: 8px; text-align: right; font-weight: bold;">TOTAL</td>
+              <td style="border: 1px solid #999; padding: 8px; text-align: center;"></td>
+              <td style="border: 1px solid #999; padding: 8px; text-align: right; font-weight: bold;">${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+          </table>
+          <div style="margin-top: 15px;">
+            <div style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>Subsidy will be credited in your Bank account</span>
+                <span style="font-weight: bold;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              </div>
+            </div>
+            <div style="background-color: #fff3cd; padding: 10px; border: 1px solid #ffc107;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-weight: bold;">Net Amount to Customer on Solar Investment</span>
+                <span style="font-weight: bold;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      // Remove buttons
-      const buttons = printContainer.querySelectorAll('button');
-      buttons.forEach(btn => btn.remove());
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px; background-color: #dcfce7; padding: 10px;">PROFIT WITH SOLAR</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">Present Power Bill</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${monthlyBillBefore.toLocaleString()}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">Power Bill For Next 1 year</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${annualBillBefore.toLocaleString()}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">Tariff Increment Year on Year</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${tariffIncrement}%</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">Power Bill For Next 25 years</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">Proposed Solar power plant</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kWp</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ccc;">
+              <td style="padding: 8px;">One Time Investment</td>
+              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr style="background-color: #90ee90; font-weight: bold;">
+              <td style="padding: 8px;">Benefit With Solar after your investment</td>
+              <td style="padding: 8px; text-align: right;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+          </table>
+        </div>
 
-      document.body.appendChild(printContainer);
+        <div style="margin-bottom: 30px;">
+          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">BILL OF MATERIALS</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+            <tr style="background-color: #daa520;">
+              <th style="border: 1px solid #999; padding: 8px; width: 40px;">S.No</th>
+              <th style="border: 1px solid #999; padding: 8px; text-align: left;">Material with Specifications</th>
+              <th style="border: 1px solid #999; padding: 8px; width: 100px;">Make</th>
+              <th style="border: 1px solid #999; padding: 8px; width: 60px;">UOM</th>
+              <th style="border: 1px solid #999; padding: 8px; width: 50px;">Qty</th>
+            </tr>
+            ${billOfMaterials.map((material, idx) => `
+              <tr>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${idx + 1}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${material.description}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${material.make}</td>
+                <td style="border: 1px solid #ccc; padding: 8px;">${material.uom}</td>
+                <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${material.quantity}</td>
+              </tr>
+            `).join('')}
+          </table>
+        </div>
+      `;
 
-      // Wait for DOM update
-      await new Promise(resolve => setTimeout(resolve, 200));
+      pdfContainer.innerHTML = html;
+      document.body.appendChild(pdfContainer);
 
-      const canvas = await html2canvas(printContainer, {
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      const canvas = await html2canvas(pdfContainer, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        windowHeight: printContainer.scrollHeight,
-        windowWidth: 1200,
+        windowHeight: pdfContainer.scrollHeight,
+        windowWidth: 900,
       });
 
-      document.body.removeChild(printContainer);
+      document.body.removeChild(pdfContainer);
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
@@ -265,26 +339,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-
       const imgProps = pdf.getImageProperties(imgData);
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
       let position = 0;
-
       while (position < imgHeight) {
         if (position > 0) {
           pdf.addPage();
         }
-
-        pdf.addImage(
-          imgData,
-          'PNG',
-          0,
-          -(position),
-          pdfWidth,
-          imgHeight
-        );
-
+        pdf.addImage(imgData, 'PNG', 0, -(position), pdfWidth, imgHeight);
         position += pdfHeight;
       }
 
