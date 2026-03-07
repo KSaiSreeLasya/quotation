@@ -118,16 +118,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
           .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
           .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
-          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 12px 15px; margin: 20px 0 15px 0; font-size: 13px; font-weight: bold; color: #1a1a1a; page-break-after: avoid; }
-          .section-container { page-break-inside: avoid; margin-bottom: 20px; }
+          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 10px 12px; margin: 15px 0 12px 0; font-size: 12px; font-weight: bold; color: #1a1a1a; page-break-after: avoid; }
+          .section-container { page-break-inside: avoid; margin-bottom: 15px; }
           .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; page-break-inside: avoid; }
           .info-grid { display: flex; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
           .info-item { flex: 1; }
           .info-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
           .info-value { font-size: 13px; font-weight: bold; color: #1a1a1a; }
-          table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-          th { background-color: #1f2937; color: white; padding: 10px; text-align: left; font-weight: bold; font-size: 11px; }
-          td { border: 1px solid #e5e7eb; padding: 8px; }
+          table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+          th { background-color: #1f2937; color: white; padding: 8px; text-align: left; font-weight: bold; font-size: 10px; }
+          td { border: 1px solid #e5e7eb; padding: 6px 8px; font-size: 10px; }
           tr:nth-child(even) { background-color: #f9fafb; }
           .highlight-row { background-color: #fef3c7 !important; font-weight: bold; }
           .success-row { background-color: #d1fae5 !important; font-weight: bold; }
@@ -185,10 +185,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           <div class="info-label" style="margin-bottom: 6px;">📍 Installation Location</div>
           <div style="color: #374151; font-size: 12px;">${address}</div>
         </div>
+        <div style="height: 120px;"></div>
 
         <!-- Electricity Bill Analysis -->
-        <div class="section-container">
-          <div class="section-header">💡 ELECTRICITY BILL ANALYSIS</div>
+        <div class="section-container" style="margin-bottom: 10px;">
+          <div class="section-header" style="margin: 10px 0 10px 0;">💡 ELECTRICITY BILL ANALYSIS</div>
           <table class="comparison-table">
           <thead>
             <tr>
@@ -233,24 +234,24 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </table>
 
         <!-- Savings Summary -->
-        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #22c55e; border-radius: 4px; padding: 15px; margin-bottom: 20px;">
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #22c55e; border-radius: 4px; padding: 10px; margin-bottom: 10px;">
           <div style="display: flex; justify-content: space-around; text-align: center;">
             <div>
-              <div style="font-size: 10px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">💰 Monthly Savings</div>
-              <div style="font-size: 18px; font-weight: bold; color: #166534;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">💰 Monthly Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
             </div>
             <div style="border-left: 2px solid rgba(0,0,0,0.1);"></div>
             <div>
-              <div style="font-size: 10px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 5px;">📈 Annual Savings</div>
-              <div style="font-size: 18px; font-weight: bold; color: #166534;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">📈 Annual Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
             </div>
           </div>
         </div>
         </div>
 
         <!-- System Specification -->
-        <div class="section-container">
-          <div class="section-header">⚙️ SYSTEM SPECIFICATION</div>
+        <div class="section-container" style="margin-bottom: 10px;">
+          <div class="section-header" style="margin: 10px 0 10px 0;">⚙️ SYSTEM SPECIFICATION</div>
           <table>
           <tbody>
             <tr>
