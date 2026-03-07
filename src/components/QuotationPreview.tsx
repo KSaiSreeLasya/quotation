@@ -108,18 +108,20 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       let html = `
         <style>
-          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; }
+          body { margin: 0; padding: 0; }
+          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; page-break-inside: avoid; }
           .company-logo { width: 100px; height: 100px; flex-shrink: 0; }
           .company-info { flex: 1; }
           .company-name { font-size: 28px; font-weight: bold; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
           .company-details { font-size: 11px; color: #6b7280; margin: 8px 0 0 0; line-height: 1.6; }
-          .pdf-header { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); padding: 20px 25px; margin: -30px -30px 25px -30px; color: white; }
+          .pdf-header { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); padding: 20px 25px; margin: -30px -30px 25px -30px; color: white; page-break-inside: avoid; }
           .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
           .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
           .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
-          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 12px 15px; margin: 20px 0 15px 0; font-size: 13px; font-weight: bold; color: #1a1a1a; }
-          .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
-          .info-grid { display: flex; gap: 20px; margin-bottom: 20px; }
+          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 12px 15px; margin: 20px 0 15px 0; font-size: 13px; font-weight: bold; color: #1a1a1a; page-break-after: avoid; }
+          .section-container { page-break-inside: avoid; margin-bottom: 20px; }
+          .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; page-break-inside: avoid; }
+          .info-grid { display: flex; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
           .info-item { flex: 1; }
           .info-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
           .info-value { font-size: 13px; font-weight: bold; color: #1a1a1a; }
@@ -129,10 +131,14 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           tr:nth-child(even) { background-color: #f9fafb; }
           .highlight-row { background-color: #fef3c7 !important; font-weight: bold; }
           .success-row { background-color: #d1fae5 !important; font-weight: bold; }
+          .comparison-table { page-break-inside: avoid; }
           .comparison-table th { background-color: #374151; }
           .comparison-table td { border-color: #d1d5db; }
           .value-right { text-align: right; }
-          .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 10px; color: #6b7280; text-align: center; }
+          .quotation-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .financial-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .bom-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 10px; color: #6b7280; text-align: center; page-break-inside: avoid; }
           .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, #d1d5db, transparent); margin: 15px 0; }
           .bill-before { color: #b91c1c; }
           .bill-after { color: #059669; }
@@ -181,8 +187,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Electricity Bill Analysis -->
-        <div class="section-header">💡 ELECTRICITY BILL ANALYSIS</div>
-        <table class="comparison-table">
+        <div class="section-container">
+          <div class="section-header">💡 ELECTRICITY BILL ANALYSIS</div>
+          <table class="comparison-table">
           <thead>
             <tr>
               <th colspan="3">Before Solar Installation</th>
@@ -239,10 +246,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </div>
           </div>
         </div>
+        </div>
 
         <!-- System Specification -->
-        <div class="section-header">⚙️ SYSTEM SPECIFICATION</div>
-        <table>
+        <div class="section-container">
+          <div class="section-header">⚙️ SYSTEM SPECIFICATION</div>
+          <table>
           <tbody>
             <tr>
               <td style="font-weight: 600; background-color: #f3f4f6; width: 60%;">Number of Panels</td>
@@ -266,10 +275,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </tr>
           </tbody>
         </table>
+        </div>
 
         <!-- Quotation Details -->
-        <div class="section-header">💳 QUOTATION DETAILS</div>
-        <table>
+        <div class="quotation-section">
+          <div class="section-header">💳 QUOTATION DETAILS</div>
+          <table>
           <thead>
             <tr>
               <th>Description</th>
@@ -328,10 +339,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </div>
           </div>
         </div>
+        </div>
 
         <!-- Financial Projection -->
-        <div class="section-header">📊 25-YEAR FINANCIAL PROJECTION</div>
-        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px;">
+        <div class="financial-section">
+          <div class="section-header">📊 25-YEAR FINANCIAL PROJECTION</div>
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px;">
           <table style="margin: 0;">
             <tbody>
               <tr>
@@ -356,11 +369,13 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
               </tr>
             </tbody>
           </table>
+          </div>
         </div>
 
         <!-- Bill of Materials -->
-        <div class="section-header" style="margin-top: 30px;">📦 BILL OF MATERIALS</div>
-        <table>
+        <div class="bom-section">
+          <div class="section-header" style="margin-top: 30px;">📦 BILL OF MATERIALS</div>
+          <table>
           <thead>
             <tr>
               <th style="width: 40px; text-align: center;">S.No</th>
@@ -382,6 +397,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             `).join('')}
           </tbody>
         </table>
+        </div>
 
         <!-- Footer -->
         <div class="footer">
