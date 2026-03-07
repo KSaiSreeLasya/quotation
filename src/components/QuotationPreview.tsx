@@ -50,6 +50,66 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
     ]
   );
 
+  // Terms and Conditions items
+  const [termsConditions, setTermsConditions] = useState<Array<{title: string; content: string}>>([
+    {
+      title: 'Payment Terms',
+      content: '> 50% advance with Firm Purchase order and with KYC Documents\n> 40% after getting approval from Local Discom on the Solar Feasibility and in principal Sanction\n> 10% after Installation'
+    },
+    {
+      title: '',
+      content: 'The Order booking price is Valid for 3 months only from the date of Advance payment.'
+    },
+    {
+      title: '',
+      content: 'Any Statutory variation in taxes and duties from the date of submission of this proposal including change of rates for solar PV system and/or its parts/components/equipment under GST, Imposition of Antidumping Duty (ADD) and/or Safeguard Duty (SDD) on imported modules and cells by the Government of India would be to the clients account and shall be Payable by the client at actual.'
+    },
+    {
+      title: 'Delivery',
+      content: '25-35 Working Days from the date of receiving 90% Payment.\nProjected Time lines *\n> 2 days for Feasibility and Inpriciple Sanction\n> 10 Days for Product delivery after 90% payment\n> 10 Days for Plant installation\n> 10 days for Net meter Installation'
+    },
+    {
+      title: '',
+      content: 'Make of the products may vary based on the availability in the market and we shall provide equivalent products only quoted in the BOM'
+    },
+    {
+      title: '',
+      content: 'Time for load enhancements or any upgradation in the electrical connection will not cover in the standard delivery time lines shall be at extra time. Charges for those activities shall be extra at actual.'
+    },
+    {
+      title: 'Warranty',
+      content: '> 5 Years against Manufacturing defects. On complete system with respect to each original manufacturer\'s Terms and Conditions\n> Linear Power Warranty on Solar Modules : 25 Years as per manufacturer\'s terms and conditions\n> Warranty void if Physical Damages and unauthorized usage or tampering of the Machine.'
+    },
+    {
+      title: '',
+      content: 'The Price quoted confidential and it is valid for 10 Days from the date of Quote supplied.'
+    },
+    {
+      title: '',
+      content: 'Power Generation and Savings are shown purely based on Estimated NASA data.'
+    },
+    {
+      title: '',
+      content: 'Net Meter Installation is subject to stock availability with the Local Distribution Company'
+    },
+    {
+      title: '',
+      content: 'Charges for Load enhancement if any or Name Change Shall be extra at actuals and shall be extra time required for this process'
+    },
+    {
+      title: '',
+      content: 'Order Cancellation attracts deduction of Order processing changes as per terms and conditions of the Company.'
+    },
+    {
+      title: '',
+      content: 'The Net meter billing and its Settlement is a sole responsibility of Local Distribution company and no where responsible with Solar System Integrator'
+    },
+    {
+      title: 'Bank Details',
+      content: 'Account Holder: AXISO GREEN ENERGIES PVT LTD.\nAccount Number: 50200102457732\nIFSC: HDFC0002390\nAccount Type: CURRENT'
+    }
+  ]);
+
   // Customer scope items
   const [customerScope, setCustomerScope] = useState<string[]>([
     'Customer to provide space for storing of materials.',
@@ -121,7 +181,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       let html = `
         <style>
           body { margin: 0; padding: 0; }
-          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; page-break-inside: avoid; }
+          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #0f766e; page-break-inside: avoid; }
           .company-logo { width: 100px; height: 100px; flex-shrink: 0; }
           .company-info { flex: 1; }
           .company-name { font-size: 28px; font-weight: bold; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
@@ -130,27 +190,31 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
           .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
           .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
-          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 10px 12px; margin: 15px 0 12px 0; font-size: 12px; font-weight: bold; color: #1a1a1a; page-break-after: avoid; }
+          .section-header { background: linear-gradient(90deg, #0f766e 0%, #14b8a6 100%); border-left: 4px solid #0d5a54; padding: 12px 15px; margin: 18px 0 14px 0; font-size: 11px; font-weight: bold; color: white; page-break-after: avoid; letter-spacing: 0.3px; text-transform: uppercase; }
           .section-container { page-break-inside: avoid; margin-bottom: 15px; }
-          .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; page-break-inside: avoid; }
+          .info-box { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fbbf24; padding: 14px; margin-bottom: 12px; border-radius: 6px; page-break-inside: avoid; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
           .info-grid { display: flex; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
           .info-item { flex: 1; }
-          .info-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
-          .info-value { font-size: 13px; font-weight: bold; color: #1a1a1a; }
-          table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-          th { background-color: #1f2937; color: white; padding: 8px; text-align: left; font-weight: bold; font-size: 10px; }
-          td { border: 1px solid #e5e7eb; padding: 6px 8px; font-size: 10px; }
+          .info-label { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
+          .info-value { font-size: 13px; font-weight: bold; color: #0f766e; }
+          table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+          th { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; padding: 10px 8px; text-align: left; font-weight: bold; font-size: 10px; letter-spacing: 0.3px; }
+          td { border: 1px solid #d1d5db; padding: 8px; font-size: 10px; }
           tr:nth-child(even) { background-color: #f9fafb; }
-          .highlight-row { background-color: #fef3c7 !important; font-weight: bold; }
-          .success-row { background-color: #d1fae5 !important; font-weight: bold; }
+          tbody tr:hover { background-color: #f3f4f6; }
+          .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: bold; color: #78350f; }
+          .success-row { background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important; font-weight: bold; color: #065f46; }
           .comparison-table { page-break-inside: avoid; }
-          .comparison-table th { background-color: #374151; }
+          .comparison-table th { background: linear-gradient(135deg, #374151 0%, #4b5563 100%); }
           .comparison-table td { border-color: #d1d5db; }
           .value-right { text-align: right; }
           .quotation-section { page-break-inside: avoid; margin-bottom: 20px; }
           .financial-section { page-break-inside: avoid; margin-bottom: 20px; }
           .bom-section { page-break-inside: avoid; margin-bottom: 20px; }
-          .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 10px; color: #6b7280; text-align: center; page-break-inside: avoid; }
+          .terms-item { padding: 10px; margin-bottom: 10px; border-left: 3px solid #0f766e; background-color: #f8f9fa; }
+          .terms-item-odd { background-color: #ffffff; }
+          .terms-title { font-weight: bold; color: #0f766e; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; }
+          .footer { margin-top: 35px; padding-top: 25px; border-top: 2px solid #0f766e; font-size: 10px; color: #6b7280; text-align: center; page-break-inside: avoid; background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); padding-bottom: 20px; }
           .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, #d1d5db, transparent); margin: 15px 0; }
           .bill-before { color: #b91c1c; }
           .bill-after { color: #059669; }
@@ -252,16 +316,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </table>
 
         <!-- Savings Summary -->
-        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #22c55e; border-radius: 4px; padding: 10px; margin-bottom: 10px;">
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #10b981; border-radius: 6px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);">
           <div style="display: flex; justify-content: space-around; text-align: center;">
             <div>
-              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">💰 Monthly Savings</div>
-              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.3px;">💰 Monthly Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #065f46;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
             </div>
             <div style="border-left: 2px solid rgba(0,0,0,0.1);"></div>
             <div>
-              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">📈 Annual Savings</div>
-              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.3px;">📈 Annual Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #065f46;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
             </div>
           </div>
         </div>
@@ -350,15 +414,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <!-- Subsidy & Net Amount -->
         <div style="margin-top: 15px; display: grid; gap: 10px;">
-          <div class="info-box" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-color: #0284c7;">
+          <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 2px solid #0284c7; border-radius: 6px; padding: 14px; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.15);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 600; color: #0c4a6e;">💰 Subsidy (Credited to Bank)</span>
+              <span style="font-weight: 600; color: #0c4a6e; font-size: 11px;">💰 SUBSIDY (Credited to Bank)</span>
               <span style="font-size: 14px; font-weight: bold; color: #075985;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
           </div>
-          <div class="info-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-color: #d97706;">
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #d97706; border-radius: 6px; padding: 14px; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.15);">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 600; color: #92400e;">🏦 Net Amount (Your Investment)</span>
+              <span style="font-weight: 600; color: #92400e; font-size: 11px;">🏦 NET AMOUNT (Your Investment)</span>
               <span style="font-size: 14px; font-weight: bold; color: #b45309;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
             </div>
           </div>
@@ -372,28 +436,28 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F18c19d76c43241ceaca5f0662141f48f?format=webp&width=800&height=1200" alt="Profit With Solar" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px;" />
           </div>
 
-          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px; margin-top: 15px;">
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981; border-radius: 6px; padding: 16px; margin-top: 15px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);">
           <table style="margin: 0;">
             <tbody>
               <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Present Monthly Power Bill</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">₹${monthlyBillBefore.toLocaleString()}</td>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Present Monthly Power Bill</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">₹${monthlyBillBefore.toLocaleString()}</td>
               </tr>
               <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Yearly Power Bill</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">₹${(annualBillBefore).toLocaleString()}</td>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Yearly Power Bill</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">₹${(annualBillBefore).toLocaleString()}</td>
               </tr>
               <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Annual Tariff Increment</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">${tariffIncrement}%</td>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Annual Tariff Increment</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">${tariffIncrement}%</td>
               </tr>
-              <tr style="border-top: 2px solid rgba(0,0,0,0.1);">
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534; padding-top: 10px;">Projected Bill (25 years)</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534; padding-top: 10px;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <tr style="border-top: 2px solid rgba(0,0,0,0.1); border-bottom: 2px solid rgba(0,0,0,0.1);">
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 10px 0;">Projected Bill (25 years)</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 10px 0;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
               </tr>
-              <tr style="background-color: #16a34a; color: white; font-weight: bold; border: none;">
-                <td style="border: none; padding: 12px; color: white;">✅ Net Benefit After Investment</td>
-                <td style="border: none; padding: 12px; text-align: right; font-size: 13px;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <tr style="background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; font-weight: bold; border: none;">
+                <td style="border: none; padding: 12px; color: white; font-size: 11px;">✅ NET BENEFIT AFTER INVESTMENT</td>
+                <td style="border: none; padding: 12px; text-align: right; font-size: 13px; color: white;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
               </tr>
             </tbody>
           </table>
@@ -427,13 +491,26 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </table>
         </div>
 
+        <!-- Terms and Conditions Section -->
+        <div style="margin-top: 30px; page-break-inside: avoid;">
+          <div class="section-header" style="margin: 0 0 18px 0; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-left: 0; color: white; font-size: 12px; border-radius: 4px 4px 0 0;">⚖️ TERMS AND CONDITIONS</div>
+          <div style="font-size: 10px; color: #374151; line-height: 1.8; background-color: #f8fafc; padding: 15px; border-radius: 0 0 4px 4px; border: 1px solid #e2e8f0;">
+            ${termsConditions.map((item, index) => `
+              <div style="margin-bottom: 14px; padding: 12px; background-color: ${index % 2 === 0 ? '#ffffff' : '#f8f9fa'}; border-left: 4px solid #0f766e; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                ${item.title ? `<div style="font-weight: bold; color: #0f766e; margin-bottom: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
+                <div style="white-space: pre-wrap; margin: 0; color: #1f2937; line-height: 1.7; font-size: 9.5px;">${item.content}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
         <!-- Customer Scope -->
-        <div style="margin-top: 30px; padding: 20px; background-color: #fef3c7; border: 2px solid #fbbf24; border-radius: 6px; page-break-inside: avoid;">
-          <div style="font-size: 12px; font-weight: bold; color: #92400e; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📋 Customer Scope of Work</div>
+        <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #fbbf24; border-radius: 6px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.15);">
+          <div style="font-size: 12px; font-weight: bold; color: #92400e; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px;">📋 CUSTOMER SCOPE OF WORK</div>
           <div style="font-size: 10px; color: #78350f; line-height: 1.8;">
             ${customerScope.map((item, index) => `
-              <div style="margin-bottom: 8px; display: flex;">
-                <span style="font-weight: bold; min-width: 20px; margin-right: 8px;">${index + 1}.</span>
+              <div style="margin-bottom: 10px; display: flex; padding: 8px; background-color: ${index % 2 === 0 ? 'rgba(255,255,255,0.4)' : 'transparent'}; border-radius: 3px;">
+                <span style="font-weight: bold; min-width: 20px; margin-right: 8px; color: #b45309;">${index + 1}.</span>
                 <span>${item}</span>
               </div>
             `).join('')}
@@ -967,6 +1044,42 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 <Plus size={18} />
                 Add Material
               </button>
+            </div>
+
+            {/* Terms and Conditions Section */}
+            <div className="border-t border-slate-200 pt-8">
+              <h3 className="text-lg font-bold text-slate-900 mb-6">Terms and Conditions</h3>
+
+              <div className="bg-slate-50 border border-slate-300 rounded-lg p-4 space-y-4">
+                {termsConditions.map((item, index) => (
+                  <div key={index} className="border border-slate-300 rounded p-4 bg-white hover:shadow-sm transition-shadow">
+                    {item.title && (
+                      <input
+                        type="text"
+                        value={item.title}
+                        onChange={(e) => {
+                          const updated = [...termsConditions];
+                          updated[index].title = e.target.value;
+                          setTermsConditions(updated);
+                        }}
+                        className="w-full font-bold text-slate-900 mb-2 p-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-slate-500 outline-none"
+                        placeholder={`Section ${index + 1} Title`}
+                      />
+                    )}
+                    <textarea
+                      value={item.content}
+                      onChange={(e) => {
+                        const updated = [...termsConditions];
+                        updated[index].content = e.target.value;
+                        setTermsConditions(updated);
+                      }}
+                      className="w-full p-2 border border-slate-300 rounded text-sm resize-none focus:ring-2 focus:ring-slate-500 outline-none"
+                      rows={4}
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-slate-600 mt-4 italic">These terms and conditions will appear in the PDF before customer scope</p>
             </div>
 
             {/* Customer Scope Section */}
