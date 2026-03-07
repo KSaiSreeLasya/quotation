@@ -108,20 +108,21 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       let html = `
         <style>
-          .pdf-header { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); padding: 25px; margin: -30px -30px 30px -30px; color: white; }
-          .pdf-header-title { font-size: 28px; font-weight: bold; margin: 0; }
-          .pdf-header-subtitle { font-size: 12px; opacity: 0.9; margin: 5px 0 0 0; }
-          .section-header { background-color: #f3f4f6; border-left: 4px solid #f59e0b; padding: 12px 15px; margin: 20px 0 15px 0; font-size: 13px; font-weight: bold; color: #1a1a1a; }
+          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; }
+          .company-logo { width: 100px; height: 100px; flex-shrink: 0; }
+          .company-info { flex: 1; }
+          .company-name { font-size: 28px; font-weight: bold; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
+          .company-details { font-size: 11px; color: #6b7280; margin: 8px 0 0 0; line-height: 1.6; }
+          .pdf-header { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); padding: 20px 25px; margin: -30px -30px 25px -30px; color: white; }
+          .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
+          .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
+          .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
+          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 12px 15px; margin: 20px 0 15px 0; font-size: 13px; font-weight: bold; color: #1a1a1a; }
           .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; }
           .info-grid { display: flex; gap: 20px; margin-bottom: 20px; }
           .info-item { flex: 1; }
           .info-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
           .info-value { font-size: 13px; font-weight: bold; color: #1a1a1a; }
-          .metric-box { background: #ecfdf5; border: 1px solid #86efac; padding: 15px; border-radius: 4px; margin: 10px 0; }
-          .metric-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-          .metric-row:last-child { border-bottom: none; }
-          .metric-label { font-weight: 600; color: #047857; }
-          .metric-value { font-weight: bold; font-size: 13px; color: #065f46; }
           table { width: 100%; border-collapse: collapse; margin: 12px 0; }
           th { background-color: #1f2937; color: white; padding: 10px; text-align: left; font-weight: bold; font-size: 11px; }
           td { border: 1px solid #e5e7eb; padding: 8px; }
@@ -137,11 +138,25 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .bill-after { color: #059669; }
         </style>
 
+        <!-- Company Header with Logo -->
+        <div class="company-header">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F0b85f72529aa43089d684d8542c7bc51?format=webp&width=800&height=1200" alt="AXIVOLT Logo" class="company-logo" />
+          <div class="company-info">
+            <div class="company-name">AXIVOLT</div>
+            <div class="company-details">
+              📍 Flat No 101, Manish Residency<br/>
+              Sri Durga Colony, Miyapur<br/>
+              Madeenaguda, Hyderabad<br/>
+              Telangana 500049
+            </div>
+          </div>
+        </div>
+
         <!-- Header -->
         <div class="pdf-header">
           <div class="pdf-header-title">☀️ SOLAR QUOTATION</div>
           <div class="pdf-header-subtitle">Professional Solar Energy Solution</div>
-          <div style="margin-top: 10px; font-size: 11px;">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}</div>
+          <div class="pdf-header-ref">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}</div>
         </div>
 
         <!-- Customer Information -->
