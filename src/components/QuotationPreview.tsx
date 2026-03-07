@@ -100,216 +100,332 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       pdfContainer.style.left = '-9999px';
       pdfContainer.style.width = '900px';
       pdfContainer.style.backgroundColor = '#ffffff';
-      pdfContainer.style.padding = '40px';
-      pdfContainer.style.fontFamily = 'Arial, sans-serif';
-      pdfContainer.style.color = '#0f172a';
-      pdfContainer.style.fontSize = '12px';
-      pdfContainer.style.lineHeight = '1.6';
+      pdfContainer.style.padding = '30px';
+      pdfContainer.style.fontFamily = '"Segoe UI", Arial, sans-serif';
+      pdfContainer.style.color = '#1a1a1a';
+      pdfContainer.style.fontSize = '11px';
+      pdfContainer.style.lineHeight = '1.5';
 
       let html = `
-        <div style="margin-bottom: 30px;">
-          <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 10px 0;">Solar Quotation</h1>
-          <p style="font-size: 11px; color: #666; margin: 0;">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000)}</p>
-        </div>
+        <style>
+          body { margin: 0; padding: 0; }
+          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e5e7eb; page-break-inside: avoid; }
+          .company-logo { width: 100px; height: 100px; flex-shrink: 0; }
+          .company-info { flex: 1; }
+          .company-name { font-size: 28px; font-weight: bold; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
+          .company-details { font-size: 11px; color: #6b7280; margin: 8px 0 0 0; line-height: 1.6; }
+          .pdf-header { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); padding: 20px 25px; margin: -30px -30px 25px -30px; color: white; page-break-inside: avoid; }
+          .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
+          .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
+          .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
+          .section-header { background-color: #f3f4f6; border-left: 4px solid #0f766e; padding: 10px 12px; margin: 15px 0 12px 0; font-size: 12px; font-weight: bold; color: #1a1a1a; page-break-after: avoid; }
+          .section-container { page-break-inside: avoid; margin-bottom: 15px; }
+          .info-box { background-color: #fffbeb; border: 1px solid #fcd34d; padding: 12px; margin-bottom: 12px; border-radius: 4px; page-break-inside: avoid; }
+          .info-grid { display: flex; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
+          .info-item { flex: 1; }
+          .info-label { font-size: 10px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; }
+          .info-value { font-size: 13px; font-weight: bold; color: #1a1a1a; }
+          table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+          th { background-color: #1f2937; color: white; padding: 8px; text-align: left; font-weight: bold; font-size: 10px; }
+          td { border: 1px solid #e5e7eb; padding: 6px 8px; font-size: 10px; }
+          tr:nth-child(even) { background-color: #f9fafb; }
+          .highlight-row { background-color: #fef3c7 !important; font-weight: bold; }
+          .success-row { background-color: #d1fae5 !important; font-weight: bold; }
+          .comparison-table { page-break-inside: avoid; }
+          .comparison-table th { background-color: #374151; }
+          .comparison-table td { border-color: #d1d5db; }
+          .value-right { text-align: right; }
+          .quotation-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .financial-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .bom-section { page-break-inside: avoid; margin-bottom: 20px; }
+          .footer { margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 10px; color: #6b7280; text-align: center; page-break-inside: avoid; }
+          .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, #d1d5db, transparent); margin: 15px 0; }
+          .bill-before { color: #b91c1c; }
+          .bill-after { color: #059669; }
+        </style>
 
-        <div style="margin-bottom: 30px; display: flex; gap: 40px;">
-          <div style="flex: 1;">
-            <h3 style="font-weight: bold; font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 15px;">Customer Details</h3>
-            <p style="margin: 5px 0; font-weight: bold;">${data.customerName || 'N/A'}</p>
-            <p style="margin: 5px 0;">${data.customerContact || 'N/A'}</p>
-            <p style="margin: 5px 0; color: #666;">${address}</p>
-            <p style="margin: 5px 0; color: #666;">Date: ${new Date().toLocaleDateString()}</p>
-          </div>
-        </div>
-
-        <div style="margin-bottom: 30px;">
-          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">ELECTRICITY BILL ANALYSIS</h3>
-          <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
-            <tr style="background-color: #f0f0f0;">
-              <td colspan="2" style="border: 1px solid #ccc; padding: 10px; font-weight: bold;">Before Solar</td>
-              <td colspan="2" style="border: 1px solid #ccc; padding: 10px; font-weight: bold;">After Solar</td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Units (kWh)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${monthlyUnitsBefore}
-              </td>
-              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Units (kWh)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${monthlyUnitsAfter}
-              </td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Bill (₹)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${monthlyBillBefore.toLocaleString()}
-              </td>
-              <td style="border: 1px solid #ccc; padding: 8px;">Monthly Bill (₹)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${monthlyBillAfter.toLocaleString()}
-              </td>
-            </tr>
-            <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">Avg Price/Unit (₹)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${avgPriceBeforeSolar}
-              </td>
-              <td style="border: 1px solid #ccc; padding: 8px;">Avg Price/Unit (₹)</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">
-                ${avgPriceAfterSolar}
-              </td>
-            </tr>
-          </table>
-
-          <div style="background-color: #dcfce7; border: 1px solid #86efac; padding: 15px; border-radius: 5px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-              <span style="font-weight: bold;">Monthly Savings</span>
-              <span style="font-weight: bold;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-              <span style="font-weight: bold;">Annual Savings</span>
-              <span style="font-weight: bold;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="font-weight: bold;">Tariff Increment/Year</span>
-              <span style="font-weight: bold;">${tariffIncrement}%</span>
+        <!-- Company Header with Logo -->
+        <div class="company-header">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F0b85f72529aa43089d684d8542c7bc51?format=webp&width=800&height=1200" alt="AXIVOLT Logo" class="company-logo" />
+          <div class="company-info">
+            <div class="company-name">AXIVOLT</div>
+            <div class="company-details">
+              📍 Flat No 101, Manish Residency<br/>
+              Sri Durga Colony, Miyapur<br/>
+              Madeenaguda, Hyderabad<br/>
+              Telangana 500049
             </div>
           </div>
         </div>
 
-        <div style="margin-bottom: 30px;">
-          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">SYSTEM SPECIFICATION</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 8px;">Number of Panels</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.panelCount}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 8px;">Total System Size</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kW</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 8px;">Roof Orientation</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.orientation}° (${(data.efficiencyFactor * 100).toFixed(0)}%)</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 8px;">Est. Annual Generation</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
-            </tr>
-          </table>
+        <!-- Header -->
+        <div class="pdf-header">
+          <div class="pdf-header-title">☀️ SOLAR QUOTATION</div>
+          <div class="pdf-header-subtitle">Professional Solar Energy Solution</div>
+          <div class="pdf-header-ref">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}</div>
         </div>
 
-        <div style="margin-bottom: 30px;">
-          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">QUOTATION</h3>
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
-            <tr style="background-color: #d3d3d3;">
-              <th style="border: 1px solid #999; padding: 8px; text-align: left;">Description</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: center; width: 60px;">Qty</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Price(₹)</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Sub(₹)</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: center; width: 50px;">GST%</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: right; width: 80px;">Total(₹)</th>
+        <!-- Customer Information -->
+        <div class="section-header">📋 CUSTOMER INFORMATION</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Customer Name</div>
+            <div class="info-value">${data.customerName || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Contact Number</div>
+            <div class="info-value">${data.customerContact || 'N/A'}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Installation Date</div>
+            <div class="info-value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+          </div>
+        </div>
+        <div class="info-box">
+          <div class="info-label" style="margin-bottom: 6px;">📍 Installation Location</div>
+          <div style="color: #374151; font-size: 12px;">${address}</div>
+        </div>
+
+        <!-- Bi-Directional Metering Diagram -->
+        <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2Fc7a086c127c2406aa10980861c14ccf5?format=webp&width=800&height=1200" alt="Bi-Directional Metering Diagram" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="height: 40px;"></div>
+
+        <!-- Electricity Bill Analysis -->
+        <div class="section-container" style="margin-bottom: 10px;">
+          <div class="section-header" style="margin: 10px 0 10px 0;">💡 ELECTRICITY BILL ANALYSIS</div>
+          <table class="comparison-table">
+          <thead>
+            <tr>
+              <th colspan="3">Before Solar Installation</th>
+              <th colspan="3">After Solar Installation</th>
+            </tr>
+            <tr style="background-color: #4b5563;">
+              <th style="background-color: inherit;">Metric</th>
+              <th style="background-color: inherit; text-align: right;">Value</th>
+              <th style="background-color: inherit;"></th>
+              <th style="background-color: inherit;">Metric</th>
+              <th style="background-color: inherit; text-align: right;">Value</th>
+              <th style="background-color: inherit;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="bill-before">Monthly Units (kWh)</td>
+              <td class="bill-before value-right">${monthlyUnitsBefore}</td>
+              <td></td>
+              <td class="bill-after">Monthly Units (kWh)</td>
+              <td class="bill-after value-right">${monthlyUnitsAfter}</td>
+              <td></td>
             </tr>
             <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">${panelDescription}<br><span style="font-size: 10px; color: #666;">Cap: ${data.systemSizeKw.toFixed(2)}kWp</span></td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${panelQty}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${panelPrice.toLocaleString()}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${panelGst}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="bill-before">Monthly Bill (₹)</td>
+              <td class="bill-before value-right" style="font-weight: bold;">₹${monthlyBillBefore.toLocaleString()}</td>
+              <td></td>
+              <td class="bill-after">Monthly Bill (₹)</td>
+              <td class="bill-after value-right" style="font-weight: bold;">₹${monthlyBillAfter.toLocaleString()}</td>
+              <td></td>
             </tr>
             <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">${netMeterDescription}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${netMeterQty}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${netMeterPrice.toLocaleString()}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${netMeterGst}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="bill-before">Avg Price/Unit (₹)</td>
+              <td class="bill-before value-right">₹${avgPriceBeforeSolar}</td>
+              <td></td>
+              <td class="bill-after">Avg Price/Unit (₹)</td>
+              <td class="bill-after value-right">₹${avgPriceAfterSolar}</td>
+              <td></td>
             </tr>
-            <tr>
-              <td style="border: 1px solid #ccc; padding: 8px;">${subsidyDescription}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${subsidyQty}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${subsidyPrice.toLocaleString()}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right;">${subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${subsidyGst}</td>
-              <td style="border: 1px solid #ccc; padding: 8px; text-align: right; font-weight: bold;">${subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-            </tr>
-            <tr style="background-color: #ffe6cc;">
-              <td colspan="4" style="border: 1px solid #999; padding: 8px; text-align: right; font-weight: bold;">TOTAL</td>
-              <td style="border: 1px solid #999; padding: 8px; text-align: center;"></td>
-              <td style="border: 1px solid #999; padding: 8px; text-align: right; font-weight: bold;">${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-            </tr>
-          </table>
-          <div style="margin-top: 15px;">
-            <div style="background-color: #f0f0f0; padding: 10px; margin-bottom: 10px;">
-              <div style="display: flex; justify-content: space-between;">
-                <span>Subsidy will be credited in your Bank account</span>
-                <span style="font-weight: bold;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-              </div>
+          </tbody>
+        </table>
+
+        <!-- Savings Summary -->
+        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #22c55e; border-radius: 4px; padding: 10px; margin-bottom: 10px;">
+          <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">💰 Monthly Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
             </div>
-            <div style="background-color: #fff3cd; padding: 10px; border: 1px solid #ffc107;">
-              <div style="display: flex; justify-content: space-between;">
-                <span style="font-weight: bold;">Net Amount to Customer on Solar Investment</span>
-                <span style="font-weight: bold;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-              </div>
+            <div style="border-left: 2px solid rgba(0,0,0,0.1);"></div>
+            <div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 3px;">📈 Annual Savings</div>
+              <div style="font-size: 16px; font-weight: bold; color: #166534;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
             </div>
           </div>
         </div>
 
-        <div style="margin-bottom: 30px;">
-          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px; background-color: #dcfce7; padding: 10px;">PROFIT WITH SOLAR</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">Present Power Bill</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${monthlyBillBefore.toLocaleString()}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">Power Bill For Next 1 year</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${annualBillBefore.toLocaleString()}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">Tariff Increment Year on Year</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${tariffIncrement}%</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">Power Bill For Next 25 years</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">Proposed Solar power plant</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kWp</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #ccc;">
-              <td style="padding: 8px;">One Time Investment</td>
-              <td style="padding: 8px; text-align: right; font-weight: bold;">₹${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-            </tr>
-            <tr style="background-color: #90ee90; font-weight: bold;">
-              <td style="padding: 8px;">Benefit With Solar after your investment</td>
-              <td style="padding: 8px; text-align: right;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-            </tr>
-          </table>
+        <!-- Solar Impact Infographic -->
+        <div style="margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e5e7eb;">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F94376c4c2a9743b7ad102cb93916310c?format=webp&width=800&height=1200" alt="Solar Impact Summary" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+        </div>
         </div>
 
-        <div style="margin-bottom: 30px;">
-          <h3 style="font-weight: bold; font-size: 12px; margin-bottom: 15px;">BILL OF MATERIALS</h3>
-          <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
-            <tr style="background-color: #daa520;">
-              <th style="border: 1px solid #999; padding: 8px; width: 40px;">S.No</th>
-              <th style="border: 1px solid #999; padding: 8px; text-align: left;">Material with Specifications</th>
-              <th style="border: 1px solid #999; padding: 8px; width: 100px;">Make</th>
-              <th style="border: 1px solid #999; padding: 8px; width: 60px;">UOM</th>
-              <th style="border: 1px solid #999; padding: 8px; width: 50px;">Qty</th>
+        <!-- System Specification -->
+        <div class="section-container" style="margin-bottom: 10px;">
+          <div class="section-header" style="margin: 10px 0 10px 0;">⚙️ SYSTEM SPECIFICATION</div>
+          <table>
+          <tbody>
+            <tr>
+              <td style="font-weight: 600; background-color: #f3f4f6; width: 60%;">Number of Panels</td>
+              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.panelCount}</td>
             </tr>
+            <tr>
+              <td style="font-weight: 600; background-color: #f3f4f6;">Total System Capacity</td>
+              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kWp</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600; background-color: #f3f4f6;">Roof Orientation</td>
+              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.orientation}° (${(data.efficiencyFactor * 100).toFixed(0)}% efficiency)</td>
+            </tr>
+            <tr>
+              <td style="font-weight: 600; background-color: #f3f4f6;">Shading Factor</td>
+              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${(data.shadeFactor * 100).toFixed(0)}% exposure</td>
+            </tr>
+            <tr style="background-color: #dbeafe;">
+              <td style="font-weight: 600;">Est. Annual Generation</td>
+              <td style="value-right; font-weight: bold; color: #1e40af;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <!-- Quotation Details -->
+        <div class="quotation-section">
+          <div class="section-header">💳 QUOTATION DETAILS</div>
+          <table>
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th style="width: 60px; text-align: center;">Qty</th>
+              <th style="width: 80px; text-align: right;">Price (₹)</th>
+              <th style="width: 80px; text-align: right;">Subtotal (₹)</th>
+              <th style="width: 50px; text-align: center;">GST %</th>
+              <th style="width: 80px; text-align: right;">Total (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>${panelDescription}<br><span style="font-size: 9px; color: #6b7280;">Capacity: ${data.systemSizeKw.toFixed(2)}kWp</span></td>
+              <td style="text-align: center;">${panelQty}</td>
+              <td style="text-align: right;">₹${panelPrice.toLocaleString()}</td>
+              <td style="text-align: right;">₹${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="text-align: center;">${panelGst}%</td>
+              <td style="text-align: right; font-weight: bold;">₹${panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr>
+              <td>${netMeterDescription}</td>
+              <td style="text-align: center;">${netMeterQty}</td>
+              <td style="text-align: right;">₹${netMeterPrice.toLocaleString()}</td>
+              <td style="text-align: right;">₹${netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="text-align: center;">${netMeterGst}%</td>
+              <td style="text-align: right; font-weight: bold;">₹${netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr>
+              <td>${subsidyDescription}</td>
+              <td style="text-align: center;">${subsidyQty}</td>
+              <td style="text-align: right;">₹${subsidyPrice.toLocaleString()}</td>
+              <td style="text-align: right;">₹${subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td style="text-align: center;">${subsidyGst}%</td>
+              <td style="text-align: right; font-weight: bold;">₹${subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+            <tr class="highlight-row">
+              <td colspan="4" style="text-align: right; border-right: 2px solid #f59e0b;">TOTAL</td>
+              <td style="text-align: center;"></td>
+              <td style="text-align: right; background-color: #fbbf24; color: #78350f;">₹${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Subsidy & Net Amount -->
+        <div style="margin-top: 15px; display: grid; gap: 10px;">
+          <div class="info-box" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-color: #0284c7;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #0c4a6e;">💰 Subsidy (Credited to Bank)</span>
+              <span style="font-size: 14px; font-weight: bold; color: #075985;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+            </div>
+          </div>
+          <div class="info-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border-color: #d97706;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 600; color: #92400e;">🏦 Net Amount (Your Investment)</span>
+              <span style="font-size: 14px; font-weight: bold; color: #b45309;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <!-- Financial Projection -->
+        <div class="financial-section">
+          <div class="section-header">📊 PROFIT WITH SOLAR</div>
+          <div style="margin: 15px 0; padding: 0; background-color: transparent;">
+            <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F18c19d76c43241ceaca5f0662141f48f?format=webp&width=800&height=1200" alt="Profit With Solar" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px;" />
+          </div>
+
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px; margin-top: 15px;">
+          <table style="margin: 0;">
+            <tbody>
+              <tr>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Present Monthly Power Bill</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">₹${monthlyBillBefore.toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Yearly Power Bill</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">₹${(annualBillBefore).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534;">Annual Tariff Increment</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534;">${tariffIncrement}%</td>
+              </tr>
+              <tr style="border-top: 2px solid rgba(0,0,0,0.1);">
+                <td style="background-color: transparent; border: none; font-weight: 600; color: #166534; padding-top: 10px;">Projected Bill (25 years)</td>
+                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #166534; padding-top: 10px;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              </tr>
+              <tr style="background-color: #16a34a; color: white; font-weight: bold; border: none;">
+                <td style="border: none; padding: 12px; color: white;">✅ Net Benefit After Investment</td>
+                <td style="border: none; padding: 12px; text-align: right; font-size: 13px;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <!-- Bill of Materials -->
+        <div class="bom-section">
+          <div class="section-header" style="margin-top: 30px;">📦 BILL OF MATERIALS</div>
+          <table>
+          <thead>
+            <tr>
+              <th style="width: 40px; text-align: center;">S.No</th>
+              <th>Material with Specifications</th>
+              <th style="width: 120px;">Make/Brand</th>
+              <th style="width: 60px; text-align: center;">Unit</th>
+              <th style="width: 50px; text-align: center;">Qty</th>
+            </tr>
+          </thead>
+          <tbody>
             ${billOfMaterials.map((material, idx) => `
               <tr>
-                <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${idx + 1}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${material.description}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${material.make}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">${material.uom}</td>
-                <td style="border: 1px solid #ccc; padding: 8px; text-align: center;">${material.quantity}</td>
+                <td style="text-align: center; font-weight: bold;">${idx + 1}</td>
+                <td>${material.description}</td>
+                <td>${material.make}</td>
+                <td style="text-align: center;">${material.uom}</td>
+                <td style="text-align: center; font-weight: bold;">${material.quantity}</td>
               </tr>
             `).join('')}
-          </table>
+          </tbody>
+        </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+          <div class="footer-divider"></div>
+          <div style="margin-bottom: 10px;">
+            <strong>Thank you for choosing solar energy!</strong><br>
+            This quotation is valid for 30 days from the date of issue.
+          </div>
+          <div style="font-size: 9px; color: #9ca3af;">
+            This is an automated quotation. For more information, please contact us.<br>
+            Generated on ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          </div>
         </div>
       `;
 
