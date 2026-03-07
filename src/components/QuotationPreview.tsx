@@ -185,7 +185,13 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           <div class="info-label" style="margin-bottom: 6px;">📍 Installation Location</div>
           <div style="color: #374151; font-size: 12px;">${address}</div>
         </div>
-        <div style="height: 120px;"></div>
+
+        <!-- Bi-Directional Metering Diagram -->
+        <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e5e7eb;">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2Fc7a086c127c2406aa10980861c14ccf5?format=webp&width=800&height=1200" alt="Bi-Directional Metering Diagram" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+        </div>
+
+        <div style="height: 40px;"></div>
 
         <!-- Electricity Bill Analysis -->
         <div class="section-container" style="margin-bottom: 10px;">
