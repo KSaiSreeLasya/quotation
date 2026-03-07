@@ -253,6 +253,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </div>
           </div>
         </div>
+
+        <!-- Solar Impact Infographic -->
+        <div style="margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e5e7eb;">
+          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F94376c4c2a9743b7ad102cb93916310c?format=webp&width=800&height=1200" alt="Solar Impact Summary" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+        </div>
         </div>
 
         <!-- System Specification -->
@@ -350,8 +355,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <!-- Financial Projection -->
         <div class="financial-section">
-          <div class="section-header">📊 25-YEAR FINANCIAL PROJECTION</div>
-          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px;">
+          <div class="section-header">📊 PROFIT WITH SOLAR</div>
+          <div style="margin: 15px 0; padding: 0; background-color: transparent;">
+            <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F18c19d76c43241ceaca5f0662141f48f?format=webp&width=800&height=1200" alt="Profit With Solar" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px;" />
+          </div>
+
+          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #16a34a; border-radius: 4px; padding: 15px; margin-top: 15px;">
           <table style="margin: 0;">
             <tbody>
               <tr>
