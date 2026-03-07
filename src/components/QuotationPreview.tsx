@@ -50,6 +50,18 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
     ]
   );
 
+  // Customer scope items
+  const [customerScope, setCustomerScope] = useState<string[]>([
+    'Customer to provide space for storing of materials.',
+    'Making the site ready and clearing the terrace / roof of any unwanted items is not included in scope of work. Necessary support will be extended to our Installation team for taking material inside the premises and also to the roof top. The same has to be kept at proper and secure place till completion of installation',
+    'Safety of material supplied would be in customer scope after delivery at site',
+    'Customer shall provide access to feed in solar power to LT panel located in ground floor of building. Feeder / LT panel for connection to grid will be made available at site and shall be in Customer\'s Scope',
+    'Load Distribution from AC LT panel is at Customer scope.',
+    'Customer to provide GPRS/WIFI for cloud monitoring',
+    'Cleaning of Modules is not in our scope. Customer is request to clean panels once in 15 days or as per site conditions, Cleaning with RO is recommended to avoid scaling on the solar panels',
+    'Water & Electricity and any support ladders required for construction of solar power plant shall be in Customer\'s scope'
+  ]);
+
   // Calculate totals
   const panelSubTotal = panelPrice * panelQty;
   const panelTotal = panelSubTotal * (1 + panelGst / 100);
@@ -413,6 +425,19 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             `).join('')}
           </tbody>
         </table>
+        </div>
+
+        <!-- Customer Scope -->
+        <div style="margin-top: 30px; padding: 20px; background-color: #fef3c7; border: 2px solid #fbbf24; border-radius: 6px; page-break-inside: avoid;">
+          <div style="font-size: 12px; font-weight: bold; color: #92400e; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📋 Customer Scope of Work</div>
+          <div style="font-size: 10px; color: #78350f; line-height: 1.8;">
+            ${customerScope.map((item, index) => `
+              <div style="margin-bottom: 8px; display: flex;">
+                <span style="font-weight: bold; min-width: 20px; margin-right: 8px;">${index + 1}.</span>
+                <span>${item}</span>
+              </div>
+            `).join('')}
+          </div>
         </div>
 
         <!-- Footer -->
@@ -867,7 +892,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             {/* Bill of Materials Section */}
             <div className="border-t border-slate-200 pt-8">
               <h3 className="text-lg font-bold text-slate-900 mb-6">Bill of Materials</h3>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-sm">
                   <thead>
@@ -942,6 +967,32 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 <Plus size={18} />
                 Add Material
               </button>
+            </div>
+
+            {/* Customer Scope Section */}
+            <div className="border-t border-slate-200 pt-8">
+              <h3 className="text-lg font-bold text-slate-900 mb-6">Customer Scope of Work</h3>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="space-y-4">
+                  {customerScope.map((item, index) => (
+                    <div key={index} className="flex gap-3">
+                      <span className="font-bold text-amber-900 min-w-fit">{index + 1}.</span>
+                      <textarea
+                        value={item}
+                        onChange={(e) => {
+                          const updated = [...customerScope];
+                          updated[index] = e.target.value;
+                          setCustomerScope(updated);
+                        }}
+                        className="w-full p-2 border border-amber-300 rounded text-sm resize-none focus:ring-2 focus:ring-amber-500 outline-none"
+                        rows={2}
+                      />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-amber-700 mt-4 italic">These scope items will appear in the PDF quotation</p>
+              </div>
             </div>
           </div>
         </div>
