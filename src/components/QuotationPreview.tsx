@@ -181,69 +181,114 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       let html = `
         <style>
-          body { margin: 0; padding: 0; }
-          .company-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #0f766e; page-break-inside: avoid; }
-          .company-logo { width: 100px; height: 100px; flex-shrink: 0; }
+          * { margin: 0; padding: 0; }
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2d3748; }
+
+          /* Header Styles */
+          .company-header { display: flex; align-items: center; gap: 20px; padding: 20px 0 25px 0; border-bottom: 3px solid #10b981; margin-bottom: 25px; page-break-inside: avoid; }
+          .company-logo { width: 80px; height: 80px; flex-shrink: 0; }
           .company-info { flex: 1; }
-          .company-name { font-size: 28px; font-weight: bold; color: #0f172a; margin: 0; letter-spacing: -0.5px; }
-          .company-details { font-size: 11px; color: #6b7280; margin: 8px 0 0 0; line-height: 1.6; }
-          .pdf-header { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%); padding: 20px 25px; margin: -30px -30px 25px -30px; color: white; page-break-inside: avoid; }
-          .pdf-header-title { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; }
-          .pdf-header-subtitle { font-size: 11px; opacity: 0.9; margin: 0; }
-          .pdf-header-ref { margin-top: 8px; font-size: 10px; opacity: 0.85; }
-          .section-header { background: linear-gradient(90deg, #0f766e 0%, #14b8a6 100%); border-left: 4px solid #0d5a54; padding: 12px 15px; margin: 18px 0 14px 0; font-size: 11px; font-weight: bold; color: white; page-break-after: avoid; letter-spacing: 0.3px; text-transform: uppercase; }
-          .section-container { page-break-inside: avoid; margin-bottom: 15px; }
-          .info-box { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fbbf24; padding: 14px; margin-bottom: 12px; border-radius: 6px; page-break-inside: avoid; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-          .info-grid { display: flex; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
-          .info-item { flex: 1; }
-          .info-label { font-size: 9px; color: #6b7280; text-transform: uppercase; font-weight: bold; margin-bottom: 6px; letter-spacing: 0.5px; }
-          .info-value { font-size: 13px; font-weight: bold; color: #0f766e; }
-          table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-          th { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; padding: 10px 8px; text-align: left; font-weight: bold; font-size: 10px; letter-spacing: 0.3px; }
-          td { border: 1px solid #d1d5db; padding: 8px; font-size: 10px; }
-          tr:nth-child(even) { background-color: #f9fafb; }
-          tbody tr:hover { background-color: #f3f4f6; }
-          .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: bold; color: #78350f; }
-          .success-row { background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important; font-weight: bold; color: #065f46; }
-          .comparison-table { page-break-inside: avoid; }
-          .comparison-table th { background: linear-gradient(135deg, #374151 0%, #4b5563 100%); }
-          .comparison-table td { border-color: #d1d5db; }
-          .value-right { text-align: right; }
-          .quotation-section { page-break-inside: avoid; margin-bottom: 20px; }
-          .financial-section { page-break-inside: avoid; margin-bottom: 20px; }
-          .bom-section { page-break-inside: avoid; margin-bottom: 20px; }
-          .terms-item { padding: 10px; margin-bottom: 10px; border-left: 3px solid #0f766e; background-color: #f8f9fa; }
-          .terms-item-odd { background-color: #ffffff; }
-          .terms-title { font-weight: bold; color: #0f766e; margin-bottom: 6px; font-size: 10px; text-transform: uppercase; }
-          .footer { margin-top: 35px; padding-top: 25px; border-top: 2px solid #0f766e; font-size: 10px; color: #6b7280; text-align: center; page-break-inside: avoid; background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%); padding-bottom: 20px; }
-          .footer-divider { height: 1px; background: linear-gradient(90deg, transparent, #d1d5db, transparent); margin: 15px 0; }
-          .bill-before { color: #b91c1c; }
-          .bill-after { color: #059669; }
+          .company-name { font-size: 26px; font-weight: 700; color: #1a202c; margin-bottom: 5px; }
+          .company-details { font-size: 10px; color: #718096; line-height: 1.6; }
+
+          /* Main Header */
+          .pdf-header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; margin: 0 0 30px 0; color: white; page-break-inside: avoid; border-radius: 8px; }
+          .pdf-header-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+          .pdf-header-subtitle { font-size: 12px; opacity: 0.95; margin-bottom: 10px; }
+          .pdf-header-ref { font-size: 11px; opacity: 0.9; }
+
+          /* Section Headers */
+          .section-header { background: #f7fafc; border-bottom: 3px solid #10b981; padding: 14px 16px; margin: 25px 0 16px 0; font-size: 12px; font-weight: 700; color: #1a202c; page-break-after: avoid; letter-spacing: 0.5px; text-transform: uppercase; }
+
+          /* Info Grid */
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
+          .info-item { background: #f7fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #10b981; }
+          .info-label { font-size: 9px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.3px; }
+          .info-value { font-size: 14px; font-weight: 600; color: #10b981; }
+
+          /* Info Box */
+          .info-box { background: #f0fdf4; border: 2px solid #dcfce7; padding: 16px; margin-bottom: 20px; border-radius: 8px; page-break-inside: avoid; }
+          .info-box-label { font-size: 11px; color: #059669; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+          .info-box-value { color: #1a202c; font-size: 13px; line-height: 1.6; }
+
+          /* Tables */
+          table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+          th { background: #2d3748; color: white; padding: 12px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 0.3px; }
+          td { border: 1px solid #e2e8f0; padding: 10px 12px; font-size: 10px; }
+          tr:nth-child(even) { background-color: #f7fafc; }
+          tr:hover { background-color: #edf2f7; }
+
+          /* Special Row Styles */
+          .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: 600; }
+          .success-row { background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important; font-weight: 600; color: #065f46; }
+          .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
+
+          /* Card Styles */
+          .card { background: white; border: 2px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 16px; page-break-inside: avoid; }
+          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+          .card-item { background: #f7fafc; padding: 14px; border-radius: 6px; border-left: 3px solid #10b981; }
+          .card-label { font-size: 10px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
+          .card-value { font-size: 16px; font-weight: 700; color: #10b981; }
+
+          /* Metric Cards */
+          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 16px; border-radius: 8px; text-align: center; }
+          .metric-title { font-size: 11px; color: #059669; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+          .metric-value { font-size: 20px; font-weight: 700; color: #065f46; }
+
+          /* Profit Summary */
+          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #10b981; border-radius: 8px; padding: 20px; margin: 20px 0; }
+          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 185, 129, 0.2); }
+          .profit-item:last-child { border-bottom: none; }
+          .profit-label { font-size: 11px; color: #065f46; font-weight: 600; }
+          .profit-value { font-size: 14px; font-weight: 700; color: #10b981; }
+          .profit-highlight { background: linear-gradient(90deg, #10b981 0%, #059669 100%); color: white; padding: 14px; border-radius: 6px; font-weight: 600; }
+
+          /* Comparison Section */
+          .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
+          .comparison-col { background: #f7fafc; border-radius: 8px; padding: 16px; }
+          .comparison-col h4 { font-size: 12px; font-weight: 600; color: #1a202c; margin-bottom: 12px; border-bottom: 2px solid #10b981; padding-bottom: 8px; }
+          .comparison-item { display: flex; justify-content: space-between; padding: 8px 0; }
+          .comparison-label { font-size: 10px; color: #718096; }
+          .comparison-value { font-size: 11px; font-weight: 600; color: #1a202c; }
+
+          /* Terms & Scope */
+          .terms-item { padding: 12px; margin-bottom: 10px; border-left: 3px solid #10b981; background: #f7fafc; border-radius: 4px; }
+          .terms-title { font-weight: 600; color: #059669; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
+          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.5; white-space: pre-wrap; }
+
+          /* Footer */
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; }
+          .footer-text { margin-bottom: 8px; }
+
+          /* Utilities */
+          .text-right { text-align: right; }
+          .text-center { text-align: center; }
+          .mb-10 { margin-bottom: 10px; }
+          .mb-20 { margin-bottom: 20px; }
+          .page-break { page-break-after: always; }
         </style>
 
-        <!-- Company Header with Logo -->
+        <!-- Company Header -->
         <div class="company-header">
           <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F0b85f72529aa43089d684d8542c7bc51?format=webp&width=800&height=1200" alt="AXIVOLT Logo" class="company-logo" />
           <div class="company-info">
             <div class="company-name">AXIVOLT</div>
             <div class="company-details">
-              📍 Flat No 101, Manish Residency<br/>
-              Sri Durga Colony, Miyapur<br/>
-              Madeenaguda, Hyderabad<br/>
-              Telangana 500049
+              Flat No 101, Manish Residency • Sri Durga Colony, Miyapur<br/>
+              Madeenaguda, Hyderabad • Telangana 500049
             </div>
           </div>
         </div>
 
-        <!-- Header -->
+        <!-- Main Header -->
         <div class="pdf-header">
-          <div class="pdf-header-title">☀️ SOLAR QUOTATION</div>
-          <div class="pdf-header-subtitle">Professional Solar Energy Solution</div>
-          <div class="pdf-header-ref">Ref: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}</div>
+          <div class="pdf-header-title">SOLAR ENERGY QUOTATION</div>
+          <div class="pdf-header-subtitle">Professional Installation & Commissioning</div>
+          <div class="pdf-header-ref">Reference: SQ-${new Date().getFullYear()}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')} | Date: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
         </div>
 
         <!-- Customer Information -->
-        <div class="section-header">📋 CUSTOMER INFORMATION</div>
+        <div class="section-header">CUSTOMER INFORMATION</div>
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Customer Name</div>
@@ -255,263 +300,246 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
           <div class="info-item">
             <div class="info-label">Installation Date</div>
-            <div class="info-value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div class="info-value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
           </div>
         </div>
+
         <div class="info-box">
-          <div class="info-label" style="margin-bottom: 6px;">📍 Installation Location</div>
-          <div style="color: #374151; font-size: 12px;">${address}</div>
+          <div class="info-box-label">Installation Location</div>
+          <div class="info-box-value">${address}</div>
         </div>
 
-        <!-- Bi-Directional Metering Diagram -->
-        <div style="margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #e5e7eb;">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2Fc7a086c127c2406aa10980861c14ccf5?format=webp&width=800&height=1200" alt="Bi-Directional Metering Diagram" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+        <!-- System Overview Section -->
+        <div class="section-header">SYSTEM OVERVIEW</div>
+        <div class="card-grid">
+          <div class="card-item">
+            <div class="card-label">Proposed System Size</div>
+            <div class="card-value">${systemSizeKw.toFixed(2)} kWp</div>
+          </div>
+          <div class="card-item">
+            <div class="card-label">Number of Panels</div>
+            <div class="card-value">${data.panelCount}</div>
+          </div>
+          <div class="card-item">
+            <div class="card-label">Efficiency Rating</div>
+            <div class="card-value">${(data.efficiencyFactor * 100).toFixed(0)}%</div>
+          </div>
+          <div class="card-item">
+            <div class="card-label">Annual Generation</div>
+            <div class="card-value">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+          </div>
         </div>
 
-        <div style="height: 40px;"></div>
+        <div class="comparison-grid">
+          <div class="comparison-col">
+            <h4>Before Solar Installation</h4>
+            <div class="comparison-item">
+              <span class="comparison-label">Monthly Units (kWh)</span>
+              <span class="comparison-value">${monthlyUnitsBefore}</span>
+            </div>
+            <div class="comparison-item">
+              <span class="comparison-label">Monthly Bill</span>
+              <span class="comparison-value">₹${monthlyBillBefore.toLocaleString()}</span>
+            </div>
+            <div class="comparison-item">
+              <span class="comparison-label">Price per Unit</span>
+              <span class="comparison-value">₹${avgPriceBeforeSolar}</span>
+            </div>
+          </div>
 
-        <!-- Electricity Bill Analysis -->
-        <div class="section-container" style="margin-bottom: 10px;">
-          <div class="section-header" style="margin: 10px 0 10px 0;">💡 ELECTRICITY BILL ANALYSIS</div>
-          <table class="comparison-table">
-          <thead>
-            <tr>
-              <th colspan="3">Before Solar Installation</th>
-              <th colspan="3">After Solar Installation</th>
-            </tr>
-            <tr style="background-color: #4b5563;">
-              <th style="background-color: inherit;">Metric</th>
-              <th style="background-color: inherit; text-align: right;">Value</th>
-              <th style="background-color: inherit;"></th>
-              <th style="background-color: inherit;">Metric</th>
-              <th style="background-color: inherit; text-align: right;">Value</th>
-              <th style="background-color: inherit;"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="bill-before">Monthly Units (kWh)</td>
-              <td class="bill-before value-right">${monthlyUnitsBefore}</td>
-              <td></td>
-              <td class="bill-after">Monthly Units (kWh)</td>
-              <td class="bill-after value-right">${monthlyUnitsAfter}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="bill-before">Monthly Bill (₹)</td>
-              <td class="bill-before value-right" style="font-weight: bold;">₹${monthlyBillBefore.toLocaleString()}</td>
-              <td></td>
-              <td class="bill-after">Monthly Bill (₹)</td>
-              <td class="bill-after value-right" style="font-weight: bold;">₹${monthlyBillAfter.toLocaleString()}</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td class="bill-before">Avg Price/Unit (₹)</td>
-              <td class="bill-before value-right">₹${avgPriceBeforeSolar}</td>
-              <td></td>
-              <td class="bill-after">Avg Price/Unit (₹)</td>
-              <td class="bill-after value-right">₹${avgPriceAfterSolar}</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+          <div class="comparison-col" style="border-left: 3px solid #10b981;">
+            <h4 style="color: #059669;">After Solar Installation</h4>
+            <div class="comparison-item">
+              <span class="comparison-label">Monthly Units (kWh)</span>
+              <span class="comparison-value" style="color: #059669;">${monthlyUnitsAfter}</span>
+            </div>
+            <div class="comparison-item">
+              <span class="comparison-label">Monthly Bill</span>
+              <span class="comparison-value" style="color: #059669;">₹${monthlyBillAfter.toLocaleString()}</span>
+            </div>
+            <div class="comparison-item">
+              <span class="comparison-label">Price per Unit</span>
+              <span class="comparison-value" style="color: #059669;">₹${avgPriceAfterSolar}</span>
+            </div>
+          </div>
+        </div>
 
         <!-- Savings Summary -->
-        <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #10b981; border-radius: 6px; padding: 14px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);">
-          <div style="display: flex; justify-content: space-around; text-align: center;">
-            <div>
-              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.3px;">💰 Monthly Savings</div>
-              <div style="font-size: 16px; font-weight: bold; color: #065f46;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
+        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7;">
+          <div class="card-grid">
+            <div class="metric-card">
+              <div class="metric-title">Monthly Savings</div>
+              <div class="metric-value">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
             </div>
-            <div style="border-left: 2px solid rgba(0,0,0,0.1);"></div>
-            <div>
-              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; font-weight: bold; margin-bottom: 4px; letter-spacing: 0.3px;">📈 Annual Savings</div>
-              <div style="font-size: 16px; font-weight: bold; color: #065f46;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+            <div class="metric-card">
+              <div class="metric-title">Annual Savings</div>
+              <div class="metric-value">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
             </div>
           </div>
         </div>
 
-        <!-- Solar Impact Infographic -->
-        <div style="margin: 15px 0; padding: 12px; background-color: #f8f9fa; border-radius: 6px; border: 1px solid #e5e7eb;">
-          <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F94376c4c2a9743b7ad102cb93916310c?format=webp&width=800&height=1200" alt="Solar Impact Summary" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto;" />
-        </div>
-        </div>
-
-        <!-- System Specification -->
-        <div class="section-container" style="margin-bottom: 10px;">
-          <div class="section-header" style="margin: 10px 0 10px 0;">⚙️ SYSTEM SPECIFICATION</div>
-          <table>
+        <table>
           <tbody>
             <tr>
-              <td style="font-weight: 600; background-color: #f3f4f6; width: 60%;">Number of Panels</td>
-              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.panelCount}</td>
+              <td>Roof Orientation</td>
+              <td class="text-right">${data.orientation}°</td>
             </tr>
             <tr>
-              <td style="font-weight: 600; background-color: #f3f4f6;">Total System Capacity</td>
-              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${systemSizeKw.toFixed(2)} kWp</td>
+              <td>Efficiency Factor</td>
+              <td class="text-right">${(data.efficiencyFactor * 100).toFixed(0)}%</td>
             </tr>
             <tr>
-              <td style="font-weight: 600; background-color: #f3f4f6;">Roof Orientation</td>
-              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.orientation}° (${(data.efficiencyFactor * 100).toFixed(0)}% efficiency)</td>
+              <td>Shading Exposure</td>
+              <td class="text-right">${(data.shadeFactor * 100).toFixed(0)}%</td>
             </tr>
-            <tr>
-              <td style="font-weight: 600; background-color: #f3f4f6;">Shading Factor</td>
-              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${(data.shadeFactor * 100).toFixed(0)}% exposure</td>
-            </tr>
-            <tr style="background-color: #dbeafe;">
-              <td style="font-weight: 600;">Est. Annual Generation</td>
-              <td style="value-right; font-weight: bold; color: #1e40af;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
+            <tr style="background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 100%);">
+              <td style="font-weight: 600; color: #059669;">Est. Annual Generation</td>
+              <td class="text-right" style="font-weight: 600; color: #059669;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
             </tr>
           </tbody>
         </table>
-        </div>
 
-        <!-- Quotation Details -->
-        <div class="quotation-section">
-          <div class="section-header">💳 QUOTATION DETAILS</div>
-          <table>
+        <table>
           <thead>
             <tr>
               <th>Description</th>
-              <th style="width: 60px; text-align: center;">Qty</th>
-              <th style="width: 80px; text-align: right;">Price (₹)</th>
-              <th style="width: 80px; text-align: right;">Subtotal (₹)</th>
+              <th style="width: 50px; text-align: center;">Qty</th>
+              <th style="width: 70px; text-align: right;">Unit Price</th>
+              <th style="width: 70px; text-align: right;">Subtotal</th>
               <th style="width: 50px; text-align: center;">GST %</th>
-              <th style="width: 80px; text-align: right;">Total (₹)</th>
+              <th style="width: 70px; text-align: right;">Total</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>${panelDescription}<br><span style="font-size: 9px; color: #6b7280;">Capacity: ${systemSizeKw.toFixed(2)}kWp</span></td>
-              <td style="text-align: center;">${panelQty}</td>
-              <td style="text-align: right;">₹${panelPrice.toLocaleString()}</td>
-              <td style="text-align: right;">₹${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="text-align: center;">${panelGst}%</td>
-              <td style="text-align: right; font-weight: bold;">₹${panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td>${panelDescription}<br><span style="font-size: 9px; color: #718096;">System: ${systemSizeKw.toFixed(2)}kWp</span></td>
+              <td class="text-center">${panelQty}</td>
+              <td class="text-right">₹${panelPrice.toLocaleString()}</td>
+              <td class="text-right">₹${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="text-center">${panelGst}%</td>
+              <td class="text-right" style="font-weight: 600;">₹${panelTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
             </tr>
             <tr>
               <td>${netMeterDescription}</td>
-              <td style="text-align: center;">${netMeterQty}</td>
-              <td style="text-align: right;">₹${netMeterPrice.toLocaleString()}</td>
-              <td style="text-align: right;">₹${netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="text-align: center;">${netMeterGst}%</td>
-              <td style="text-align: right; font-weight: bold;">₹${netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="text-center">${netMeterQty}</td>
+              <td class="text-right">₹${netMeterPrice.toLocaleString()}</td>
+              <td class="text-right">₹${netMeterSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="text-center">${netMeterGst}%</td>
+              <td class="text-right" style="font-weight: 600;">₹${netMeterTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
             </tr>
             <tr>
               <td>${subsidyDescription}</td>
-              <td style="text-align: center;">${subsidyQty}</td>
-              <td style="text-align: right;">₹${subsidyPrice.toLocaleString()}</td>
-              <td style="text-align: right;">₹${subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              <td style="text-align: center;">${subsidyGst}%</td>
-              <td style="text-align: right; font-weight: bold;">₹${subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="text-center">${subsidyQty}</td>
+              <td class="text-right">₹${subsidyPrice.toLocaleString()}</td>
+              <td class="text-right">₹${subsidySubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+              <td class="text-center">${subsidyGst}%</td>
+              <td class="text-right" style="font-weight: 600;">₹${subsidyTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
             </tr>
-            <tr class="highlight-row">
-              <td colspan="4" style="text-align: right; border-right: 2px solid #f59e0b;">TOTAL</td>
-              <td style="text-align: center;"></td>
-              <td style="text-align: right; background-color: #fbbf24; color: #78350f;">₹${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
+            <tr class="total-row">
+              <td colspan="4" class="text-right">TOTAL AMOUNT</td>
+              <td class="text-center">-</td>
+              <td class="text-right">₹${grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
             </tr>
           </tbody>
         </table>
 
         <!-- Subsidy & Net Amount -->
-        <div style="margin-top: 15px; display: grid; gap: 10px;">
-          <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border: 2px solid #0284c7; border-radius: 6px; padding: 14px; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.15);">
+        <div class="card-grid" style="margin-top: 16px;">
+          <div class="card" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #7dd3fc;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 600; color: #0c4a6e; font-size: 11px;">💰 SUBSIDY (Credited to Bank)</span>
-              <span style="font-size: 14px; font-weight: bold; color: #075985;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              <div style="flex: 1;">
+                <div class="info-label" style="color: #0369a1; margin-bottom: 8px;">Government Subsidy</div>
+                <div style="font-size: 18px; font-weight: 700; color: #0c4a6e;">₹${(data.subsidy || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                <div style="font-size: 9px; color: #0c4a6e; margin-top: 4px;">Credited to your bank</div>
+              </div>
             </div>
           </div>
-          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #d97706; border-radius: 6px; padding: 14px; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.15);">
+
+          <div class="card" style="background: linear-gradient(135deg, #fef08a 0%, #fde047 100%); border: 2px solid #facc15;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-weight: 600; color: #92400e; font-size: 11px;">🏦 NET AMOUNT (Your Investment)</span>
-              <span style="font-size: 14px; font-weight: bold; color: #b45309;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+              <div style="flex: 1;">
+                <div class="info-label" style="color: #854d0e; margin-bottom: 8px;">Your Investment</div>
+                <div style="font-size: 18px; font-weight: 700; color: #78350f;">₹${(grandTotal - (data.subsidy || 0)).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                <div style="font-size: 9px; color: #78350f; margin-top: 4px;">After subsidy deduction</div>
+              </div>
             </div>
           </div>
-        </div>
         </div>
 
         <!-- Financial Projection -->
-        <div class="financial-section">
-          <div class="section-header">📊 PROFIT WITH SOLAR</div>
-          <div style="margin: 15px 0; padding: 0; background-color: transparent;">
-            <img src="https://cdn.builder.io/api/v1/image/assets%2Fcb8e28b98e7d478c907b197aa0e49640%2F18c19d76c43241ceaca5f0662141f48f?format=webp&width=800&height=1200" alt="Profit With Solar" style="width: 100%; max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px;" />
-          </div>
+        <div style="page-break-before: always;"></div>
 
-          <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #10b981; border-radius: 6px; padding: 16px; margin-top: 15px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);">
-          <table style="margin: 0;">
-            <tbody>
-              <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Present Monthly Power Bill</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">₹${monthlyBillBefore.toLocaleString()}</td>
-              </tr>
-              <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Yearly Power Bill</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">₹${(annualBillBefore).toLocaleString()}</td>
-              </tr>
-              <tr>
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 8px 0;">Annual Tariff Increment</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 8px 0;">${tariffIncrement}%</td>
-              </tr>
-              <tr style="border-top: 2px solid rgba(0,0,0,0.1); border-bottom: 2px solid rgba(0,0,0,0.1);">
-                <td style="background-color: transparent; border: none; font-weight: 600; color: #065f46; padding: 10px 0;">Projected Bill (25 years)</td>
-                <td style="background-color: transparent; border: none; text-align: right; font-weight: bold; color: #065f46; padding: 10px 0;">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              </tr>
-              <tr style="background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; font-weight: bold; border: none;">
-                <td style="border: none; padding: 12px; color: white; font-size: 11px;">✅ NET BENEFIT AFTER INVESTMENT</td>
-                <td style="border: none; padding: 12px; text-align: right; font-size: 13px; color: white;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
+
+        <div class="profit-summary">
+          <div class="profit-item">
+            <span class="profit-label">Present Monthly Power Bill</span>
+            <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
+          </div>
+          <div class="profit-item">
+            <span class="profit-label">Annual Power Bill</span>
+            <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
+          </div>
+          <div class="profit-item">
+            <span class="profit-label">Annual Tariff Increment</span>
+            <span class="profit-value">${tariffIncrement}%</span>
+          </div>
+          <div class="profit-item">
+            <span class="profit-label">Projected Bill (25 years)</span>
+            <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+          </div>
+          <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
+            <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
+            <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+            <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
           </div>
         </div>
 
         <!-- Bill of Materials -->
-        <div class="bom-section">
-          <div class="section-header" style="margin-top: 30px;">📦 BILL OF MATERIALS</div>
-          <table>
+        <div class="section-header">BILL OF MATERIALS</div>
+        <table>
           <thead>
             <tr>
-              <th style="width: 40px; text-align: center;">S.No</th>
-              <th>Material with Specifications</th>
-              <th style="width: 120px;">Make/Brand</th>
-              <th style="width: 60px; text-align: center;">Unit</th>
+              <th style="width: 40px; text-align: center;">No.</th>
+              <th>Description</th>
+              <th style="width: 100px;">Make/Brand</th>
+              <th style="width: 50px; text-align: center;">Unit</th>
               <th style="width: 50px; text-align: center;">Qty</th>
             </tr>
           </thead>
           <tbody>
             ${billOfMaterials.map((material, idx) => `
               <tr>
-                <td style="text-align: center; font-weight: bold;">${idx + 1}</td>
+                <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
                 <td>${material.description}</td>
                 <td>${material.make}</td>
-                <td style="text-align: center;">${material.uom}</td>
-                <td style="text-align: center; font-weight: bold;">${material.quantity}</td>
+                <td class="text-center">${material.uom}</td>
+                <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
               </tr>
             `).join('')}
           </tbody>
         </table>
-        </div>
 
-        <!-- Terms and Conditions Section -->
-        <div style="margin-top: 30px; page-break-inside: avoid;">
-          <div class="section-header" style="margin: 0 0 18px 0; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-left: 0; color: white; font-size: 12px; border-radius: 4px 4px 0 0;">⚖️ TERMS AND CONDITIONS</div>
-          <div style="font-size: 10px; color: #374151; line-height: 1.8; background-color: #f8fafc; padding: 15px; border-radius: 0 0 4px 4px; border: 1px solid #e2e8f0;">
+        <!-- Terms and Conditions -->
+        <div class="section-header">TERMS AND CONDITIONS</div>
+        <div class="card">
+          <div style="font-size: 10px; color: #2d3748; line-height: 1.7;">
             ${termsConditions.map((item, index) => `
-              <div style="margin-bottom: 14px; padding: 12px; background-color: ${index % 2 === 0 ? '#ffffff' : '#f8f9fa'}; border-left: 4px solid #0f766e; border-radius: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
-                ${item.title ? `<div style="font-weight: bold; color: #0f766e; margin-bottom: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
-                <div style="white-space: pre-wrap; margin: 0; color: #1f2937; line-height: 1.7; font-size: 9.5px;">${item.content}</div>
+              <div class="terms-item">
+                ${item.title ? `<div class="terms-title">${index + 1}. ${item.title}</div>` : ''}
+                <div class="terms-content">${item.content}</div>
               </div>
             `).join('')}
           </div>
         </div>
 
         <!-- Customer Scope -->
-        <div style="margin-top: 25px; padding: 20px; background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%); border: 2px solid #fbbf24; border-radius: 6px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.15);">
-          <div style="font-size: 12px; font-weight: bold; color: #92400e; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px;">📋 CUSTOMER SCOPE OF WORK</div>
-          <div style="font-size: 10px; color: #78350f; line-height: 1.8;">
+        <div class="section-header" style="margin-top: 30px;">CUSTOMER SCOPE OF WORK</div>
+        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047;">
+          <div style="font-size: 10px; color: #78350f; line-height: 1.7;">
             ${customerScope.map((item, index) => `
-              <div style="margin-bottom: 10px; display: flex; padding: 8px; background-color: ${index % 2 === 0 ? 'rgba(255,255,255,0.4)' : 'transparent'}; border-radius: 3px;">
-                <span style="font-weight: bold; min-width: 20px; margin-right: 8px; color: #b45309;">${index + 1}.</span>
+              <div style="display: flex; gap: 12px; margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 6px; border-left: 3px solid #d97706;">
+                <span style="font-weight: 700; color: #b45309; min-width: 20px; flex-shrink: 0;">${index + 1}</span>
                 <span>${item}</span>
               </div>
             `).join('')}
@@ -520,14 +548,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <!-- Footer -->
         <div class="footer">
-          <div class="footer-divider"></div>
-          <div style="margin-bottom: 10px;">
-            <strong>Thank you for choosing solar energy!</strong><br>
-            This quotation is valid for 30 days from the date of issue.
+          <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
+            <div style="font-size: 12px; font-weight: 600; color: #059669; margin-bottom: 8px;">Thank You for Choosing Solar Energy!</div>
+            <div style="font-size: 11px; color: #2d3748; line-height: 1.6;">
+              This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
+              <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
+            </div>
           </div>
-          <div style="font-size: 9px; color: #9ca3af;">
-            This is an automated quotation. For more information, please contact us.<br>
-            Generated on ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 9px; color: #718096;">
+            <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
+            <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
           </div>
         </div>
       `;
