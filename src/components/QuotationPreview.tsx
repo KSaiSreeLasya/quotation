@@ -38,6 +38,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const [monthlyUnitsBefore, setMonthlyUnitsBefore] = useState(data.monthlyUnitsConsumedBefore || 360);
   const [monthlyUnitsAfter, setMonthlyUnitsAfter] = useState(data.monthlyUnitsConsumedAfter || 50);
   const [tariffIncrement, setTariffIncrement] = useState(data.tariffIncrement || 2);
+  const [systemSizeKw, setSystemSizeKw] = useState(data.systemSizeKw || 3.3);
 
   // Bill of materials
   const [billOfMaterials, setBillOfMaterials] = useState<BillOfMaterial[]>(
@@ -347,7 +348,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </tr>
             <tr>
               <td style="font-weight: 600; background-color: #f3f4f6;">Total System Capacity</td>
-              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${data.systemSizeKw.toFixed(2)} kWp</td>
+              <td style="value-right; background-color: #fffbeb; font-weight: bold;">${systemSizeKw.toFixed(2)} kWp</td>
             </tr>
             <tr>
               <td style="font-weight: 600; background-color: #f3f4f6;">Roof Orientation</td>
@@ -381,7 +382,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </thead>
           <tbody>
             <tr>
-              <td>${panelDescription}<br><span style="font-size: 9px; color: #6b7280;">Capacity: ${data.systemSizeKw.toFixed(2)}kWp</span></td>
+              <td>${panelDescription}<br><span style="font-size: 9px; color: #6b7280;">Capacity: ${systemSizeKw.toFixed(2)}kWp</span></td>
               <td style="text-align: center;">${panelQty}</td>
               <td style="text-align: right;">₹${panelPrice.toLocaleString()}</td>
               <td style="text-align: right;">₹${panelSubTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
@@ -741,7 +742,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-50">
                   <span className="text-slate-600">Total System Size</span>
-                  <span className="font-bold text-slate-900">{data.systemSizeKw.toFixed(2)} kW</span>
+                  <span className="font-bold text-slate-900">{systemSizeKw.toFixed(2)} kW</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-slate-50">
                   <span className="text-slate-600">Roof Orientation</span>
@@ -926,38 +927,64 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="border-t border-slate-200 pt-8">
               <div className="bg-green-100 p-6 rounded-lg border border-green-300">
                 <h3 className="text-lg font-bold text-slate-900 mb-6 text-center">Profit With Solar</h3>
-                
+
                 <div className="space-y-4">
-                  <div className="flex justify-between py-3 border-b border-green-300">
+                  <div className="flex justify-between items-center py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">Present Power Bill</span>
-                    <span className="font-bold text-slate-900">₹{monthlyBillBefore.toLocaleString()}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-slate-600">₹</span>
+                      <input
+                        type="number"
+                        value={monthlyBillBefore}
+                        onChange={(e) => setMonthlyBillBefore(parseFloat(e.target.value) || 0)}
+                        className="border border-slate-300 rounded px-3 py-1 w-32 font-bold text-slate-900 text-right"
+                      />
+                    </div>
                   </div>
-                  
+
                   <div className="flex justify-between py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">Power Bill For Next 1 year</span>
                     <span className="font-bold text-slate-900">₹{(annualBillBefore).toLocaleString()}</span>
                   </div>
-                  
-                  <div className="flex justify-between py-3 border-b border-green-300">
+
+                  <div className="flex justify-between items-center py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">Tariff Increment Year on Year</span>
-                    <span className="font-bold text-slate-900">{tariffIncrement}%</span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        value={tariffIncrement}
+                        onChange={(e) => setTariffIncrement(parseFloat(e.target.value) || 0)}
+                        className="border border-slate-300 rounded px-3 py-1 w-20 font-bold text-slate-900 text-right"
+                        step="0.1"
+                      />
+                      <span className="text-slate-600 font-semibold">%</span>
+                    </div>
                   </div>
-                  
+
                   <div className="flex justify-between py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">Power Bill For Next 25 years</span>
                     <span className="font-bold text-slate-900">₹{powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                   </div>
-                  
-                  <div className="flex justify-between py-3 border-b border-green-300">
+
+                  <div className="flex justify-between items-center py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">Proposed Solar power plant</span>
-                    <span className="font-bold text-slate-900">{data.systemSizeKw.toFixed(2)} kWp</span>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        value={systemSizeKw}
+                        onChange={(e) => setSystemSizeKw(parseFloat(e.target.value) || 0)}
+                        className="border border-slate-300 rounded px-3 py-1 w-20 font-bold text-slate-900 text-right"
+                        step="0.01"
+                      />
+                      <span className="text-slate-600 font-semibold">kWp</span>
+                    </div>
                   </div>
-                  
+
                   <div className="flex justify-between py-3 border-b border-green-300">
                     <span className="font-semibold text-slate-900">One Time Investment</span>
                     <span className="font-bold text-slate-900">₹{grandTotal.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                   </div>
-                  
+
                   <div className="flex justify-between py-3 bg-green-200 px-4 rounded font-bold">
                     <span className="text-slate-900">Benefit With Solar after your investment</span>
                     <span className="text-slate-900">₹{(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
