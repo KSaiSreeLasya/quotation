@@ -79,7 +79,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [netMeterGstPercent, setNetMeterGstPercent] = useState(18);
   const [subsidyCharges, setSubsidyCharges] = useState(1500);
   const [subsidyGstPercent, setSubsidyGstPercent] = useState(18);
-  const [subsidyAmount, setSubsidyAmount] = useState(78000); // Fixed subsidy amount
+  const [isSubsidyEligible, setIsSubsidyEligible] = useState(false); // Checkbox for subsidy eligibility
+  const [subsidyAmount, setSubsidyAmount] = useState(78000); // Subsidy amount when eligible
 
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
@@ -106,7 +107,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const inverterCost = INVERTER_BASE_COST + (systemSizeKw * INVERTER_KW_COST);
   const installationCost = INSTALLATION_BASE_COST;
   const totalCost = panelsCost + structureCost + inverterCost + installationCost;
-  const subsidy = subsidyAmount; // Use fixed subsidy amount
+  const subsidy = isSubsidyEligible ? subsidyAmount : 0; // Apply subsidy only if eligible
   const finalAmount = totalCost - subsidy;
 
   // Calculate pricing based on configuration
@@ -124,8 +125,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       annualGenerationKwh,
       annualSavings,
       totalCost,
-      subsidy: subsidyAmount,
-      finalAmount: totalCost - subsidyAmount,
+      subsidy: isSubsidyEligible ? subsidyAmount : 0,
+      finalAmount: totalCost - (isSubsidyEligible ? subsidyAmount : 0),
       orientation,
       efficiencyFactor,
       shadeFactor: actualShadeFactor,
@@ -492,19 +493,43 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* Subsidy Configuration */}
         <section className="space-y-3">
           <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Subsidy Configuration
+            Government Subsidy
           </label>
-          <div className="relative">
+          <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl">
             <input
-              type="number"
-              value={subsidyAmount}
-              onChange={(e) => setSubsidyAmount(parseFloat(e.target.value) || 0)}
-              placeholder="Subsidy Amount"
-              className="w-full pl-4 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition-all"
+              type="checkbox"
+              id="subsidy-eligible"
+              checked={isSubsidyEligible}
+              onChange={(e) => setIsSubsidyEligible(e.target.checked)}
+              className="w-5 h-5 text-emerald-600 rounded cursor-pointer"
             />
-            <span className="absolute right-4 top-3 text-[10px] font-bold text-slate-500 uppercase">₹</span>
+            <label htmlFor="subsidy-eligible" className="flex-1 text-sm font-semibold text-slate-700 cursor-pointer">
+              Customer is eligible for subsidy
+            </label>
           </div>
-          <p className="text-xs text-slate-500">Current Subsidy: ₹{subsidyAmount.toLocaleString()}</p>
+
+          {isSubsidyEligible && (
+            <div className="space-y-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+              <label className="text-xs font-semibold text-emerald-900 uppercase tracking-wider">
+                Subsidy Amount
+              </label>
+              <div className="relative">
+                <input
+                  type="number"
+                  value={subsidyAmount}
+                  onChange={(e) => setSubsidyAmount(parseFloat(e.target.value) || 0)}
+                  placeholder="Enter subsidy amount"
+                  className="w-full pl-4 pr-4 py-3 bg-white border border-emerald-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition-all"
+                />
+                <span className="absolute right-4 top-3 text-[10px] font-bold text-emerald-600 uppercase">₹</span>
+              </div>
+              <p className="text-xs text-emerald-700 font-medium">Subsidy to be credited: ₹{subsidyAmount.toLocaleString()}</p>
+            </div>
+          )}
+
+          {!isSubsidyEligible && (
+            <p className="text-xs text-slate-500 italic">Customer will not receive subsidy benefits</p>
+          )}
         </section>
 
         {/* Real-time Stats */}
