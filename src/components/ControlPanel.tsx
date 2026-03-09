@@ -79,6 +79,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [netMeterGstPercent, setNetMeterGstPercent] = useState(18);
   const [subsidyCharges, setSubsidyCharges] = useState(1500);
   const [subsidyGstPercent, setSubsidyGstPercent] = useState(18);
+  const [subsidyAmount, setSubsidyAmount] = useState(78000); // Fixed subsidy amount
 
   const getEfficiencyFactor = (deg: number) => {
     if (deg >= 135 && deg <= 225) return ORIENTATION_EFFICIENCY.SOUTH;
@@ -105,7 +106,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const inverterCost = INVERTER_BASE_COST + (systemSizeKw * INVERTER_KW_COST);
   const installationCost = INSTALLATION_BASE_COST;
   const totalCost = panelsCost + structureCost + inverterCost + installationCost;
-  const subsidy = totalCost * SUBSIDY_PERCENTAGE;
+  const subsidy = subsidyAmount; // Use fixed subsidy amount
   const finalAmount = totalCost - subsidy;
 
   // Calculate pricing based on configuration
@@ -123,8 +124,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       annualGenerationKwh,
       annualSavings,
       totalCost,
-      subsidy,
-      finalAmount,
+      subsidy: subsidyAmount,
+      finalAmount: totalCost - subsidyAmount,
       orientation,
       efficiencyFactor,
       shadeFactor: actualShadeFactor,
@@ -486,6 +487,24 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             />
             <div className="absolute right-3 top-2 text-[10px] font-bold text-slate-400 uppercase">kW</div>
           </div>
+        </section>
+
+        {/* Subsidy Configuration */}
+        <section className="space-y-3">
+          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            Subsidy Configuration
+          </label>
+          <div className="relative">
+            <input
+              type="number"
+              value={subsidyAmount}
+              onChange={(e) => setSubsidyAmount(parseFloat(e.target.value) || 0)}
+              placeholder="Subsidy Amount"
+              className="w-full pl-4 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none text-sm transition-all"
+            />
+            <span className="absolute right-4 top-3 text-[10px] font-bold text-slate-500 uppercase">₹</span>
+          </div>
+          <p className="text-xs text-slate-500">Current Subsidy: ₹{subsidyAmount.toLocaleString()}</p>
         </section>
 
         {/* Real-time Stats */}
