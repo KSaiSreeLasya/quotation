@@ -748,23 +748,25 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- System Overview Section -->
-        <div class="section-header">SYSTEM OVERVIEW</div>
-        <div class="card-grid">
-          <div class="card-item">
-            <div class="card-label">Proposed System Size</div>
-            <div class="card-value">${systemSizeKw.toFixed(2)} kWp</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Number of Panels</div>
-            <div class="card-value">${data.panelCount}</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Efficiency Rating</div>
-            <div class="card-value">${(data.efficiencyFactor * 100).toFixed(0)}%</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Annual Generation</div>
-            <div class="card-value">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+        <div class="keep-together">
+          <div class="section-header">SYSTEM OVERVIEW</div>
+          <div class="card-grid">
+            <div class="card-item">
+              <div class="card-label">Proposed System Size</div>
+              <div class="card-value">${systemSizeKw.toFixed(2)} kWp</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Number of Panels</div>
+              <div class="card-value">${data.panelCount}</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Efficiency Rating</div>
+              <div class="card-value">${(data.efficiencyFactor * 100).toFixed(0)}%</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Annual Generation</div>
+              <div class="card-value">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+            </div>
           </div>
         </div>
 
@@ -905,117 +907,122 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Financial Projection -->
-        <div style="page-break-before: always;"></div>
-
-        <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
-
-        <div class="profit-summary">
-          <div class="profit-item">
-            <span class="profit-label">Present Monthly Power Bill</span>
-            <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Annual Power Bill</span>
-            <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Annual Tariff Increment</span>
-            <span class="profit-value">${tariffIncrement}%</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Projected Bill (25 years)</span>
-            <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-          </div>
-          <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
-            <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
-            <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-            <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
+        <div class="keep-together">
+          <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
+          <div class="profit-summary">
+            <div class="profit-item">
+              <span class="profit-label">Present Monthly Power Bill</span>
+              <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Power Bill</span>
+              <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Tariff Increment</span>
+              <span class="profit-value">${tariffIncrement}%</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Projected Bill (25 years)</span>
+              <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+            </div>
+            <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
+              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
+              <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
+            </div>
           </div>
         </div>
 
         <!-- Environmental Benefits -->
-        <div class="section-header">ENVIRONMENTAL IMPACT</div>
-        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 12px; padding: 24px;">
-          <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
-            <div class="metric-card" style="background: white; border: 1px solid #d1fae5; padding: 16px; border-radius: 12px; text-align: center;">
-              <div style="font-size: 20px; margin-bottom: 8px;">☀️</div>
-              <div style="font-size: 14px; font-weight: 800; color: #065f46;">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
-              <div style="font-size: 9px; color: #059669; text-transform: uppercase; margin-top: 4px;">Clean Energy</div>
+        <div class="keep-together">
+          <div class="section-header">ENVIRONMENTAL IMPACT</div>
+          <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 12px; padding: 24px;">
+            <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
+              <div class="metric-card" style="background: white; border: 1px solid #d1fae5; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">☀️</div>
+                <div style="font-size: 14px; font-weight: 800; color: #065f46;">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+                <div style="font-size: 9px; color: #059669; text-transform: uppercase; margin-top: 4px;">Clean Energy</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #ffedd5; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">🏭</div>
+                <div style="font-size: 14px; font-weight: 800; color: #9a3412;">${envBenefits.co2SavedTonsPerYear} Tons</div>
+                <div style="font-size: 9px; color: #9a3412; text-transform: uppercase; margin-top: 4px;">CO2 Reduced</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #dcfce7; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">🌳</div>
+                <div style="font-size: 14px; font-weight: 800; color: #166534;">${Math.round(envBenefits.equivalentTrees)} Trees</div>
+                <div style="font-size: 9px; color: #15803d; text-transform: uppercase; margin-top: 4px;">Equivalent planted</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #fef3c7; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">💰</div>
+                <div style="font-size: 14px; font-weight: 800; color: #854d0e;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+                <div style="font-size: 9px; color: #a16207; text-transform: uppercase; margin-top: 4px;">Yearly Savings</div>
+              </div>
             </div>
-            <div class="metric-card" style="background: white; border: 1px solid #ffedd5; padding: 16px; border-radius: 12px; text-align: center;">
-              <div style="font-size: 20px; margin-bottom: 8px;">🏭</div>
-              <div style="font-size: 14px; font-weight: 800; color: #9a3412;">${envBenefits.co2SavedTonsPerYear} Tons</div>
-              <div style="font-size: 9px; color: #9a3412; text-transform: uppercase; margin-top: 4px;">CO2 Reduced</div>
+            <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #065f46; font-weight: 600; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px;">
+              Over 25 years, you will reduce ${envBenefits.co2Saved25YearsTons} tons of carbon emissions,
+              equivalent to planting ${envBenefits.equivalentTrees25Years.toLocaleString()} mature trees.
             </div>
-            <div class="metric-card" style="background: white; border: 1px solid #dcfce7; padding: 16px; border-radius: 12px; text-align: center;">
-              <div style="font-size: 20px; margin-bottom: 8px;">🌳</div>
-              <div style="font-size: 14px; font-weight: 800; color: #166534;">${Math.round(envBenefits.equivalentTrees)} Trees</div>
-              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; margin-top: 4px;">Equivalent planted</div>
-            </div>
-            <div class="metric-card" style="background: white; border: 1px solid #fef3c7; padding: 16px; border-radius: 12px; text-align: center;">
-              <div style="font-size: 20px; margin-bottom: 8px;">💰</div>
-              <div style="font-size: 14px; font-weight: 800; color: #854d0e;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
-              <div style="font-size: 9px; color: #a16207; text-transform: uppercase; margin-top: 4px;">Yearly Savings</div>
-            </div>
-          </div>
-          <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #065f46; font-weight: 600; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px;">
-            Over 25 years, you will reduce ${envBenefits.co2Saved25YearsTons} tons of carbon emissions,
-            equivalent to planting ${envBenefits.equivalentTrees25Years.toLocaleString()} mature trees.
           </div>
         </div>
 
         <!-- Bill of Materials -->
-        <div class="section-header">BILL OF MATERIALS</div>
-        <div style="page-break-inside: avoid;">
-          <table style="page-break-inside: avoid;">
-            <thead>
-              <tr>
-                <th style="width: 40px; text-align: center;">No.</th>
-                <th>Description</th>
-                <th style="width: 100px;">Make/Brand</th>
-                <th style="width: 50px; text-align: center;">Unit</th>
-                <th style="width: 50px; text-align: center;">Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${billOfMaterials.map((material, idx) => `
-                <tr style="page-break-inside: avoid;">
-                  <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
-                  <td>${material.description}</td>
-                  <td>${material.make}</td>
-                  <td class="text-center">${material.uom}</td>
-                  <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+        <div class="keep-together">
+          <div class="section-header">BILL OF MATERIALS</div>
+          <div style="page-break-inside: avoid;">
+            <table style="page-break-inside: avoid;">
+              <thead>
+                <tr>
+                  <th style="width: 40px; text-align: center;">No.</th>
+                  <th>Description</th>
+                  <th style="width: 100px;">Make/Brand</th>
+                  <th style="width: 50px; text-align: center;">Unit</th>
+                  <th style="width: 50px; text-align: center;">Qty</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${billOfMaterials.map((material, idx) => `
+                  <tr style="page-break-inside: avoid;">
+                    <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
+                    <td>${material.description}</td>
+                    <td>${material.make}</td>
+                    <td class="text-center">${material.uom}</td>
+                    <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Terms and Conditions -->
-        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
-        <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
-        <div class="card" style="page-break-inside: avoid; padding: 18px; margin: 0; border-radius: 8px;">
-          <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
-            ${termsConditions.map((item, index) => `
-              <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
-                ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
-                <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
-              </div>
-            `).join('')}
+        <div class="keep-together">
+          <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
+          <div class="card" style="page-break-inside: avoid; padding: 18px; margin: 0; border-radius: 8px;">
+            <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
+              ${termsConditions.map((item, index) => `
+                <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
+                  ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
+                  <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
 
         <!-- Customer Scope -->
-        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
-        <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
-        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
-          <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
-            ${customerScope.map((item, index) => `
-              <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
-                <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
-                <span style="font-size: 11px; line-height: 1.7;">${item}</span>
-              </div>
-            `).join('')}
+        <div class="keep-together">
+          <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
+          <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
+            <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
+              ${customerScope.map((item, index) => `
+                <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
+                  <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
+                  <span style="font-size: 11px; line-height: 1.7;">${item}</span>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
 
@@ -1042,7 +1049,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       // Smart Page Break Logic for html2canvas
       // This helps push elements to the next page instead of splitting them
       const pageHeightPx = 1270; // Approximation for A4 height at 900px width
-      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
+      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.keep-together, .section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
 
       elementsToAvoidSplitting.forEach((el: any) => {
         const rect = el.getBoundingClientRect();
