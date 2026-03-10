@@ -997,32 +997,32 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions -->
-        <div class="keep-together">
-          <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
-          <div class="card" style="page-break-inside: avoid; padding: 18px; margin: 0; border-radius: 8px;">
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
-              ${termsConditions.map((item, index) => `
-                <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
+        <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
+        <div class="card" style="padding: 18px; margin: 0; border-radius: 8px; border: 2px solid #e2e8f0;">
+          <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
+            ${termsConditions.map((item, index) => {
+              // Wrap the first item with the section header logic if we wanted,
+              // but since they are in a card, let's just make sure the card itself is split-able.
+              return `
+                <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
                   ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
                   <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
                 </div>
-              `).join('')}
-            </div>
+              `;
+            }).join('')}
           </div>
         </div>
 
         <!-- Customer Scope -->
-        <div class="keep-together">
-          <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
-          <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
-            <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
-              ${customerScope.map((item, index) => `
-                <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
-                  <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
-                  <span style="font-size: 11px; line-height: 1.7;">${item}</span>
-                </div>
-              `).join('')}
-            </div>
+        <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
+        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 18px; margin: 0;">
+          <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
+            ${customerScope.map((item, index) => `
+              <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid;">
+                <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
+                <span style="font-size: 11px; line-height: 1.7;">${item}</span>
+              </div>
+            `).join('')}
           </div>
         </div>
 
@@ -1059,8 +1059,25 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         const pageOfTop = Math.floor(top / pageHeightPx);
         const pageOfBottom = Math.floor(bottom / pageHeightPx);
 
-        if (pageOfTop !== pageOfBottom) {
-          // Element crosses a page boundary
+        // Special logic for section headers: keep them with at least some content
+        if (el.classList.contains('section-header')) {
+          const nextEl = el.nextElementSibling;
+          if (nextEl) {
+            const nextBottom = nextEl.offsetTop + Math.min(nextEl.offsetHeight, 100);
+            const pageOfNextStart = Math.floor(nextBottom / pageHeightPx);
+            if (pageOfTop !== pageOfNextStart) {
+              // Header is at bottom, but content starts on next page. Push header.
+              const spacerHeight = (pageOfNextStart * pageHeightPx) - top;
+              const spacer = document.createElement('div');
+              spacer.style.height = `${spacerHeight}px`;
+              el.parentNode.insertBefore(spacer, el);
+              return;
+            }
+          }
+        }
+
+        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85) {
+          // Element crosses a page boundary and is small enough to fit on a new page
           const spacerHeight = (pageOfBottom * pageHeightPx) - top;
           if (spacerHeight > 0) {
             const spacer = document.createElement('div');
