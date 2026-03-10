@@ -185,38 +185,40 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2d3748; }
 
           /* Header Styles */
-          .company-header { display: flex; align-items: center; gap: 20px; padding: 20px 0 25px 0; border-bottom: 3px solid #10b981; margin-bottom: 25px; page-break-inside: avoid; }
-          .company-logo { width: 80px; height: 80px; flex-shrink: 0; }
+          .company-header { display: flex; align-items: center; gap: 24px; padding: 24px 0 28px 0; border-bottom: 4px solid #10b981; margin-bottom: 28px; page-break-inside: avoid; }
+          .company-logo { width: 90px; height: 90px; flex-shrink: 0; border-radius: 8px; background: #f0fdf4; padding: 4px; }
           .company-info { flex: 1; }
-          .company-name { font-size: 26px; font-weight: 700; color: #1a202c; margin-bottom: 5px; }
-          .company-details { font-size: 10px; color: #718096; line-height: 1.6; }
+          .company-name { font-size: 28px; font-weight: 800; color: #065f46; margin-bottom: 8px; letter-spacing: -0.5px; }
+          .company-details { font-size: 10px; color: #718096; line-height: 1.7; }
 
           /* Main Header */
-          .pdf-header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; margin: 0 0 30px 0; color: white; page-break-inside: avoid; border-radius: 8px; }
-          .pdf-header-title { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-          .pdf-header-subtitle { font-size: 12px; opacity: 0.95; margin-bottom: 10px; }
-          .pdf-header-ref { font-size: 11px; opacity: 0.9; }
+          .pdf-header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 36px; margin: 0 0 32px 0; color: white; page-break-inside: avoid; border-radius: 12px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25); }
+          .pdf-header-title { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+          .pdf-header-subtitle { font-size: 13px; opacity: 0.95; margin-bottom: 12px; font-weight: 500; }
+          .pdf-header-ref { font-size: 11px; opacity: 0.92; font-weight: 500; }
 
           /* Section Headers */
-          .section-header { background: #f7fafc; border-bottom: 3px solid #10b981; padding: 14px 16px; margin: 25px 0 16px 0; font-size: 12px; font-weight: 700; color: #1a202c; page-break-after: avoid; letter-spacing: 0.5px; text-transform: uppercase; }
+          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 16px 18px; margin: 28px 0 18px 0; font-size: 12px; font-weight: 700; color: #065f46; page-break-after: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; }
 
           /* Info Grid */
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 20px; page-break-inside: avoid; }
-          .info-item { background: #f7fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #10b981; }
-          .info-label { font-size: 9px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; letter-spacing: 0.3px; }
-          .info-value { font-size: 14px; font-weight: 600; color: #10b981; }
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 22px; page-break-inside: avoid; }
+          .info-item { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 16px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08); }
+          .info-label { font-size: 9px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.4px; }
+          .info-value { font-size: 15px; font-weight: 700; color: #065f46; }
 
           /* Info Box */
-          .info-box { background: #f0fdf4; border: 2px solid #dcfce7; padding: 16px; margin-bottom: 20px; border-radius: 8px; page-break-inside: avoid; }
-          .info-box-label { font-size: 11px; color: #059669; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
-          .info-box-value { color: #1a202c; font-size: 13px; line-height: 1.6; }
+          .info-box { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; padding: 18px; margin-bottom: 22px; border-radius: 10px; page-break-inside: avoid; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1); }
+          .info-box-label { font-size: 11px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.3px; }
+          .info-box-value { color: #1a202c; font-size: 13px; line-height: 1.7; font-weight: 500; }
 
           /* Tables */
-          table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-          th { background: #2d3748; color: white; padding: 12px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 0.3px; }
-          td { border: 1px solid #e2e8f0; padding: 10px 12px; font-size: 10px; }
-          tr:nth-child(even) { background-color: #f7fafc; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+          th { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 14px 12px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 0.4px; text-transform: uppercase; }
+          td { border-bottom: 1px solid #e2e8f0; padding: 12px; font-size: 10px; }
+          tr { background: white; transition: background-color 0.2s ease; }
+          tr:nth-child(even) { background-color: #f8fafc; }
           tr:hover { background-color: #edf2f7; }
+          tbody tr:first-child { border-top: none; }
 
           /* Special Row Styles */
           .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: 600; }
@@ -224,24 +226,24 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
 
           /* Card Styles */
-          .card { background: white; border: 2px solid #e2e8f0; border-radius: 8px; padding: 18px; margin-bottom: 16px; page-break-inside: avoid; }
-          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-          .card-item { background: #f7fafc; padding: 14px; border-radius: 6px; border-left: 3px solid #10b981; }
-          .card-label { font-size: 10px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
-          .card-value { font-size: 16px; font-weight: 700; color: #10b981; }
+          .card { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 22px; margin-bottom: 18px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); }
+          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+          .card-item { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 16px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+          .card-label { font-size: 10px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.3px; }
+          .card-value { font-size: 18px; font-weight: 700; color: #10b981; }
 
           /* Metric Cards */
-          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 16px; border-radius: 8px; text-align: center; }
-          .metric-title { font-size: 11px; color: #059669; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
-          .metric-value { font-size: 20px; font-weight: 700; color: #065f46; }
+          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12); }
+          .metric-title { font-size: 11px; color: #059669; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.3px; }
+          .metric-value { font-size: 22px; font-weight: 800; color: #065f46; }
 
           /* Profit Summary */
-          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #10b981; border-radius: 8px; padding: 20px; margin: 20px 0; }
-          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 185, 129, 0.2); }
+          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); }
+          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); }
           .profit-item:last-child { border-bottom: none; }
-          .profit-label { font-size: 11px; color: #065f46; font-weight: 600; }
-          .profit-value { font-size: 14px; font-weight: 700; color: #10b981; }
-          .profit-highlight { background: linear-gradient(90deg, #10b981 0%, #059669 100%); color: white; padding: 14px; border-radius: 6px; font-weight: 600; }
+          .profit-label { font-size: 11px; color: #059669; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+          .profit-value { font-size: 15px; font-weight: 700; color: #065f46; }
+          .profit-highlight { background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; padding: 18px; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
 
           /* Comparison Section */
           .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
@@ -252,9 +254,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .comparison-value { font-size: 11px; font-weight: 600; color: #1a202c; }
 
           /* Terms & Scope */
-          .terms-item { padding: 12px; margin-bottom: 10px; border-left: 3px solid #10b981; background: #f7fafc; border-radius: 4px; }
-          .terms-title { font-weight: 600; color: #059669; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; }
-          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.5; white-space: pre-wrap; }
+          .terms-item { padding: 14px; margin-bottom: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
+          .terms-title { font-weight: 700; color: #059669; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
+          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.6; white-space: pre-wrap; }
 
           /* Footer */
           .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; }
@@ -331,70 +333,70 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <div class="comparison-grid">
-          <div class="comparison-col">
-            <h4>Before Solar Installation</h4>
-            <div class="comparison-item">
-              <span class="comparison-label">Monthly Units (kWh)</span>
-              <span class="comparison-value">${monthlyUnitsBefore}</span>
+          <div class="comparison-col" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #cbd5e1; border-radius: 10px; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);">
+            <h4 style="border-bottom: 3px solid #64748b; padding-bottom: 12px; margin-bottom: 12px; color: #1e293b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Before Solar Installation</h4>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #94a3b8;">
+              <span class="comparison-label" style="color: #64748b;">Monthly Units (kWh)</span>
+              <span class="comparison-value" style="color: #1e293b; font-weight: 700;">${monthlyUnitsBefore}</span>
             </div>
-            <div class="comparison-item">
-              <span class="comparison-label">Monthly Bill</span>
-              <span class="comparison-value">₹${monthlyBillBefore.toLocaleString()}</span>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #94a3b8;">
+              <span class="comparison-label" style="color: #64748b;">Monthly Bill</span>
+              <span class="comparison-value" style="color: #1e293b; font-weight: 700;">₹${monthlyBillBefore.toLocaleString()}</span>
             </div>
-            <div class="comparison-item">
-              <span class="comparison-label">Price per Unit</span>
-              <span class="comparison-value">₹${avgPriceBeforeSolar}</span>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; border-left: 3px solid #94a3b8;">
+              <span class="comparison-label" style="color: #64748b;">Price per Unit</span>
+              <span class="comparison-value" style="color: #1e293b; font-weight: 700;">₹${avgPriceBeforeSolar}</span>
             </div>
           </div>
 
-          <div class="comparison-col" style="border-left: 3px solid #10b981;">
-            <h4 style="color: #059669;">After Solar Installation</h4>
-            <div class="comparison-item">
-              <span class="comparison-label">Monthly Units (kWh)</span>
-              <span class="comparison-value" style="color: #059669;">${monthlyUnitsAfter}</span>
+          <div class="comparison-col" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #86efac; border-radius: 10px; box-shadow: 0 2px 6px rgba(22, 163, 74, 0.12);">
+            <h4 style="border-bottom: 3px solid #10b981; padding-bottom: 12px; margin-bottom: 12px; color: #065f46; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">After Solar Installation</h4>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #10b981;">
+              <span class="comparison-label" style="color: #059669;">Monthly Units (kWh)</span>
+              <span class="comparison-value" style="color: #065f46; font-weight: 700;">${monthlyUnitsAfter}</span>
             </div>
-            <div class="comparison-item">
-              <span class="comparison-label">Monthly Bill</span>
-              <span class="comparison-value" style="color: #059669;">₹${monthlyBillAfter.toLocaleString()}</span>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #10b981;">
+              <span class="comparison-label" style="color: #059669;">Monthly Bill</span>
+              <span class="comparison-value" style="color: #065f46; font-weight: 700;">₹${monthlyBillAfter.toLocaleString()}</span>
             </div>
-            <div class="comparison-item">
-              <span class="comparison-label">Price per Unit</span>
-              <span class="comparison-value" style="color: #059669;">₹${avgPriceAfterSolar}</span>
+            <div class="comparison-item" style="background: white; padding: 10px 12px; border-radius: 6px; border-left: 3px solid #10b981;">
+              <span class="comparison-label" style="color: #059669;">Price per Unit</span>
+              <span class="comparison-value" style="color: #065f46; font-weight: 700;">₹${avgPriceAfterSolar}</span>
             </div>
           </div>
         </div>
 
         <!-- Savings Summary -->
-        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7;">
+        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); padding: 24px;">
           <div class="card-grid">
-            <div class="metric-card">
-              <div class="metric-title">Monthly Savings</div>
-              <div class="metric-value">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #6ee7b7; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.15); border-radius: 10px; padding: 20px;">
+              <div class="metric-title" style="color: #059669; font-size: 12px;">Monthly Savings</div>
+              <div class="metric-value" style="color: #065f46; font-size: 24px; margin-top: 8px;">₹${(monthlyBillBefore - monthlyBillAfter).toLocaleString()}</div>
             </div>
-            <div class="metric-card">
-              <div class="metric-title">Annual Savings</div>
-              <div class="metric-value">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #7dd3fc; box-shadow: 0 2px 8px rgba(3, 105, 161, 0.15); border-radius: 10px; padding: 20px;">
+              <div class="metric-title" style="color: #0369a1; font-size: 12px;">Annual Savings</div>
+              <div class="metric-value" style="color: #0c4a6e; font-size: 24px; margin-top: 8px;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
             </div>
           </div>
         </div>
 
-        <table>
+        <table style="margin: 20px 0; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
           <tbody>
-            <tr>
-              <td>Roof Orientation</td>
-              <td class="text-right">${data.orientation}°</td>
+            <tr style="background: #f8fafb; border-bottom: 2px solid #e2e8f0;">
+              <td style="border: none; padding: 14px 16px; font-weight: 500; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;">Roof Orientation</td>
+              <td class="text-right" style="border: none; padding: 14px 16px; font-weight: 700; color: #10b981; font-size: 13px;">${data.orientation}°</td>
             </tr>
-            <tr>
-              <td>Efficiency Factor</td>
-              <td class="text-right">${(data.efficiencyFactor * 100).toFixed(0)}%</td>
+            <tr style="background: #ffffff; border-bottom: 2px solid #e2e8f0;">
+              <td style="border: none; padding: 14px 16px; font-weight: 500; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;">Efficiency Factor</td>
+              <td class="text-right" style="border: none; padding: 14px 16px; font-weight: 700; color: #10b981; font-size: 13px;">${(data.efficiencyFactor * 100).toFixed(0)}%</td>
             </tr>
-            <tr>
-              <td>Shading Exposure</td>
-              <td class="text-right">${(data.shadeFactor * 100).toFixed(0)}%</td>
+            <tr style="background: #f8fafb; border-bottom: 2px solid #e2e8f0;">
+              <td style="border: none; padding: 14px 16px; font-weight: 500; color: #475569; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px;">Shading Exposure</td>
+              <td class="text-right" style="border: none; padding: 14px 16px; font-weight: 700; color: #10b981; font-size: 13px;">${(data.shadeFactor * 100).toFixed(0)}%</td>
             </tr>
-            <tr style="background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 100%);">
-              <td style="font-weight: 600; color: #059669;">Est. Annual Generation</td>
-              <td class="text-right" style="font-weight: 600; color: #059669;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
+            <tr style="background: linear-gradient(90deg, #dcfce7 0%, #ecfdf5 100%); border: 2px solid #86efac;">
+              <td style="border: none; padding: 16px; font-weight: 700; color: #065f46; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">Est. Annual Generation</td>
+              <td class="text-right" style="border: none; padding: 16px; font-weight: 800; color: #065f46; font-size: 16px;">${data.annualGenerationKwh.toLocaleString()} kWh</td>
             </tr>
           </tbody>
         </table>
