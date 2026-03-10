@@ -499,57 +499,62 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <!-- Bill of Materials -->
         <div class="section-header">BILL OF MATERIALS</div>
-        <table>
-          <thead>
-            <tr>
-              <th style="width: 40px; text-align: center;">No.</th>
-              <th>Description</th>
-              <th style="width: 100px;">Make/Brand</th>
-              <th style="width: 50px; text-align: center;">Unit</th>
-              <th style="width: 50px; text-align: center;">Qty</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${billOfMaterials.map((material, idx) => `
+        <div style="page-break-inside: avoid;">
+          <table style="page-break-inside: avoid;">
+            <thead>
               <tr>
-                <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
-                <td>${material.description}</td>
-                <td>${material.make}</td>
-                <td class="text-center">${material.uom}</td>
-                <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                <th style="width: 40px; text-align: center;">No.</th>
+                <th>Description</th>
+                <th style="width: 100px;">Make/Brand</th>
+                <th style="width: 50px; text-align: center;">Unit</th>
+                <th style="width: 50px; text-align: center;">Qty</th>
               </tr>
-            `).join('')}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              ${billOfMaterials.map((material, idx) => `
+                <tr style="page-break-inside: avoid;">
+                  <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
+                  <td>${material.description}</td>
+                  <td>${material.make}</td>
+                  <td class="text-center">${material.uom}</td>
+                  <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
 
         <!-- Terms and Conditions -->
-        <div class="section-header">TERMS AND CONDITIONS</div>
-        <div class="card">
-          <div style="font-size: 10px; color: #2d3748; line-height: 1.7;">
+        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
+        <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
+        <div class="card" style="page-break-inside: avoid; padding: 16px; margin: 0; border-radius: 8px;">
+          <div style="font-size: 9px; color: #2d3748; line-height: 1.6;">
             ${termsConditions.map((item, index) => `
-              <div class="terms-item">
-                ${item.title ? `<div class="terms-title">${index + 1}. ${item.title}</div>` : ''}
-                <div class="terms-content">${item.content}</div>
+              <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 8px; padding: 10px; border-left: 3px solid #10b981;">
+                ${item.title ? `<div class="terms-title" style="font-size: 9px; margin-bottom: 4px;">${index + 1}. ${item.title}</div>` : ''}
+                <div class="terms-content" style="font-size: 9px; line-height: 1.5;">${item.content}</div>
               </div>
             `).join('')}
           </div>
         </div>
 
         <!-- Customer Scope -->
-        <div class="section-header" style="margin-top: 30px;">CUSTOMER SCOPE OF WORK</div>
-        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047;">
-          <div style="font-size: 10px; color: #78350f; line-height: 1.7;">
+        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
+        <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
+        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 16px; margin: 0;">
+          <div style="font-size: 9px; color: #78350f; line-height: 1.6;">
             ${customerScope.map((item, index) => `
-              <div style="display: flex; gap: 12px; margin-bottom: 12px; padding: 10px; background: rgba(255,255,255,0.5); border-radius: 6px; border-left: 3px solid #d97706;">
-                <span style="font-weight: 700; color: #b45309; min-width: 20px; flex-shrink: 0;">${index + 1}</span>
-                <span>${item}</span>
+              <div style="display: flex; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.6); border-radius: 4px; border-left: 3px solid #d97706; page-break-inside: avoid;">
+                <span style="font-weight: 700; color: #b45309; min-width: 18px; flex-shrink: 0; font-size: 9px;">${index + 1}</span>
+                <span style="font-size: 9px;">${item}</span>
               </div>
             `).join('')}
           </div>
         </div>
 
         <!-- Footer -->
-        <div class="footer">
+        <div style="page-break-before: auto; margin-top: 40px;"></div>
+        <div class="footer" style="page-break-inside: avoid; margin-top: 60px;">
           <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
             <div style="font-size: 12px; font-weight: 600; color: #059669; margin-bottom: 8px;">Thank You for Choosing Solar Energy!</div>
             <div style="font-size: 11px; color: #2d3748; line-height: 1.6;">
