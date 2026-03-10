@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { X, Download, Mail, CheckCircle2, Loader2, FileText, Plus, Trash2 } from 'lucide-react';
+import { X, Download, Mail, CheckCircle2, Loader2, FileText, Plus, Trash2, Sun, Factory, TreeDeciduous, IndianRupee } from 'lucide-react';
 import { QuotationData, BillOfMaterial } from '../types';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { calculateEnvironmentalBenefits } from '../utils/solarCalculations';
 
 interface QuotationPreviewProps {
   data: QuotationData;
@@ -138,6 +139,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const avgPriceAfterSolar = monthlyBillAfter > 0 ? (monthlyBillAfter / monthlyUnitsAfter).toFixed(2) : '0';
   const annualBillBefore = monthlyBillBefore * 12;
   const powerBill25Years = annualBillBefore * 25 * Math.pow(1 + tariffIncrement / 100, 12);
+
+  const envBenefits = calculateEnvironmentalBenefits(data.annualGenerationKwh);
 
   const addMaterialRow = () => {
     const newMaterial: BillOfMaterial = {
@@ -908,6 +911,37 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
+        <!-- Environmental Benefits -->
+        <div class="section-header">ENVIRONMENTAL IMPACT</div>
+        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 12px; padding: 24px;">
+          <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
+            <div class="metric-card" style="background: white; border: 1px solid #d1fae5; padding: 16px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 20px; margin-bottom: 8px;">☀️</div>
+              <div style="font-size: 14px; font-weight: 800; color: #065f46;">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+              <div style="font-size: 9px; color: #059669; text-transform: uppercase; margin-top: 4px;">Clean Energy</div>
+            </div>
+            <div class="metric-card" style="background: white; border: 1px solid #ffedd5; padding: 16px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 20px; margin-bottom: 8px;">🏭</div>
+              <div style="font-size: 14px; font-weight: 800; color: #9a3412;">${envBenefits.co2SavedTonsPerYear} Tons</div>
+              <div style="font-size: 9px; color: #9a3412; text-transform: uppercase; margin-top: 4px;">CO2 Reduced</div>
+            </div>
+            <div class="metric-card" style="background: white; border: 1px solid #dcfce7; padding: 16px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 20px; margin-bottom: 8px;">🌳</div>
+              <div style="font-size: 14px; font-weight: 800; color: #166534;">${Math.round(envBenefits.equivalentTrees)} Trees</div>
+              <div style="font-size: 9px; color: #15803d; text-transform: uppercase; margin-top: 4px;">Equivalent planted</div>
+            </div>
+            <div class="metric-card" style="background: white; border: 1px solid #fef3c7; padding: 16px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 20px; margin-bottom: 8px;">💰</div>
+              <div style="font-size: 14px; font-weight: 800; color: #854d0e;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+              <div style="font-size: 9px; color: #a16207; text-transform: uppercase; margin-top: 4px;">Yearly Savings</div>
+            </div>
+          </div>
+          <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #065f46; font-weight: 600; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px;">
+            Over 25 years, you will reduce ${envBenefits.co2Saved25YearsTons} tons of carbon emissions,
+            equivalent to planting ${envBenefits.equivalentTrees25Years.toLocaleString()} mature trees.
+          </div>
+        </div>
+
         <!-- Bill of Materials -->
         <div class="section-header">BILL OF MATERIALS</div>
         <div style="page-break-inside: avoid;">
@@ -1437,6 +1471,70 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                     <span className="text-slate-900">Benefit With Solar after your investment</span>
                     <span className="text-slate-900">₹{(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Environmental Benefits */}
+            <div className="border-t border-slate-200 pt-8">
+              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 mb-8 text-center flex items-center justify-center gap-3">
+                  <span className="w-12 h-1 bg-emerald-500 rounded-full"></span>
+                  Environmental Benefits
+                  <span className="w-12 h-1 bg-emerald-500 rounded-full"></span>
+                </h3>
+
+                <div className="grid grid-cols-4 gap-6">
+                  {/* Generation */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-amber-100">
+                      <Sun className="text-amber-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{(data.annualGenerationKwh / 1000).toFixed(1)} MWh</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Clean Energy Produced</p>
+                    </div>
+                  </div>
+
+                  {/* CO2 Savings */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-orange-100">
+                      <Factory className="text-orange-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{envBenefits.co2SavedTonsPerYear} Tons</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">CO2 Emissions Reduced</p>
+                    </div>
+                  </div>
+
+                  {/* Tree Equivalents */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-emerald-100">
+                      <TreeDeciduous className="text-emerald-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{Math.round(envBenefits.equivalentTrees)} Trees</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Planted Equivalent</p>
+                    </div>
+                  </div>
+
+                  {/* Savings */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-amber-100">
+                      <IndianRupee className="text-amber-600" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">₹{((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Financial Savings Yearly</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+                  <p className="text-slate-600 font-medium">
+                    Over 25 years, you will reduce <span className="text-emerald-600 font-bold">{envBenefits.co2Saved25YearsTons} tons</span> of carbon emissions,
+                    equivalent to planting <span className="text-emerald-600 font-bold">{envBenefits.equivalentTrees25Years.toLocaleString()} mature trees</span>.
+                  </p>
                 </div>
               </div>
             </div>

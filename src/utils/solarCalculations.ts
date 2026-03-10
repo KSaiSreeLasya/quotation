@@ -30,6 +30,15 @@ export interface AreaAnalysis {
   shadingFactor: number; // 0-1
 }
 
+export interface EnvironmentalBenefits {
+  annualGenerationKwh: number;
+  co2SavedKgPerYear: number;
+  co2SavedTonsPerYear: number;
+  equivalentTrees: number;
+  co2Saved25YearsTons: number;
+  equivalentTrees25Years: number;
+}
+
 /**
  * Calculate optimal tilt angle based on latitude
  * Year-round optimal: tilt angle ≈ latitude
@@ -236,4 +245,31 @@ export function calculateSystemEfficiency(
     (shadingFactor * 0.25);
   
   return Math.round(Math.min(1.0, combinedEfficiency) * 100) / 100;
+}
+
+/**
+ * Calculate environmental benefits like CO2 savings and tree equivalents
+ */
+export function calculateEnvironmentalBenefits(
+  annualGenerationKwh: number,
+  emissionFactorKgCO2PerKwh: number = 0.82, // Average for India: ~0.82 kg CO2 / kWh
+  treeAbsorptionKgPerYear: number = 21.77 // Avg absorption per mature tree: ~21.77 kg CO2 / year
+): EnvironmentalBenefits {
+  const co2SavedKgPerYear = annualGenerationKwh * emissionFactorKgCO2PerKwh;
+  const co2SavedTonsPerYear = co2SavedKgPerYear / 1000;
+  const equivalentTrees = co2SavedKgPerYear / treeAbsorptionKgPerYear;
+
+  // 25-year projection
+  const co2Saved25YearsKg = co2SavedKgPerYear * 25;
+  const co2Saved25YearsTons = co2Saved25YearsKg / 1000;
+  const equivalentTrees25Years = equivalentTrees * 25;
+
+  return {
+    annualGenerationKwh,
+    co2SavedKgPerYear: Math.round(co2SavedKgPerYear * 100) / 100,
+    co2SavedTonsPerYear: Math.round(co2SavedTonsPerYear * 100) / 100,
+    equivalentTrees: Math.round(equivalentTrees * 10) / 10,
+    co2Saved25YearsTons: Math.round(co2Saved25YearsTons * 10) / 10,
+    equivalentTrees25Years: Math.round(equivalentTrees25Years),
+  };
 }
