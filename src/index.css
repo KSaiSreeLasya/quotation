@@ -112,6 +112,51 @@
 .pdf-capture [class*="bg-"] { background-color: inherit; }
 .pdf-capture [class*="border-"] { border-color: inherit; }
 
+/* Global Break Prevention Rules */
+* {
+  word-break: keep-all;
+  overflow-wrap: normal;
+  page-break-inside: avoid;
+  orphans: 2;
+  widows: 2;
+}
+
+html, body {
+  page-break-inside: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+p {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+}
+
+table {
+  page-break-inside: avoid;
+  border-collapse: collapse;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+thead {
+  display: table-header-group;
+  page-break-inside: avoid;
+}
+
+tbody {
+  page-break-inside: auto;
+}
+
+div, section, article {
+  page-break-inside: avoid;
+}
+
 /* Quotation Table Input Styles */
 #quotation-content input[type="number"],
 #quotation-content input[type="text"],
