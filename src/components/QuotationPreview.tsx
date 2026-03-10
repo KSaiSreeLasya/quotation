@@ -297,7 +297,27 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
 
           /* Section Headers */
-          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 18px 20px; margin: 32px 0 20px 0; font-size: 14px; font-weight: 800; color: #065f46; page-break-after: avoid; page-break-inside: avoid; page-break-before: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
+          .section-header {
+            background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%);
+            border-bottom: 4px solid #10b981;
+            border-left: 6px solid #059669;
+            padding: 18px 20px;
+            margin: 32px 0 20px 0;
+            font-size: 14px;
+            font-weight: 800;
+            color: #065f46;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            page-break-before: auto;
+            break-inside: avoid;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+            border-radius: 4px;
+            white-space: nowrap;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Info Grid */
           .info-grid {
@@ -556,6 +576,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             font-weight: 700;
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
             page-break-inside: avoid;
+            break-inside: avoid;
             page-break-before: avoid;
             page-break-after: avoid;
             white-space: nowrap;
@@ -615,7 +636,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
 
           /* Terms & Scope */
-          .terms-item {
+          .terms-item, .scope-item {
             padding: 12px;
             margin-bottom: 10px;
             border-left: 4px solid #10b981;
@@ -623,8 +644,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             page-break-inside: avoid;
-            page-break-after: avoid;
-            page-break-before: avoid;
+            break-inside: avoid;
+            page-break-after: auto;
+            page-break-before: auto;
             orphans: 5;
             widows: 5;
             word-break: keep-all;
@@ -989,7 +1011,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
           <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
             ${customerScope.map((item, index) => `
-              <div style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
+              <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
                 <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
                 <span style="font-size: 11px; line-height: 1.7;">${item}</span>
               </div>
@@ -1016,6 +1038,30 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       pdfContainer.innerHTML = html;
       document.body.appendChild(pdfContainer);
+
+      // Smart Page Break Logic for html2canvas
+      // This helps push elements to the next page instead of splitting them
+      const pageHeightPx = 1270; // Approximation for A4 height at 900px width
+      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
+
+      elementsToAvoidSplitting.forEach((el: any) => {
+        const rect = el.getBoundingClientRect();
+        const top = el.offsetTop;
+        const bottom = top + el.offsetHeight;
+
+        const pageOfTop = Math.floor(top / pageHeightPx);
+        const pageOfBottom = Math.floor(bottom / pageHeightPx);
+
+        if (pageOfTop !== pageOfBottom) {
+          // Element crosses a page boundary
+          const spacerHeight = (pageOfBottom * pageHeightPx) - top;
+          if (spacerHeight > 0) {
+            const spacer = document.createElement('div');
+            spacer.style.height = `${spacerHeight + 10}px`; // Add a small buffer
+            el.parentNode.insertBefore(spacer, el);
+          }
+        }
+      });
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
