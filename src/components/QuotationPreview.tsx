@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { X, Download, Mail, CheckCircle2, Loader2, FileText, Plus, Trash2 } from 'lucide-react';
+import { X, Download, Mail, CheckCircle2, Loader2, FileText, Plus, Trash2, Sun, Factory, TreeDeciduous, IndianRupee } from 'lucide-react';
 import { QuotationData, BillOfMaterial } from '../types';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { calculateEnvironmentalBenefits } from '../utils/solarCalculations';
 
 interface QuotationPreviewProps {
   data: QuotationData;
@@ -138,6 +139,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const avgPriceAfterSolar = monthlyBillAfter > 0 ? (monthlyBillAfter / monthlyUnitsAfter).toFixed(2) : '0';
   const annualBillBefore = monthlyBillBefore * 12;
   const powerBill25Years = annualBillBefore * 25 * Math.pow(1 + tariffIncrement / 100, 12);
+
+  const envBenefits = calculateEnvironmentalBenefits(data.annualGenerationKwh);
 
   const addMaterialRow = () => {
     const newMaterial: BillOfMaterial = {
@@ -294,7 +297,27 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
 
           /* Section Headers */
-          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 18px 20px; margin: 32px 0 20px 0; font-size: 14px; font-weight: 800; color: #065f46; page-break-after: avoid; page-break-inside: avoid; page-break-before: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
+          .section-header {
+            background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%);
+            border-bottom: 4px solid #10b981;
+            border-left: 6px solid #059669;
+            padding: 18px 20px;
+            margin: 32px 0 20px 0;
+            font-size: 14px;
+            font-weight: 800;
+            color: #065f46;
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            page-break-before: auto;
+            break-inside: avoid;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+            border-radius: 4px;
+            white-space: nowrap;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Info Grid */
           .info-grid {
@@ -553,6 +576,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             font-weight: 700;
             box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
             page-break-inside: avoid;
+            break-inside: avoid;
             page-break-before: avoid;
             page-break-after: avoid;
             white-space: nowrap;
@@ -612,7 +636,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
 
           /* Terms & Scope */
-          .terms-item {
+          .terms-item, .scope-item {
             padding: 12px;
             margin-bottom: 10px;
             border-left: 4px solid #10b981;
@@ -620,8 +644,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             page-break-inside: avoid;
-            page-break-after: avoid;
-            page-break-before: avoid;
+            break-inside: avoid;
+            page-break-after: auto;
+            page-break-before: auto;
             orphans: 5;
             widows: 5;
             word-break: keep-all;
@@ -723,23 +748,25 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- System Overview Section -->
-        <div class="section-header">SYSTEM OVERVIEW</div>
-        <div class="card-grid">
-          <div class="card-item">
-            <div class="card-label">Proposed System Size</div>
-            <div class="card-value">${systemSizeKw.toFixed(2)} kWp</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Number of Panels</div>
-            <div class="card-value">${data.panelCount}</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Efficiency Rating</div>
-            <div class="card-value">${(data.efficiencyFactor * 100).toFixed(0)}%</div>
-          </div>
-          <div class="card-item">
-            <div class="card-label">Annual Generation</div>
-            <div class="card-value">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+        <div class="keep-together">
+          <div class="section-header">SYSTEM OVERVIEW</div>
+          <div class="card-grid">
+            <div class="card-item">
+              <div class="card-label">Proposed System Size</div>
+              <div class="card-value">${systemSizeKw.toFixed(2)} kWp</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Number of Panels</div>
+              <div class="card-value">${data.panelCount}</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Efficiency Rating</div>
+              <div class="card-value">${(data.efficiencyFactor * 100).toFixed(0)}%</div>
+            </div>
+            <div class="card-item">
+              <div class="card-label">Annual Generation</div>
+              <div class="card-value">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+            </div>
           </div>
         </div>
 
@@ -880,82 +907,118 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Financial Projection -->
-        <div style="page-break-before: always;"></div>
+        <div class="keep-together">
+          <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
+          <div class="profit-summary">
+            <div class="profit-item">
+              <span class="profit-label">Present Monthly Power Bill</span>
+              <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Power Bill</span>
+              <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Tariff Increment</span>
+              <span class="profit-value">${tariffIncrement}%</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Projected Bill (25 years)</span>
+              <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+            </div>
+            <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
+              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
+              <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
+            </div>
+          </div>
+        </div>
 
-        <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
-
-        <div class="profit-summary">
-          <div class="profit-item">
-            <span class="profit-label">Present Monthly Power Bill</span>
-            <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Annual Power Bill</span>
-            <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Annual Tariff Increment</span>
-            <span class="profit-value">${tariffIncrement}%</span>
-          </div>
-          <div class="profit-item">
-            <span class="profit-label">Projected Bill (25 years)</span>
-            <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-          </div>
-          <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
-            <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
-            <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-            <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
+        <!-- Environmental Benefits -->
+        <div class="keep-together">
+          <div class="section-header">ENVIRONMENTAL IMPACT</div>
+          <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 12px; padding: 24px;">
+            <div class="card-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;">
+              <div class="metric-card" style="background: white; border: 1px solid #d1fae5; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">☀️</div>
+                <div style="font-size: 14px; font-weight: 800; color: #065f46;">${(data.annualGenerationKwh / 1000).toFixed(1)} MWh</div>
+                <div style="font-size: 9px; color: #059669; text-transform: uppercase; margin-top: 4px;">Clean Energy</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #ffedd5; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">🏭</div>
+                <div style="font-size: 14px; font-weight: 800; color: #9a3412;">${envBenefits.co2SavedTonsPerYear} Tons</div>
+                <div style="font-size: 9px; color: #9a3412; text-transform: uppercase; margin-top: 4px;">CO2 Reduced</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #dcfce7; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">🌳</div>
+                <div style="font-size: 14px; font-weight: 800; color: #166534;">${Math.round(envBenefits.equivalentTrees)} Trees</div>
+                <div style="font-size: 9px; color: #15803d; text-transform: uppercase; margin-top: 4px;">Equivalent planted</div>
+              </div>
+              <div class="metric-card" style="background: white; border: 1px solid #fef3c7; padding: 16px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 20px; margin-bottom: 8px;">💰</div>
+                <div style="font-size: 14px; font-weight: 800; color: #854d0e;">₹${((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</div>
+                <div style="font-size: 9px; color: #a16207; text-transform: uppercase; margin-top: 4px;">Yearly Savings</div>
+              </div>
+            </div>
+            <div style="margin-top: 20px; text-align: center; font-size: 12px; color: #065f46; font-weight: 600; background: rgba(255,255,255,0.5); padding: 12px; border-radius: 8px;">
+              Over 25 years, you will reduce ${envBenefits.co2Saved25YearsTons} tons of carbon emissions,
+              equivalent to planting ${envBenefits.equivalentTrees25Years.toLocaleString()} mature trees.
+            </div>
           </div>
         </div>
 
         <!-- Bill of Materials -->
-        <div class="section-header">BILL OF MATERIALS</div>
-        <div style="page-break-inside: avoid;">
-          <table style="page-break-inside: avoid;">
-            <thead>
-              <tr>
-                <th style="width: 40px; text-align: center;">No.</th>
-                <th>Description</th>
-                <th style="width: 100px;">Make/Brand</th>
-                <th style="width: 50px; text-align: center;">Unit</th>
-                <th style="width: 50px; text-align: center;">Qty</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${billOfMaterials.map((material, idx) => `
-                <tr style="page-break-inside: avoid;">
-                  <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
-                  <td>${material.description}</td>
-                  <td>${material.make}</td>
-                  <td class="text-center">${material.uom}</td>
-                  <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+        <div class="keep-together">
+          <div class="section-header">BILL OF MATERIALS</div>
+          <div style="page-break-inside: avoid;">
+            <table style="page-break-inside: avoid;">
+              <thead>
+                <tr>
+                  <th style="width: 40px; text-align: center;">No.</th>
+                  <th>Description</th>
+                  <th style="width: 100px;">Make/Brand</th>
+                  <th style="width: 50px; text-align: center;">Unit</th>
+                  <th style="width: 50px; text-align: center;">Qty</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                ${billOfMaterials.map((material, idx) => `
+                  <tr style="page-break-inside: avoid;">
+                    <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
+                    <td>${material.description}</td>
+                    <td>${material.make}</td>
+                    <td class="text-center">${material.uom}</td>
+                    <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <!-- Terms and Conditions -->
-        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
         <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
-        <div class="card" style="page-break-inside: avoid; padding: 18px; margin: 0; border-radius: 8px;">
+        <div class="card" style="padding: 18px; margin: 0; border-radius: 8px; border: 2px solid #e2e8f0;">
           <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
-            ${termsConditions.map((item, index) => `
-              <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
-                ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
-                <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
-              </div>
-            `).join('')}
+            ${termsConditions.map((item, index) => {
+              // Wrap the first item with the section header logic if we wanted,
+              // but since they are in a card, let's just make sure the card itself is split-able.
+              return `
+                <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
+                  ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
+                  <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
 
         <!-- Customer Scope -->
-        <div style="page-break-before: always; margin: 0; padding: 0;"></div>
         <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
-        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
+        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 18px; margin: 0;">
           <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
             ${customerScope.map((item, index) => `
-              <div style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
+              <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid;">
                 <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
                 <span style="font-size: 11px; line-height: 1.7;">${item}</span>
               </div>
@@ -982,6 +1045,47 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       pdfContainer.innerHTML = html;
       document.body.appendChild(pdfContainer);
+
+      // Smart Page Break Logic for html2canvas
+      // This helps push elements to the next page instead of splitting them
+      const pageHeightPx = 1270; // Approximation for A4 height at 900px width
+      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.keep-together, .section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
+
+      elementsToAvoidSplitting.forEach((el: any) => {
+        const rect = el.getBoundingClientRect();
+        const top = el.offsetTop;
+        const bottom = top + el.offsetHeight;
+
+        const pageOfTop = Math.floor(top / pageHeightPx);
+        const pageOfBottom = Math.floor(bottom / pageHeightPx);
+
+        // Special logic for section headers: keep them with at least some content
+        if (el.classList.contains('section-header')) {
+          const nextEl = el.nextElementSibling;
+          if (nextEl) {
+            const nextBottom = nextEl.offsetTop + Math.min(nextEl.offsetHeight, 100);
+            const pageOfNextStart = Math.floor(nextBottom / pageHeightPx);
+            if (pageOfTop !== pageOfNextStart) {
+              // Header is at bottom, but content starts on next page. Push header.
+              const spacerHeight = (pageOfNextStart * pageHeightPx) - top;
+              const spacer = document.createElement('div');
+              spacer.style.height = `${spacerHeight}px`;
+              el.parentNode.insertBefore(spacer, el);
+              return;
+            }
+          }
+        }
+
+        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85) {
+          // Element crosses a page boundary and is small enough to fit on a new page
+          const spacerHeight = (pageOfBottom * pageHeightPx) - top;
+          if (spacerHeight > 0) {
+            const spacer = document.createElement('div');
+            spacer.style.height = `${spacerHeight + 10}px`; // Add a small buffer
+            el.parentNode.insertBefore(spacer, el);
+          }
+        }
+      });
 
       await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -1437,6 +1541,70 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                     <span className="text-slate-900">Benefit With Solar after your investment</span>
                     <span className="text-slate-900">₹{(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Environmental Benefits */}
+            <div className="border-t border-slate-200 pt-8">
+              <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <h3 className="text-xl font-bold text-slate-900 mb-8 text-center flex items-center justify-center gap-3">
+                  <span className="w-12 h-1 bg-emerald-500 rounded-full"></span>
+                  Environmental Benefits
+                  <span className="w-12 h-1 bg-emerald-500 rounded-full"></span>
+                </h3>
+
+                <div className="grid grid-cols-4 gap-6">
+                  {/* Generation */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-amber-100">
+                      <Sun className="text-amber-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{(data.annualGenerationKwh / 1000).toFixed(1)} MWh</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Clean Energy Produced</p>
+                    </div>
+                  </div>
+
+                  {/* CO2 Savings */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-orange-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-orange-100">
+                      <Factory className="text-orange-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{envBenefits.co2SavedTonsPerYear} Tons</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">CO2 Emissions Reduced</p>
+                    </div>
+                  </div>
+
+                  {/* Tree Equivalents */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-emerald-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-emerald-100">
+                      <TreeDeciduous className="text-emerald-500" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">{Math.round(envBenefits.equivalentTrees)} Trees</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Planted Equivalent</p>
+                    </div>
+                  </div>
+
+                  {/* Savings */}
+                  <div className="flex flex-col items-center text-center group">
+                    <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-300 shadow-sm border border-amber-100">
+                      <IndianRupee className="text-amber-600" size={40} strokeWidth={1.5} />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-bold text-slate-900">₹{((monthlyBillBefore - monthlyBillAfter) * 12).toLocaleString()}</p>
+                      <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Financial Savings Yearly</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-100 text-center">
+                  <p className="text-slate-600 font-medium">
+                    Over 25 years, you will reduce <span className="text-emerald-600 font-bold">{envBenefits.co2Saved25YearsTons} tons</span> of carbon emissions,
+                    equivalent to planting <span className="text-emerald-600 font-bold">{envBenefits.equivalentTrees25Years.toLocaleString()} mature trees</span>.
+                  </p>
                 </div>
               </div>
             </div>
