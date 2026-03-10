@@ -181,42 +181,240 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       let html = `
         <style>
-          * { margin: 0; padding: 0; }
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #2d3748; }
+          * {
+            margin: 0;
+            padding: 0;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            page-break-inside: avoid;
+            orphans: 2;
+            widows: 2;
+          }
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #2d3748;
+            page-break-inside: auto;
+          }
 
           /* Header Styles */
-          .company-header { display: flex; align-items: center; gap: 24px; padding: 24px 0 28px 0; border-bottom: 4px solid #10b981; margin-bottom: 28px; page-break-inside: avoid; }
-          .company-logo { width: 90px; height: 90px; flex-shrink: 0; border-radius: 8px; background: #f0fdf4; padding: 4px; }
-          .company-info { flex: 1; }
-          .company-name { font-size: 28px; font-weight: 800; color: #065f46; margin-bottom: 8px; letter-spacing: -0.5px; }
-          .company-details { font-size: 10px; color: #718096; line-height: 1.7; }
+          .company-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 24px 0 28px 0;
+            border-bottom: 4px solid #10b981;
+            margin-bottom: 28px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+          }
+          .company-logo {
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            background: #f0fdf4;
+            padding: 4px;
+            page-break-inside: avoid;
+          }
+          .company-info {
+            flex: 1;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .company-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #065f46;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .company-details {
+            font-size: 10px;
+            color: #718096;
+            line-height: 1.7;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Main Header */
-          .pdf-header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 36px; margin: 0 0 32px 0; color: white; page-break-inside: avoid; border-radius: 12px; box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25); }
-          .pdf-header-title { font-size: 32px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
-          .pdf-header-subtitle { font-size: 13px; opacity: 0.95; margin-bottom: 12px; font-weight: 500; }
-          .pdf-header-ref { font-size: 11px; opacity: 0.92; font-weight: 500; }
+          .pdf-header {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            padding: 36px;
+            margin: 0 0 32px 0;
+            color: white;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+            word-break: keep-all;
+          }
+          .pdf-header-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .pdf-header-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+            margin-bottom: 12px;
+            font-weight: 500;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .pdf-header-ref {
+            font-size: 11px;
+            opacity: 0.92;
+            font-weight: 500;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+
+          h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+
+          p {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Section Headers */
-          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 18px 20px; margin: 32px 0 20px 0; font-size: 14px; font-weight: 800; color: #065f46; page-break-after: avoid; page-break-inside: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; white-space: nowrap; }
+          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 18px 20px; margin: 32px 0 20px 0; font-size: 14px; font-weight: 800; color: #065f46; page-break-after: avoid; page-break-inside: avoid; page-break-before: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
 
           /* Info Grid */
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 26px; page-break-inside: avoid; }\n          .info-item { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 18px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08); page-break-inside: avoid; }\n          .info-label { font-size: 10px; color: #059669; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; letter-spacing: 0.4px; }\n          .info-value { font-size: 16px; font-weight: 800; color: #065f46; }
+          .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 26px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .info-item {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08);
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .info-label {
+            font-size: 10px;
+            color: #059669;
+            text-transform: uppercase;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 0.4px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .info-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #065f46;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Info Box */
-          .info-box { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; padding: 20px; margin-bottom: 24px; border-radius: 10px; page-break-inside: avoid; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1); }
-          .info-box-label { font-size: 12px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.4px; }
-          .info-box-value { color: #1a202c; font-size: 14px; line-height: 1.8; font-weight: 500; }
+          .info-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 3px solid #10b981;
+            padding: 20px;
+            margin-bottom: 24px;
+            border-radius: 10px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+            word-break: keep-all;
+          }
+          .info-box-label {
+            font-size: 12px;
+            color: #059669;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.4px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .info-box-value {
+            color: #1a202c;
+            font-size: 14px;
+            line-height: 1.8;
+            font-weight: 500;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Tables */
-          table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); page-break-inside: avoid; }
-          th { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 16px 14px; text-align: left; font-weight: 700; font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; }
-          td { border-bottom: 1px solid #e2e8f0; padding: 14px; font-size: 11px; }
-          tr { background: white; transition: background-color 0.2s ease; page-break-inside: avoid; page-break-after: avoid; }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            page-break-inside: avoid;
+            table-layout: fixed;
+            word-break: keep-all;
+          }
+          th {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            padding: 16px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 14px;
+            font-size: 11px;
+            word-break: keep-all;
+            overflow-wrap: normal;
+            page-break-inside: avoid;
+          }
+          tr {
+            background: white;
+            transition: background-color 0.2s ease;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+          }
           tr:nth-child(even) { background-color: #f8fafc; }
           tr:hover { background-color: #edf2f7; }
           tbody tr:first-child { border-top: none; }
-          thead { display: table-header-group; page-break-inside: avoid; }
+          thead {
+            display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+          }
 
           /* Special Row Styles */
           .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: 600; }
@@ -224,42 +422,263 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
 
           /* Card Styles */
-          .card { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 24px; margin-bottom: 20px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); }
-          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; page-break-inside: avoid; }
-          .card-item { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 18px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; }
-          .card-label { font-size: 11px; color: #718096; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.4px; }
-          .card-value { font-size: 20px; font-weight: 800; color: #10b981; }
+          .card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            page-break-before: avoid;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+            word-break: keep-all;
+          }
+          .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .card-item {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .card-label {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.4px;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .card-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #10b981;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Metric Cards */
-          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 22px; border-radius: 10px; text-align: center; box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12); page-break-inside: avoid; }
-          .metric-title { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.4px; }
-          .metric-value { font-size: 28px; font-weight: 900; color: #065f46; }
+          .metric-card {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 2px solid #dcfce7;
+            padding: 22px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12);
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+          }
+          .metric-title {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 0.4px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .metric-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: #065f46;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Profit Summary */
-          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); page-break-inside: avoid; orphans: 10; widows: 10; }
-          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); page-break-inside: avoid; page-break-after: avoid; }
+          .profit-summary {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            border: 3px solid #10b981;
+            border-radius: 10px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            page-break-before: avoid;
+            orphans: 10;
+            widows: 10;
+            word-break: keep-all;
+          }
+          .profit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 2px solid rgba(16, 185, 129, 0.15);
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
           .profit-item:last-child { border-bottom: none; }
-          .profit-label { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; page-break-inside: avoid; }
-          .profit-value { font-size: 16px; font-weight: 800; color: #065f46; page-break-inside: avoid; }
-          .profit-highlight { background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); page-break-inside: avoid; page-break-before: avoid; page-break-after: avoid; white-space: nowrap; overflow: visible; }
+          .profit-label {
+            font-size: 12px;
+            color: #059669;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .profit-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #065f46;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .profit-highlight {
+            background: linear-gradient(90deg, #059669 0%, #10b981 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+            page-break-inside: avoid;
+            page-break-before: avoid;
+            page-break-after: avoid;
+            white-space: nowrap;
+            overflow: visible;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
-          /* Comparison Section */\n          .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 20px 0; page-break-inside: avoid; }\n          .comparison-col { background: #f7fafc; border-radius: 8px; padding: 18px; page-break-inside: avoid; }\n          .comparison-col h4 { font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 14px; border-bottom: 2px solid #10b981; padding-bottom: 10px; }\n          .comparison-item { display: flex; justify-content: space-between; padding: 10px 0; }\n          .comparison-label { font-size: 11px; color: #718096; font-weight: 500; }\n          .comparison-value { font-size: 13px; font-weight: 700; color: #1a202c; }
+          /* Comparison Section */
+          .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin: 20px 0;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .comparison-col {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 18px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .comparison-col h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 14px;
+            border-bottom: 2px solid #10b981;
+            padding-bottom: 10px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
+          .comparison-label {
+            font-size: 11px;
+            color: #718096;
+            font-weight: 500;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .comparison-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a202c;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Terms & Scope */
-          .terms-item { padding: 12px; margin-bottom: 10px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; page-break-after: avoid; orphans: 5; widows: 5; }
-          .terms-title { font-weight: 800; color: #059669; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; page-break-inside: avoid; page-break-after: avoid; }
-          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.5; white-space: pre-wrap; page-break-inside: avoid; }
+          .terms-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 4px solid #10b981;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            page-break-before: avoid;
+            orphans: 5;
+            widows: 5;
+            word-break: keep-all;
+          }
+          .terms-title {
+            font-weight: 800;
+            color: #059669;
+            margin-bottom: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
+          .terms-content {
+            font-size: 10px;
+            color: #2d3748;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
 
           /* Footer */
-          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; page-break-before: avoid; orphans: 10; widows: 10; }
-          .footer-text { margin-bottom: 8px; page-break-inside: avoid; }
+          .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            font-size: 10px;
+            color: #718096;
+            page-break-inside: avoid;
+            page-break-before: avoid;
+            page-break-after: avoid;
+            orphans: 10;
+            widows: 10;
+            word-break: keep-all;
+          }
+          .footer-text {
+            margin-bottom: 8px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            overflow-wrap: normal;
+          }
 
           /* Utilities */
           .text-right { text-align: right; }
           .text-center { text-align: center; }
           .mb-10 { margin-bottom: 10px; }
           .mb-20 { margin-bottom: 20px; }
-          .page-break { page-break-after: always; }
+          .page-break {
+            page-break-after: always;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
         </style>
 
         <!-- Company Header -->
