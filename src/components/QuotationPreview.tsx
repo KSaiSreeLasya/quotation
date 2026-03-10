@@ -198,23 +198,20 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .pdf-header-ref { font-size: 11px; opacity: 0.92; font-weight: 500; }
 
           /* Section Headers */
-          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 16px 18px; margin: 28px 0 18px 0; font-size: 12px; font-weight: 700; color: #065f46; page-break-after: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; }
+          .section-header { background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border-bottom: 4px solid #10b981; border-left: 6px solid #059669; padding: 18px 20px; margin: 32px 0 20px 0; font-size: 14px; font-weight: 800; color: #065f46; page-break-after: avoid; page-break-inside: avoid; letter-spacing: 0.6px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1); border-radius: 4px; white-space: nowrap; }
 
           /* Info Grid */
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 22px; page-break-inside: avoid; }
-          .info-item { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 16px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08); }
-          .info-label { font-size: 9px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.4px; }
-          .info-value { font-size: 15px; font-weight: 700; color: #065f46; }
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 26px; page-break-inside: avoid; }\n          .info-item { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); padding: 18px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.08); page-break-inside: avoid; }\n          .info-label { font-size: 10px; color: #059669; text-transform: uppercase; font-weight: 800; margin-bottom: 10px; letter-spacing: 0.4px; }\n          .info-value { font-size: 16px; font-weight: 800; color: #065f46; }
 
           /* Info Box */
-          .info-box { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; padding: 18px; margin-bottom: 22px; border-radius: 10px; page-break-inside: avoid; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1); }
-          .info-box-label { font-size: 11px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.3px; }
-          .info-box-value { color: #1a202c; font-size: 13px; line-height: 1.7; font-weight: 500; }
+          .info-box { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; padding: 20px; margin-bottom: 24px; border-radius: 10px; page-break-inside: avoid; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1); }
+          .info-box-label { font-size: 12px; color: #059669; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; letter-spacing: 0.4px; }
+          .info-box-value { color: #1a202c; font-size: 14px; line-height: 1.8; font-weight: 500; }
 
           /* Tables */
-          table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
-          th { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 14px 12px; text-align: left; font-weight: 600; font-size: 10px; letter-spacing: 0.4px; text-transform: uppercase; }
-          td { border-bottom: 1px solid #e2e8f0; padding: 12px; font-size: 10px; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); page-break-inside: avoid; }
+          th { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 16px 14px; text-align: left; font-weight: 700; font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; }
+          td { border-bottom: 1px solid #e2e8f0; padding: 14px; font-size: 11px; }
           tr { background: white; transition: background-color 0.2s ease; }
           tr:nth-child(even) { background-color: #f8fafc; }
           tr:hover { background-color: #edf2f7; }
@@ -226,37 +223,31 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
 
           /* Card Styles */
-          .card { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 22px; margin-bottom: 18px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); }
-          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-          .card-item { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 16px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-          .card-label { font-size: 10px; color: #718096; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; letter-spacing: 0.3px; }
-          .card-value { font-size: 18px; font-weight: 700; color: #10b981; }
+          .card { background: white; border: 2px solid #e2e8f0; border-radius: 10px; padding: 24px; margin-bottom: 20px; page-break-inside: avoid; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); }
+          .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; page-break-inside: avoid; }
+          .card-item { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 18px; border-radius: 8px; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; }
+          .card-label { font-size: 11px; color: #718096; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.4px; }
+          .card-value { font-size: 20px; font-weight: 800; color: #10b981; }
 
           /* Metric Cards */
-          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 20px; border-radius: 10px; text-align: center; box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12); }
-          .metric-title { font-size: 11px; color: #059669; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.3px; }
-          .metric-value { font-size: 22px; font-weight: 800; color: #065f46; }
+          .metric-card { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; padding: 22px; border-radius: 10px; text-align: center; box-shadow: 0 3px 8px rgba(16, 185, 129, 0.12); page-break-inside: avoid; }
+          .metric-title { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.4px; }
+          .metric-value { font-size: 28px; font-weight: 900; color: #065f46; }
 
           /* Profit Summary */
-          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); }
-          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); }
+          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); page-break-inside: avoid; }
+          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); page-break-inside: avoid; }
           .profit-item:last-child { border-bottom: none; }
-          .profit-label { font-size: 11px; color: #059669; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
-          .profit-value { font-size: 15px; font-weight: 700; color: #065f46; }
+          .profit-label { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
+          .profit-value { font-size: 16px; font-weight: 800; color: #065f46; }
           .profit-highlight { background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; padding: 18px; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
 
-          /* Comparison Section */
-          .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 16px 0; }
-          .comparison-col { background: #f7fafc; border-radius: 8px; padding: 16px; }
-          .comparison-col h4 { font-size: 12px; font-weight: 600; color: #1a202c; margin-bottom: 12px; border-bottom: 2px solid #10b981; padding-bottom: 8px; }
-          .comparison-item { display: flex; justify-content: space-between; padding: 8px 0; }
-          .comparison-label { font-size: 10px; color: #718096; }
-          .comparison-value { font-size: 11px; font-weight: 600; color: #1a202c; }
+          /* Comparison Section */\n          .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 20px 0; page-break-inside: avoid; }\n          .comparison-col { background: #f7fafc; border-radius: 8px; padding: 18px; page-break-inside: avoid; }\n          .comparison-col h4 { font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 14px; border-bottom: 2px solid #10b981; padding-bottom: 10px; }\n          .comparison-item { display: flex; justify-content: space-between; padding: 10px 0; }\n          .comparison-label { font-size: 11px; color: #718096; font-weight: 500; }\n          .comparison-value { font-size: 13px; font-weight: 700; color: #1a202c; }
 
           /* Terms & Scope */
-          .terms-item { padding: 14px; margin-bottom: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); }
-          .terms-title { font-weight: 700; color: #059669; margin-bottom: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; }
-          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.6; white-space: pre-wrap; }
+          .terms-item { padding: 14px; margin-bottom: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; }
+          .terms-title { font-weight: 800; color: #059669; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+          .terms-content { font-size: 11px; color: #2d3748; line-height: 1.7; white-space: pre-wrap; }
 
           /* Footer */
           .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; }
@@ -527,12 +518,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <!-- Terms and Conditions -->
         <div style="page-break-before: always; margin: 0; padding: 0;"></div>
         <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
-        <div class="card" style="page-break-inside: avoid; padding: 16px; margin: 0; border-radius: 8px;">
-          <div style="font-size: 9px; color: #2d3748; line-height: 1.6;">
+        <div class="card" style="page-break-inside: avoid; padding: 18px; margin: 0; border-radius: 8px;">
+          <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
             ${termsConditions.map((item, index) => `
-              <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 8px; padding: 10px; border-left: 3px solid #10b981;">
-                ${item.title ? `<div class="terms-title" style="font-size: 9px; margin-bottom: 4px;">${index + 1}. ${item.title}</div>` : ''}
-                <div class="terms-content" style="font-size: 9px; line-height: 1.5;">${item.content}</div>
+              <div class="terms-item" style="page-break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
+                ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
+                <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
               </div>
             `).join('')}
           </div>
@@ -541,12 +532,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <!-- Customer Scope -->
         <div style="page-break-before: always; margin: 0; padding: 0;"></div>
         <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
-        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 16px; margin: 0;">
-          <div style="font-size: 9px; color: #78350f; line-height: 1.6;">
+        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; page-break-inside: avoid; padding: 18px; margin: 0;">
+          <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
             ${customerScope.map((item, index) => `
-              <div style="display: flex; gap: 10px; margin-bottom: 10px; padding: 8px; background: rgba(255,255,255,0.6); border-radius: 4px; border-left: 3px solid #d97706; page-break-inside: avoid;">
-                <span style="font-weight: 700; color: #b45309; min-width: 18px; flex-shrink: 0; font-size: 9px;">${index + 1}</span>
-                <span style="font-size: 9px;">${item}</span>
+              <div style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid;">
+                <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
+                <span style="font-size: 11px; line-height: 1.7;">${item}</span>
               </div>
             `).join('')}
           </div>
@@ -555,14 +546,14 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <!-- Footer -->
         <div style="page-break-before: auto; margin-top: 40px;"></div>
         <div class="footer" style="page-break-inside: avoid; margin-top: 60px;">
-          <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-            <div style="font-size: 12px; font-weight: 600; color: #059669; margin-bottom: 8px;">Thank You for Choosing Solar Energy!</div>
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.6;">
+          <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
+            <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
+            <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
               This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
               <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
             </div>
           </div>
-          <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 9px; color: #718096;">
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 10px; color: #718096; line-height: 1.6;">
             <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
             <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
           </div>
