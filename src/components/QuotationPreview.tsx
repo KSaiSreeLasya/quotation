@@ -212,10 +212,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           table { width: 100%; border-collapse: collapse; margin: 20px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); page-break-inside: avoid; }
           th { background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; padding: 16px 14px; text-align: left; font-weight: 700; font-size: 11px; letter-spacing: 0.4px; text-transform: uppercase; }
           td { border-bottom: 1px solid #e2e8f0; padding: 14px; font-size: 11px; }
-          tr { background: white; transition: background-color 0.2s ease; }
+          tr { background: white; transition: background-color 0.2s ease; page-break-inside: avoid; page-break-after: avoid; }
           tr:nth-child(even) { background-color: #f8fafc; }
           tr:hover { background-color: #edf2f7; }
           tbody tr:first-child { border-top: none; }
+          thead { display: table-header-group; page-break-inside: avoid; }
 
           /* Special Row Styles */
           .highlight-row { background: linear-gradient(90deg, #fef3c7 0%, #fbbf24 100%) !important; font-weight: 600; }
@@ -235,23 +236,23 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .metric-value { font-size: 28px; font-weight: 900; color: #065f46; }
 
           /* Profit Summary */
-          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); page-break-inside: avoid; }
-          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); page-break-inside: avoid; }
+          .profit-summary { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 3px solid #10b981; border-radius: 10px; padding: 24px; margin: 24px 0; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); page-break-inside: avoid; orphans: 10; widows: 10; }
+          .profit-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 2px solid rgba(16, 185, 129, 0.15); page-break-inside: avoid; page-break-after: avoid; }
           .profit-item:last-child { border-bottom: none; }
-          .profit-label { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; }
-          .profit-value { font-size: 16px; font-weight: 800; color: #065f46; }
-          .profit-highlight { background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; padding: 18px; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
+          .profit-label { font-size: 12px; color: #059669; font-weight: 800; text-transform: uppercase; letter-spacing: 0.4px; page-break-inside: avoid; }
+          .profit-value { font-size: 16px; font-weight: 800; color: #065f46; page-break-inside: avoid; }
+          .profit-highlight { background: linear-gradient(90deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 8px; font-weight: 700; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); page-break-inside: avoid; page-break-before: avoid; page-break-after: avoid; white-space: nowrap; overflow: visible; }
 
           /* Comparison Section */\n          .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 20px 0; page-break-inside: avoid; }\n          .comparison-col { background: #f7fafc; border-radius: 8px; padding: 18px; page-break-inside: avoid; }\n          .comparison-col h4 { font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 14px; border-bottom: 2px solid #10b981; padding-bottom: 10px; }\n          .comparison-item { display: flex; justify-content: space-between; padding: 10px 0; }\n          .comparison-label { font-size: 11px; color: #718096; font-weight: 500; }\n          .comparison-value { font-size: 13px; font-weight: 700; color: #1a202c; }
 
           /* Terms & Scope */
-          .terms-item { padding: 14px; margin-bottom: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; }
-          .terms-title { font-weight: 800; color: #059669; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
-          .terms-content { font-size: 11px; color: #2d3748; line-height: 1.7; white-space: pre-wrap; }
+          .terms-item { padding: 12px; margin-bottom: 10px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); page-break-inside: avoid; page-break-after: avoid; orphans: 5; widows: 5; }
+          .terms-title { font-weight: 800; color: #059669; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.3px; page-break-inside: avoid; page-break-after: avoid; }
+          .terms-content { font-size: 10px; color: #2d3748; line-height: 1.5; white-space: pre-wrap; page-break-inside: avoid; }
 
           /* Footer */
-          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; }
-          .footer-text { margin-bottom: 8px; }
+          .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center; font-size: 10px; color: #718096; page-break-inside: avoid; page-break-before: avoid; orphans: 10; widows: 10; }
+          .footer-text { margin-bottom: 8px; page-break-inside: avoid; }
 
           /* Utilities */
           .text-right { text-align: right; }
