@@ -979,7 +979,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Roof Design Layout - Page 2 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
           <div class="section-header">ROOF DESIGN LAYOUT</div>
           <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid; text-align: center;">
             ${data.designImage ? `
@@ -998,7 +998,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Bill of Materials - Page 3 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
           <div class="section-header">BILL OF MATERIALS</div>
           <div style="page-break-inside: avoid; margin-top: 20px;">
             <table style="page-break-inside: avoid;">
@@ -1027,7 +1027,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
           <div class="section-header">TERMS AND CONDITIONS</div>
           <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
             <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
@@ -1044,7 +1044,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Customer Scope - Page 5 with Footer -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0; display: flex; flex-direction: column;">
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0; display: flex; flex-direction: column;">
           <div style="flex: 1; page-break-inside: avoid;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
             <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
