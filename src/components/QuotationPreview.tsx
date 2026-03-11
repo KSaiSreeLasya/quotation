@@ -53,7 +53,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   );
 
   // Terms and Conditions items
-  const [termsConditions, setTermsConditions] = useState<Array<{title: string; content: string}>>([
+  const [termsConditions, setTermsConditions] = useState<Array<{ title: string; content: string }>>([
     {
       title: 'Payment Terms',
       content: '> 50% advance with Firm Purchase order and with KYC Documents\n> 40% after getting approval from Local Discom on the Solar Feasibility and in principal Sanction\n> 10% after Installation'
@@ -161,7 +161,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
   const updateMaterial = (id: string, field: keyof BillOfMaterial, value: any) => {
     setBillOfMaterials(
-      billOfMaterials.map(m => 
+      billOfMaterials.map(m =>
         m.id === id ? { ...m, [field]: value } : m
       )
     );
@@ -302,21 +302,24 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border-bottom: 4px solid #10b981;
             border-left: 6px solid #059669;
             padding: 18px 20px;
-            margin: 32px 0 20px 0;
+            margin: 0 0 20px 0;
             font-size: 14px;
             font-weight: 800;
             color: #065f46;
-            page-break-after: avoid;
-            page-break-inside: avoid;
-            page-break-before: auto;
-            break-inside: avoid;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+            page-break-before: avoid !important;
+            break-inside: avoid !important;
+            break-before: avoid !important;
+            break-after: avoid !important;
             letter-spacing: 0.6px;
             text-transform: uppercase;
             box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
             border-radius: 4px;
-            white-space: nowrap;
             word-break: keep-all;
             overflow-wrap: normal;
+            orphans: 10;
+            widows: 10;
           }
 
           /* Info Grid */
@@ -700,9 +703,17 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .mb-10 { margin-bottom: 10px; }
           .mb-20 { margin-bottom: 20px; }
           .page-break {
-            page-break-after: always;
-            page-break-inside: avoid;
+            page-break-after: always !important;
+            page-break-inside: avoid !important;
             word-break: keep-all;
+          }
+          .page-break-before {
+            page-break-before: always !important;
+            page-break-inside: avoid !important;
+            word-break: keep-all;
+            margin-top: 0;
+            padding-top: 0;
+            break-before: page !important;
           }
         </style>
 
@@ -906,34 +917,6 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Financial Projection -->
-        <div class="keep-together">
-          <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
-          <div class="profit-summary">
-            <div class="profit-item">
-              <span class="profit-label">Present Monthly Power Bill</span>
-              <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
-            </div>
-            <div class="profit-item">
-              <span class="profit-label">Annual Power Bill</span>
-              <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
-            </div>
-            <div class="profit-item">
-              <span class="profit-label">Annual Tariff Increment</span>
-              <span class="profit-value">${tariffIncrement}%</span>
-            </div>
-            <div class="profit-item">
-              <span class="profit-label">Projected Bill (25 years)</span>
-              <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
-            </div>
-            <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
-              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
-              <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
-              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
-            </div>
-          </div>
-        </div>
-
         <!-- Environmental Benefits -->
         <div class="keep-together">
           <div class="section-header">ENVIRONMENTAL IMPACT</div>
@@ -967,10 +950,57 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Bill of Materials -->
+        <!-- Financial Projection -->
         <div class="keep-together">
+          <div class="section-header">FINANCIAL PROJECTION & BENEFITS</div>
+          <div class="profit-summary">
+            <div class="profit-item">
+              <span class="profit-label">Present Monthly Power Bill</span>
+              <span class="profit-value">₹${monthlyBillBefore.toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Power Bill</span>
+              <span class="profit-value">₹${(annualBillBefore).toLocaleString()}</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Annual Tariff Increment</span>
+              <span class="profit-value">${tariffIncrement}%</span>
+            </div>
+            <div class="profit-item">
+              <span class="profit-label">Projected Bill (25 years)</span>
+              <span class="profit-value">₹${powerBill25Years.toLocaleString(undefined, { maximumFractionDigits: 0 })}</span>
+            </div>
+            <div class="profit-highlight" style="margin-top: 16px; background: linear-gradient(90deg, #059669 0%, #10b981 100%); padding: 16px; text-align: center; border-radius: 8px;">
+              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.95); text-transform: uppercase; margin-bottom: 8px;">Net Benefit After Your Investment</div>
+              <div style="font-size: 24px; color: white; font-weight: 700;">₹${(powerBill25Years - grandTotal).toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.9); margin-top: 6px;">Over 25 years of solar operation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roof Design Layout - Page 2 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
+          <div class="section-header">ROOF DESIGN LAYOUT</div>
+          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid; text-align: center;">
+            ${data.designImage ? `
+              <div style="width: 100%; max-width: 600px; margin: 0 auto; page-break-inside: avoid;">
+                <img src="${data.designImage}" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e2e8f0;" alt="Roof Design Layout" />
+              </div>
+              <div style="margin-top: 16px; font-size: 11px; color: #718096; font-style: italic;">
+                <p>Solar panel placement and system design for optimal energy generation</p>
+              </div>
+            ` : `
+              <div style="padding: 40px 20px; color: #718096; font-size: 12px;">
+                <p>No design image available</p>
+              </div>
+            `}
+          </div>
+        </div>
+
+        <!-- Bill of Materials - Page 3 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
           <div class="section-header">BILL OF MATERIALS</div>
-          <div style="page-break-inside: avoid;">
+          <div style="page-break-inside: avoid; margin-top: 20px;">
             <table style="page-break-inside: avoid;">
               <thead>
                 <tr>
@@ -996,49 +1026,52 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Terms and Conditions -->
-        <div class="section-header" style="margin-top: 20px;">TERMS AND CONDITIONS</div>
-        <div class="card" style="padding: 18px; margin: 0; border-radius: 8px; border: 2px solid #e2e8f0;">
-          <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
-            ${termsConditions.map((item, index) => {
-              // Wrap the first item with the section header logic if we wanted,
-              // but since they are in a card, let's just make sure the card itself is split-able.
-              return `
-                <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 10px; padding: 12px; border-left: 4px solid #10b981;">
-                  ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 6px; font-weight: 800;">${index + 1}. ${item.title}</div>` : ''}
-                  <div class="terms-content" style="font-size: 11px; line-height: 1.7;">${item.content}</div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-
-        <!-- Customer Scope -->
-        <div class="section-header" style="margin-top: 20px;">CUSTOMER SCOPE OF WORK</div>
-        <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 18px; margin: 0;">
-          <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
-            ${customerScope.map((item, index) => `
-              <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.7); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid;">
-                <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
-                <span style="font-size: 11px; line-height: 1.7;">${item}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div style="page-break-before: auto; margin-top: 40px;"></div>
-        <div class="footer" style="page-break-inside: avoid; margin-top: 60px;">
-          <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
-            <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
-            <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
-              This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
-              <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
+        <!-- Terms and Conditions - Page 4 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0;">
+          <div class="section-header">TERMS AND CONDITIONS</div>
+          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
+            <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
+              ${termsConditions.map((item, index) => {
+        return `
+                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px; padding: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
+                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 8px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
+                    <div class="terms-content" style="font-size: 11px; line-height: 1.6; color: #2d3748;">${item.content}</div>
+                  </div>
+                `;
+      }).join('')}
             </div>
           </div>
-          <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 10px; color: #718096; line-height: 1.6;">
-            <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
-            <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+
+        <!-- Customer Scope - Page 5 with Footer -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 0 0 40px 0; display: flex; flex-direction: column;">
+          <div style="flex: 1; page-break-inside: avoid;">
+            <div class="section-header">CUSTOMER SCOPE OF WORK</div>
+            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
+              <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
+                ${customerScope.map((item, index) => `
+                  <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
+                    <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 12px;">${index + 1}</span>
+                    <span style="font-size: 11px; line-height: 1.6; color: #78350f;">${item}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer - Only on Page 5 -->
+          <div class="footer" style="page-break-inside: avoid; margin-top: auto; padding-top: 30px; page-break-before: avoid;">
+            <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
+              <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
+              <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
+                This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
+                <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
+              </div>
+            </div>
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 10px; color: #718096; line-height: 1.6;">
+              <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
+              <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+            </div>
           </div>
         </div>
       `;
@@ -1047,27 +1080,32 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       document.body.appendChild(pdfContainer);
 
       // Smart Page Break Logic for html2canvas
-      // This helps push elements to the next page instead of splitting them
+      // Since we're using proper CSS page-break-before on major sections,
+      // focus on preventing orphaned headers within page 1 content
       const pageHeightPx = 1270; // Approximation for A4 height at 900px width
-      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.keep-together, .section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
+      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
 
       elementsToAvoidSplitting.forEach((el: any) => {
-        const rect = el.getBoundingClientRect();
+        // Skip if element is inside a page-break-before container (pages 2-5 handle their own breaks)
+        if (el.closest('[style*="page-break-before: always"]')) {
+          return;
+        }
+
         const top = el.offsetTop;
         const bottom = top + el.offsetHeight;
 
         const pageOfTop = Math.floor(top / pageHeightPx);
         const pageOfBottom = Math.floor(bottom / pageHeightPx);
 
-        // Special logic for section headers: keep them with at least some content
+        // Prevent section headers from orphaning at page bottom
         if (el.classList.contains('section-header')) {
           const nextEl = el.nextElementSibling;
-          if (nextEl) {
+          if (nextEl && !el.closest('[style*="page-break-before: always"]')) {
             const nextBottom = nextEl.offsetTop + Math.min(nextEl.offsetHeight, 100);
             const pageOfNextStart = Math.floor(nextBottom / pageHeightPx);
             if (pageOfTop !== pageOfNextStart) {
-              // Header is at bottom, but content starts on next page. Push header.
-              const spacerHeight = (pageOfNextStart * pageHeightPx) - top;
+              // Header is at bottom, content starts on next page. Push header to next page.
+              const spacerHeight = ((pageOfTop + 1) * pageHeightPx) - top;
               const spacer = document.createElement('div');
               spacer.style.height = `${spacerHeight}px`;
               el.parentNode.insertBefore(spacer, el);
@@ -1076,12 +1114,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
         }
 
-        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85) {
-          // Element crosses a page boundary and is small enough to fit on a new page
-          const spacerHeight = (pageOfBottom * pageHeightPx) - top;
-          if (spacerHeight > 0) {
+        // For other elements on page 1, prevent mid-element breaks if small enough
+        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85 && !el.closest('[style*="page-break-before"]')) {
+          const spacerHeight = ((pageOfBottom) * pageHeightPx) - top;
+          if (spacerHeight > 0 && spacerHeight < pageHeightPx * 2) {
             const spacer = document.createElement('div');
-            spacer.style.height = `${spacerHeight + 10}px`; // Add a small buffer
+            spacer.style.height = `${spacerHeight + 10}px`;
             el.parentNode.insertBefore(spacer, el);
           }
         }
@@ -1188,9 +1226,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                 <div>
                   <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Roof Design Layout</h3>
                   <div className="relative aspect-video bg-slate-100 rounded-2xl overflow-hidden border border-slate-200">
-                    <img 
-                      src={data.designImage} 
-                      alt="Solar Design" 
+                    <img
+                      src={data.designImage}
+                      alt="Solar Design"
                       className="w-full h-full object-contain"
                     />
                     <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm px-2 py-1 rounded text-[10px] font-bold text-slate-500">
@@ -1213,16 +1251,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   <div className="p-4 space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <label className="font-semibold text-slate-600">Monthly Units (kWh)</label>
-                      <input 
-                        type="number" 
-                        value={monthlyUnitsBefore} 
+                      <input
+                        type="number"
+                        value={monthlyUnitsBefore}
                         onChange={(e) => setMonthlyUnitsBefore(parseFloat(e.target.value) || 0)}
                         className="border border-slate-300 rounded px-2 py-1"
                       />
                       <label className="font-semibold text-slate-600">Monthly Bill (₹)</label>
-                      <input 
-                        type="number" 
-                        value={monthlyBillBefore} 
+                      <input
+                        type="number"
+                        value={monthlyBillBefore}
                         onChange={(e) => setMonthlyBillBefore(parseFloat(e.target.value) || 0)}
                         className="border border-slate-300 rounded px-2 py-1"
                       />
@@ -1239,16 +1277,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   <div className="p-4 space-y-4">
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <label className="font-semibold text-slate-600">Monthly Units (kWh)</label>
-                      <input 
-                        type="number" 
-                        value={monthlyUnitsAfter} 
+                      <input
+                        type="number"
+                        value={monthlyUnitsAfter}
                         onChange={(e) => setMonthlyUnitsAfter(parseFloat(e.target.value) || 0)}
                         className="border border-slate-300 rounded px-2 py-1"
                       />
                       <label className="font-semibold text-slate-600">Monthly Bill (₹)</label>
-                      <input 
-                        type="number" 
-                        value={monthlyBillAfter} 
+                      <input
+                        type="number"
+                        value={monthlyBillAfter}
                         onChange={(e) => setMonthlyBillAfter(parseFloat(e.target.value) || 0)}
                         className="border border-slate-300 rounded px-2 py-1"
                       />
@@ -1271,9 +1309,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                   </div>
                   <div>
                     <p className="text-emerald-700 font-semibold">Tariff Increment</p>
-                    <input 
-                      type="number" 
-                      value={tariffIncrement} 
+                    <input
+                      type="number"
+                      value={tariffIncrement}
                       onChange={(e) => setTariffIncrement(parseFloat(e.target.value) || 0)}
                       className="border border-emerald-300 rounded px-2 py-1 w-20"
                       step="0.1"
@@ -1318,7 +1356,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             {/* Quotation Table */}
             <div className="border-t border-slate-200 pt-8">
               <h3 className="text-lg font-bold text-slate-900 text-center mb-6">QUOTATION</h3>
-              
+
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse text-sm">
                   <thead>
@@ -1781,11 +1819,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <button
               type="submit"
               disabled={isSending || sent}
-              className={`px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all ${
-                sent 
-                ? 'bg-emerald-500 text-white' 
-                : 'bg-amber-500 text-white hover:bg-amber-600'
-              }`}
+              className={`px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all ${sent
+                  ? 'bg-emerald-500 text-white'
+                  : 'bg-amber-500 text-white hover:bg-amber-600'
+                }`}
             >
               {isSending ? <Loader2 size={18} className="animate-spin" /> : sent ? <CheckCircle2 size={18} /> : <Mail size={18} />}
               {sent ? 'Sent!' : 'Email'}
