@@ -308,15 +308,18 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             color: #065f46;
             page-break-after: avoid !important;
             page-break-inside: avoid !important;
-            page-break-before: avoid;
-            break-inside: avoid;
+            page-break-before: avoid !important;
+            break-inside: avoid !important;
+            break-before: avoid !important;
+            break-after: avoid !important;
             letter-spacing: 0.6px;
             text-transform: uppercase;
             box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
             border-radius: 4px;
-            white-space: nowrap;
             word-break: keep-all;
             overflow-wrap: normal;
+            orphans: 10;
+            widows: 10;
           }
 
           /* Info Grid */
@@ -700,8 +703,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .mb-10 { margin-bottom: 10px; }
           .mb-20 { margin-bottom: 20px; }
           .page-break {
-            page-break-after: always;
-            page-break-inside: avoid;
+            page-break-after: always !important;
+            page-break-inside: avoid !important;
             word-break: keep-all;
           }
           .page-break-before {
@@ -710,6 +713,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             word-break: keep-all;
             margin-top: 0;
             padding-top: 0;
+            break-before: page !important;
           }
         </style>
 
@@ -974,10 +978,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Roof Design Layout -->
-        <div class="page-break-before" style="page-break-before: always !important; padding-bottom: 50px;">
+        <!-- Roof Design Layout - Page 2 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
           <div class="section-header">ROOF DESIGN LAYOUT</div>
-          <div class="card" style="padding: 20px; margin: 0; margin-bottom: 20px; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid; text-align: center;">
+          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid; text-align: center;">
             ${data.designImage ? `
               <div style="width: 100%; max-width: 600px; margin: 0 auto; page-break-inside: avoid;">
                 <img src="${data.designImage}" style="width: 100%; height: auto; border-radius: 8px; border: 1px solid #e2e8f0;" alt="Roof Design Layout" />
@@ -993,10 +997,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Bill of Materials -->
-        <div class="page-break-before" style="page-break-before: always !important; min-height: 1270px; padding-bottom: 50px; page-break-inside: avoid;">
+        <!-- Bill of Materials - Page 3 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
           <div class="section-header">BILL OF MATERIALS</div>
-          <div style="page-break-inside: avoid;">
+          <div style="page-break-inside: avoid; margin-top: 20px;">
             <table style="page-break-inside: avoid;">
               <thead>
                 <tr>
@@ -1022,10 +1026,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Terms and Conditions -->
-        <div class="page-break-before" style="page-break-before: always !important; min-height: 1270px; padding-bottom: 50px; page-break-inside: avoid;">
+        <!-- Terms and Conditions - Page 4 -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0;">
           <div class="section-header">TERMS AND CONDITIONS</div>
-          <div class="card" style="padding: 20px; margin: 0; margin-bottom: 20px; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
+          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
             <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
               ${termsConditions.map((item, index) => {
         return `
@@ -1039,11 +1043,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
         </div>
 
-        <!-- Customer Scope -->
-        <div class="page-break-before" style="page-break-before: always !important; min-height: 1270px; padding-bottom: 50px; display: flex; flex-direction: column;">
-          <div style="flex: 1;">
+        <!-- Customer Scope - Page 5 with Footer -->
+        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 40px 0; display: flex; flex-direction: column;">
+          <div style="flex: 1; page-break-inside: avoid;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
-            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 0; page-break-inside: avoid;">
+            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
               <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
                 ${customerScope.map((item, index) => `
                   <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
@@ -1055,8 +1059,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </div>
           </div>
 
-          <!-- Footer -->
-          <div class="footer" style="page-break-inside: avoid; margin-top: auto; padding-top: 30px;">
+          <!-- Footer - Only on Page 5 -->
+          <div class="footer" style="page-break-inside: avoid; margin-top: auto; padding-top: 30px; page-break-before: avoid;">
             <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
               <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
               <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
@@ -1076,33 +1080,32 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       document.body.appendChild(pdfContainer);
 
       // Smart Page Break Logic for html2canvas
-      // This helps push elements to the next page instead of splitting them
-      // Skip page-break-before sections to let CSS handle their page breaks
+      // Since we're using proper CSS page-break-before on major sections,
+      // focus on preventing orphaned headers within page 1 content
       const pageHeightPx = 1270; // Approximation for A4 height at 900px width
-      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.keep-together:not(.page-break-before) .section-header, .keep-together:not(.page-break-before) .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
+      const elementsToAvoidSplitting = pdfContainer.querySelectorAll('.section-header, .card, .info-box, .profit-summary, .terms-item, .scope-item, table, .profit-highlight, .metric-card');
 
       elementsToAvoidSplitting.forEach((el: any) => {
-        // Skip if element is inside a page-break-before container
-        if (el.closest('.page-break-before')) {
+        // Skip if element is inside a page-break-before container (pages 2-5 handle their own breaks)
+        if (el.closest('[style*="page-break-before: always"]')) {
           return;
         }
 
-        const rect = el.getBoundingClientRect();
         const top = el.offsetTop;
         const bottom = top + el.offsetHeight;
 
         const pageOfTop = Math.floor(top / pageHeightPx);
         const pageOfBottom = Math.floor(bottom / pageHeightPx);
 
-        // Special logic for section headers: keep them with at least some content
+        // Prevent section headers from orphaning at page bottom
         if (el.classList.contains('section-header')) {
           const nextEl = el.nextElementSibling;
-          if (nextEl) {
+          if (nextEl && !el.closest('[style*="page-break-before: always"]')) {
             const nextBottom = nextEl.offsetTop + Math.min(nextEl.offsetHeight, 100);
             const pageOfNextStart = Math.floor(nextBottom / pageHeightPx);
             if (pageOfTop !== pageOfNextStart) {
-              // Header is at bottom, but content starts on next page. Push header.
-              const spacerHeight = (pageOfNextStart * pageHeightPx) - top;
+              // Header is at bottom, content starts on next page. Push header to next page.
+              const spacerHeight = ((pageOfTop + 1) * pageHeightPx) - top;
               const spacer = document.createElement('div');
               spacer.style.height = `${spacerHeight}px`;
               el.parentNode.insertBefore(spacer, el);
@@ -1111,12 +1114,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           }
         }
 
-        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85) {
-          // Element crosses a page boundary and is small enough to fit on a new page
-          const spacerHeight = (pageOfBottom * pageHeightPx) - top;
-          if (spacerHeight > 0) {
+        // For other elements on page 1, prevent mid-element breaks if small enough
+        if (pageOfTop !== pageOfBottom && el.offsetHeight < pageHeightPx * 0.85 && !el.closest('[style*="page-break-before"]')) {
+          const spacerHeight = ((pageOfBottom) * pageHeightPx) - top;
+          if (spacerHeight > 0 && spacerHeight < pageHeightPx * 2) {
             const spacer = document.createElement('div');
-            spacer.style.height = `${spacerHeight + 10}px`; // Add a small buffer
+            spacer.style.height = `${spacerHeight + 10}px`;
             el.parentNode.insertBefore(spacer, el);
           }
         }
