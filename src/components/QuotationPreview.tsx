@@ -176,11 +176,13 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       pdfContainer.style.left = '-9999px';
       pdfContainer.style.width = '900px';
       pdfContainer.style.backgroundColor = '#ffffff';
-      pdfContainer.style.padding = '30px';
+      pdfContainer.style.padding = '20px 30px';
       pdfContainer.style.fontFamily = '"Segoe UI", Arial, sans-serif';
       pdfContainer.style.color = '#1a1a1a';
       pdfContainer.style.fontSize = '11px';
       pdfContainer.style.lineHeight = '1.5';
+      pdfContainer.style.margin = '0';
+      pdfContainer.style.boxSizing = 'border-box';
 
       let html = `
         <style>
@@ -1168,13 +1170,17 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       const imgProps = pdf.getImageProperties(imgData);
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      let position = 0;
-      while (position < imgHeight) {
-        if (position > 0) {
+      // Calculate total pages needed
+      const totalPages = Math.ceil(imgHeight / pdfHeight);
+
+      // Add each page with proper positioning
+      for (let i = 0; i < totalPages; i++) {
+        if (i > 0) {
           pdf.addPage();
         }
-        pdf.addImage(imgData, 'PNG', 0, -(position), pdfWidth, imgHeight);
-        position += pdfHeight;
+        // Position image so that each page shows the next section
+        const yOffset = -(i * pdfHeight);
+        pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
       }
 
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
