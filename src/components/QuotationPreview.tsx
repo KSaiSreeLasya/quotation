@@ -176,11 +176,13 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       pdfContainer.style.left = '-9999px';
       pdfContainer.style.width = '900px';
       pdfContainer.style.backgroundColor = '#ffffff';
-      pdfContainer.style.padding = '30px';
+      pdfContainer.style.padding = '20px 30px';
       pdfContainer.style.fontFamily = '"Segoe UI", Arial, sans-serif';
       pdfContainer.style.color = '#1a1a1a';
       pdfContainer.style.fontSize = '11px';
       pdfContainer.style.lineHeight = '1.5';
+      pdfContainer.style.margin = '0';
+      pdfContainer.style.boxSizing = 'border-box';
 
       let html = `
         <style>
@@ -979,7 +981,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Roof Design Layout - Page 2 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 30px 0 40px 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
           <div class="section-header">ROOF DESIGN LAYOUT</div>
           <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid; text-align: center;">
             ${data.designImage ? `
@@ -998,7 +1000,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Bill of Materials - Page 3 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 30px 0 40px 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
           <div class="section-header">BILL OF MATERIALS</div>
           <div style="page-break-inside: avoid; margin-top: 20px;">
             <table style="page-break-inside: avoid;">
@@ -1027,7 +1029,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 30px 0 40px 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
           <div class="section-header">TERMS AND CONDITIONS</div>
           <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
             <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
@@ -1044,8 +1046,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Customer Scope - Page 5 with Footer -->
-        <div style="page-break-before: always; page-break-inside: avoid; min-height: 1270px; padding: 30px 0 40px 0; margin: 0;">
-          <div style="page-break-inside: avoid;">
+        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 0; margin: 0;">
+          <div style="page-break-inside: avoid; flex: 1;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
             <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
               <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
@@ -1059,9 +1061,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             </div>
           </div>
 
-          <!-- Footer - Only on Page 5 (Spacer forces footer to bottom) -->
-          <div style="page-break-inside: avoid; flex-grow: 1; margin: 0; padding: 0; min-height: 100px;"></div>
-          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 20px; margin-top: 0;">
+          <!-- Footer - Only on Page 5 (appears at bottom) -->
+          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 20px; margin-top: auto;">
             <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
               <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
               <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
@@ -1078,70 +1079,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       `;
 
       pdfContainer.innerHTML = html;
+      pdfContainer.style.overflow = 'visible';
       document.body.appendChild(pdfContainer);
 
-      // Smart Page Break Logic for html2canvas
-      // html2canvas renders the entire HTML as one tall image, then we split it into pages
-      // We need to ensure content is properly positioned to match page boundaries
-      const A4_HEIGHT_MM = 297;
-      const A4_WIDTH_MM = 210;
-      const PDF_DPI = 96; // html2canvas uses 96 DPI by default
-      const pageHeightPx = Math.round((A4_HEIGHT_MM / 25.4) * PDF_DPI); // ~1122px for 100% scale
-
-      // Actually, let's use the calculated height based on container
-      // Each page section has min-height: 1270px
-      const estimatedPageHeight = 1270;
-
-      // Find all major page sections (those with page-break-before: always)
-      const pageBreakSections = Array.from(pdfContainer.querySelectorAll('[style*="page-break-before: always"]'));
-
-      // Get the first content height to estimate page 1 size
-      const page1Content = pdfContainer.querySelector('.pdf-header')?.parentElement;
-      const page1Height = page1Content ? page1Content.offsetHeight : estimatedPageHeight;
-
-      // Process each section to ensure it starts cleanly at a page boundary
-      pageBreakSections.forEach((section: any, index: number) => {
-        const sectionTop = section.offsetTop;
-        const expectedPageNumber = index + 1; // Page 0 is before first break, then page 1, 2, 3, 4
-        const expectedPageTop = (index === 0) ? page1Height : page1Height + (index * estimatedPageHeight);
-
-        // If section doesn't align with page boundary, adjust with spacer
-        if (Math.abs(sectionTop - expectedPageTop) > 20) { // Allow 20px tolerance for rounding
-          const gapSize = expectedPageTop - sectionTop;
-          if (gapSize > 0) {
-            const spacer = document.createElement('div');
-            spacer.style.height = `${gapSize}px`;
-            spacer.style.pageBreakInside = 'avoid';
-            spacer.style.margin = '0';
-            spacer.style.padding = '0';
-            section.parentNode?.insertBefore(spacer, section);
-          }
-        }
-      });
-
-      // Prevent orphaned headers on page 1
-      const allHeaders = Array.from(pdfContainer.querySelectorAll('.section-header'));
-      allHeaders.forEach((header: any) => {
-        // Skip headers that are part of page breaks
-        if (header.closest('[style*="page-break-before"]')) {
-          return;
-        }
-
-        const headerTop = header.offsetTop;
-        const headerBottom = headerTop + header.offsetHeight;
-
-        // If header is close to page 1 boundary (would orphan), push to next page
-        if (headerTop < page1Height * 0.92 && headerBottom > page1Height * 0.75) {
-          const spacerHeight = page1Height - headerTop + 30;
-          const spacer = document.createElement('div');
-          spacer.style.height = `${spacerHeight}px`;
-          spacer.style.pageBreakInside = 'avoid';
-          spacer.style.margin = '0';
-          spacer.style.padding = '0';
-          header.parentNode?.insertBefore(spacer, header);
-        }
-      });
-
+      // Allow CSS page breaks to take effect
       await new Promise(resolve => setTimeout(resolve, 300));
 
       const canvas = await html2canvas(pdfContainer, {
@@ -1168,13 +1109,20 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       const imgProps = pdf.getImageProperties(imgData);
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      let position = 0;
-      while (position < imgHeight) {
-        if (position > 0) {
+      // Calculate total pages needed (Page 5 is the last page with footer)
+      const totalPages = Math.ceil(imgHeight / pdfHeight);
+
+      // Limit to maximum 5 pages (Page 1-5) to prevent empty trailing pages
+      const maxPages = Math.min(totalPages, 5);
+
+      // Add each page with proper positioning
+      for (let i = 0; i < maxPages; i++) {
+        if (i > 0) {
           pdf.addPage();
         }
-        pdf.addImage(imgData, 'PNG', 0, -(position), pdfWidth, imgHeight);
-        position += pdfHeight;
+        // Position image so that each page shows the next section
+        const yOffset = -(i * pdfHeight);
+        pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
       }
 
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
