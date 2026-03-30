@@ -1046,7 +1046,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Customer Scope - Page 5 with Footer -->
-        <div style="page-break-before: always; display: flex; flex-direction: column; min-height: 100vh; padding: 0; margin: 0;">
+        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 0; margin: 0;">
           <div style="page-break-inside: avoid; flex: 1;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
             <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
@@ -1079,6 +1079,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       `;
 
       pdfContainer.innerHTML = html;
+      pdfContainer.style.overflow = 'visible';
       document.body.appendChild(pdfContainer);
 
       // Allow CSS page breaks to take effect
@@ -1108,11 +1109,14 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       const imgProps = pdf.getImageProperties(imgData);
       const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      // Calculate total pages needed
+      // Calculate total pages needed (Page 5 is the last page with footer)
       const totalPages = Math.ceil(imgHeight / pdfHeight);
 
+      // Limit to maximum 5 pages (Page 1-5) to prevent empty trailing pages
+      const maxPages = Math.min(totalPages, 5);
+
       // Add each page with proper positioning
-      for (let i = 0; i < totalPages; i++) {
+      for (let i = 0; i < maxPages; i++) {
         if (i > 0) {
           pdf.addPage();
         }
