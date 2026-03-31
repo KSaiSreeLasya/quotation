@@ -176,7 +176,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       pdfContainer.style.left = '-9999px';
       pdfContainer.style.width = '900px';
       pdfContainer.style.backgroundColor = '#ffffff';
-      pdfContainer.style.padding = '20px 30px';
+      pdfContainer.style.padding = '40px 50px';
       pdfContainer.style.fontFamily = '"Segoe UI", Arial, sans-serif';
       pdfContainer.style.color = '#1a1a1a';
       pdfContainer.style.fontSize = '11px';
@@ -304,7 +304,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border-bottom: 4px solid #10b981;
             border-left: 6px solid #059669;
             padding: 18px 20px;
-            margin: 0 0 20px 0;
+            margin: 0 0 30px 0;
             font-size: 14px;
             font-weight: 800;
             color: #065f46;
@@ -397,7 +397,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 30px 0;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -455,7 +455,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             padding: 24px;
-            margin-bottom: 20px;
+            margin: 20px 0 30px 0;
             page-break-inside: avoid;
             page-break-after: avoid;
             page-break-before: avoid;
@@ -590,12 +590,19 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             overflow-wrap: normal;
           }
 
+          /* Keep Together Section */
+          .keep-together {
+            page-break-inside: avoid;
+            margin: 30px 0;
+            word-break: keep-all;
+          }
+
           /* Comparison Section */
           .comparison-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 22px;
-            margin: 20px 0;
+            margin: 30px 0;
             page-break-inside: avoid;
             word-break: keep-all;
           }
@@ -1109,7 +1116,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         container.style.left = '-9999px';
         container.style.width = '900px';
         container.style.backgroundColor = '#ffffff';
-        container.style.padding = '20px 30px';
+        container.style.padding = '40px 50px';
         container.style.fontFamily = '"Segoe UI", Arial, sans-serif';
         container.style.color = '#1a1a1a';
         container.style.fontSize = '11px';
@@ -1117,6 +1124,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         container.style.margin = '0';
         container.style.boxSizing = 'border-box';
         container.style.overflow = 'visible';
+        container.style.minHeight = '100vh';
 
         container.innerHTML = htmlContent;
         document.body.appendChild(container);
