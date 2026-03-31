@@ -176,7 +176,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
       pdfContainer.style.left = '-9999px';
       pdfContainer.style.width = '900px';
       pdfContainer.style.backgroundColor = '#ffffff';
-      pdfContainer.style.padding = '20px 30px';
+      pdfContainer.style.padding = '40px 50px';
       pdfContainer.style.fontFamily = '"Segoe UI", Arial, sans-serif';
       pdfContainer.style.color = '#1a1a1a';
       pdfContainer.style.fontSize = '11px';
@@ -304,7 +304,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             border-bottom: 4px solid #10b981;
             border-left: 6px solid #059669;
             padding: 18px 20px;
-            margin: 0 0 20px 0;
+            margin: 0 0 30px 0;
             font-size: 14px;
             font-weight: 800;
             color: #065f46;
@@ -397,7 +397,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 30px 0;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -449,13 +449,94 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .success-row { background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important; font-weight: 600; color: #065f46; }
           .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
 
+          /* Bill of Materials Table Styles */
+          .bom-table {
+            width: 100% !important;
+            border-collapse: collapse;
+            margin: 20px 0 30px 0 !important;
+            page-break-inside: avoid;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+          }
+          .bom-table thead {
+            display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-header-row {
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-header-cell {
+            padding: 16px 14px !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none !important;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-row {
+            page-break-inside: avoid;
+            background: white;
+            border-bottom: 1px solid #e5f2ed;
+            transition: background-color 0.2s ease;
+          }
+          .bom-row:nth-child(even) {
+            background: #f8fdfb;
+          }
+          .bom-row:hover {
+            background: #f0fdf4;
+          }
+          .bom-cell {
+            padding: 14px 14px !important;
+            font-size: 12px !important;
+            color: #1a1a1a;
+            border: none !important;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            line-height: 1.6;
+          }
+          .bom-number {
+            font-weight: 700 !important;
+            color: #059669 !important;
+            background: rgba(16, 185, 129, 0.08);
+          }
+          .bom-description {
+            font-weight: 600;
+            color: #065f46;
+          }
+          .bom-make {
+            color: #475569;
+            font-weight: 500;
+          }
+          .bom-uom {
+            color: #1a202c;
+            font-weight: 600;
+          }
+          .bom-quantity {
+            color: #059669;
+            font-weight: 700 !important;
+            background: rgba(16, 185, 129, 0.08);
+          }
+          .bom-table tbody tr:last-child {
+            border-bottom: 2px solid #10b981;
+          }
+
           /* Card Styles */
           .card {
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             padding: 24px;
-            margin-bottom: 20px;
+            margin: 20px 0 30px 0;
             page-break-inside: avoid;
             page-break-after: avoid;
             page-break-before: avoid;
@@ -590,12 +671,19 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             overflow-wrap: normal;
           }
 
+          /* Keep Together Section */
+          .keep-together {
+            page-break-inside: avoid;
+            margin: 30px 0;
+            word-break: keep-all;
+          }
+
           /* Comparison Section */
           .comparison-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 22px;
-            margin: 20px 0;
+            margin: 30px 0;
             page-break-inside: avoid;
             word-break: keep-all;
           }
@@ -642,8 +730,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
           /* Terms & Scope */
           .terms-item, .scope-item {
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
             border-left: 4px solid #10b981;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 6px;
@@ -652,15 +740,25 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             break-inside: avoid;
             page-break-after: auto;
             page-break-before: auto;
-            orphans: 5;
-            widows: 5;
+            orphans: 10;
+            widows: 10;
+            word-break: keep-all;
+          }
+          .terms-serial {
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #10b981;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            page-break-inside: avoid;
             word-break: keep-all;
           }
           .terms-title {
             font-weight: 800;
             color: #059669;
-            margin-bottom: 6px;
-            font-size: 11px;
+            margin-bottom: 10px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             page-break-inside: avoid;
@@ -669,9 +767,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             overflow-wrap: normal;
           }
           .terms-content {
-            font-size: 10px;
+            font-size: 12px;
             color: #2d3748;
-            line-height: 1.5;
+            line-height: 1.7;
             white-space: pre-wrap;
             page-break-inside: avoid;
             word-break: keep-all;
@@ -1000,27 +1098,27 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Bill of Materials - Page 3 -->
-        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 40px 0; margin: 0;">
           <div class="section-header">BILL OF MATERIALS</div>
-          <div style="page-break-inside: avoid; margin-top: 20px;">
-            <table style="page-break-inside: avoid;">
+          <div style="page-break-inside: avoid; margin-top: 30px;">
+            <table class="bom-table" style="page-break-inside: avoid;">
               <thead>
-                <tr>
-                  <th style="width: 40px; text-align: center;">No.</th>
-                  <th>Description</th>
-                  <th style="width: 100px;">Make/Brand</th>
-                  <th style="width: 50px; text-align: center;">Unit</th>
-                  <th style="width: 50px; text-align: center;">Qty</th>
+                <tr class="bom-header-row">
+                  <th class="bom-header-cell" style="width: 50px; text-align: center;">No.</th>
+                  <th class="bom-header-cell" style="text-align: left;">Description</th>
+                  <th class="bom-header-cell" style="width: 120px;">Make/Brand</th>
+                  <th class="bom-header-cell" style="width: 70px; text-align: center;">Unit</th>
+                  <th class="bom-header-cell" style="width: 70px; text-align: center;">Qty</th>
                 </tr>
               </thead>
               <tbody>
                 ${billOfMaterials.map((material, idx) => `
-                  <tr style="page-break-inside: avoid;">
-                    <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
-                    <td>${material.description}</td>
-                    <td>${material.make}</td>
-                    <td class="text-center">${material.uom}</td>
-                    <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                  <tr class="bom-row" style="page-break-inside: avoid;">
+                    <td class="bom-cell bom-number" style="text-align: center;">${idx + 1}</td>
+                    <td class="bom-cell bom-description">${material.description}</td>
+                    <td class="bom-cell bom-make">${material.make}</td>
+                    <td class="bom-cell bom-uom" style="text-align: center;">${material.uom}</td>
+                    <td class="bom-cell bom-quantity" style="text-align: center;">${material.quantity}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -1029,15 +1127,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
+        <div style="page-break-before: always; padding: 40px 0 60px 0; margin: 0; min-height: 100vh; display: flex; flex-direction: column;">
           <div class="section-header">TERMS AND CONDITIONS</div>
-          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
+          <div style="flex: 1; padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white;">
+            <div style="font-size: 11px; color: #2d3748; line-height: 1.8;">
               ${termsConditions.map((item, index) => {
         return `
-                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px; padding: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
-                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 8px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
-                    <div class="terms-content" style="font-size: 11px; line-height: 1.6; color: #2d3748;">${item.content}</div>
+                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 16px; padding: 16px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
+                    <div class="terms-serial" style="font-size: 11px; margin-bottom: 8px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.3px;">Sl. No. ${index + 1}</div>
+                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${item.title}</div>` : ''}
+                    <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #2d3748;">${item.content}</div>
                   </div>
                 `;
       }).join('')}
@@ -1046,15 +1145,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Customer Scope - Page 5 with Footer -->
-        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 0; margin: 0;">
+        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 40px 0; margin: 0;">
           <div style="page-break-inside: avoid; flex: 1;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
-            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
-              <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
+            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 30px; margin: 30px 0; page-break-inside: avoid;">
+              <div style="font-size: 12px; color: #78350f; line-height: 1.8;">
                 ${customerScope.map((item, index) => `
-                  <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
-                    <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 12px;">${index + 1}</span>
-                    <span style="font-size: 11px; line-height: 1.6; color: #78350f;">${item}</span>
+                  <div class="scope-item" style="display: flex; gap: 14px; margin-bottom: 16px; padding: 16px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
+                    <span style="font-weight: 800; color: #b45309; min-width: 24px; flex-shrink: 0; font-size: 13px;">${index + 1}</span>
+                    <span style="font-size: 12px; line-height: 1.7; color: #78350f;">${item}</span>
                   </div>
                 `).join('')}
               </div>
@@ -1062,42 +1161,37 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
 
           <!-- Footer - Only on Page 5 (appears at bottom) -->
-          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 20px; margin-top: auto;">
-            <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
-              <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
-              <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
+          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 30px; margin-top: auto;">
+            <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 24px; margin-bottom: 30px; page-break-inside: avoid;">
+              <div style="font-size: 14px; font-weight: 700; color: #059669; margin-bottom: 12px;">Thank You for Choosing Solar Energy!</div>
+              <div style="font-size: 12px; color: #2d3748; line-height: 1.8;">
                 This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
                 <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
               </div>
             </div>
-            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 10px; color: #718096; line-height: 1.6;">
-              <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; font-size: 11px; color: #718096; line-height: 1.7; page-break-inside: avoid;">
+              <div style="margin-bottom: 10px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
               <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
           </div>
         </div>
       `;
 
-      pdfContainer.innerHTML = html;
-      pdfContainer.style.overflow = 'visible';
-      document.body.appendChild(pdfContainer);
+      // Get section marker positions in HTML to split PDF properly
+      const bomStartMarker = '<!-- Bill of Materials - Page 3 -->';
+      const termsStartMarker = '<!-- Terms and Conditions - Page 4 -->';
+      const customerScopeMarker = '<!-- Customer Scope - Page 5 with Footer -->';
 
-      // Allow CSS page breaks to take effect
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const bomStartIndex = html.indexOf(bomStartMarker);
+      const termsStartIndex = html.indexOf(termsStartMarker);
+      const customerScopeIndex = html.indexOf(customerScopeMarker);
 
-      const canvas = await html2canvas(pdfContainer, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        windowHeight: pdfContainer.scrollHeight,
-        windowWidth: 900,
-      });
+      // Split HTML into sections
+      const beforeBOM = html.substring(0, bomStartIndex);
+      const bomSection = html.substring(bomStartIndex, termsStartIndex);
+      const termsSection = html.substring(termsStartIndex, customerScopeIndex);
+      const customerScopeSection = html.substring(customerScopeIndex);
 
-      document.body.removeChild(pdfContainer);
-
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
@@ -1106,24 +1200,74 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(imgData);
-      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      // Calculate total pages needed (Page 5 is the last page with footer)
-      const totalPages = Math.ceil(imgHeight / pdfHeight);
+      // Helper function to render HTML section to canvas
+      const renderSectionToCanvas = async (htmlContent: string): Promise<string> => {
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.width = '900px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '40px 50px';
+        container.style.fontFamily = '"Segoe UI", Arial, sans-serif';
+        container.style.color = '#1a1a1a';
+        container.style.fontSize = '11px';
+        container.style.lineHeight = '1.5';
+        container.style.margin = '0';
+        container.style.boxSizing = 'border-box';
+        container.style.overflow = 'visible';
+        container.style.minHeight = '100vh';
 
-      // Limit to maximum 5 pages (Page 1-5) to prevent empty trailing pages
-      const maxPages = Math.min(totalPages, 5);
+        container.innerHTML = htmlContent;
+        document.body.appendChild(container);
 
-      // Add each page with proper positioning
-      for (let i = 0; i < maxPages; i++) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const canvas = await html2canvas(container, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          windowHeight: container.scrollHeight,
+          windowWidth: 900,
+        });
+
+        document.body.removeChild(container);
+        return canvas.toDataURL('image/png');
+      };
+
+      // Helper function to add image section to PDF on fresh page
+      const addSectionToNewPage = async (sectionHtml: string) => {
+        pdf.addPage();
+        const sectionCanvas = await renderSectionToCanvas(sectionHtml);
+        const sectionImgProps = pdf.getImageProperties(sectionCanvas);
+        const sectionHeight = (sectionImgProps.height * pdfWidth) / sectionImgProps.width;
+        pdf.addImage(sectionCanvas, 'PNG', 0, 0, pdfWidth, sectionHeight);
+      };
+
+      // Render before BOM content (Pages 1-2)
+      const beforeBOMCanvas = await renderSectionToCanvas(beforeBOM);
+      const beforeBOMImgProps = pdf.getImageProperties(beforeBOMCanvas);
+      const beforeBOMHeight = (beforeBOMImgProps.height * pdfWidth) / beforeBOMImgProps.width;
+      const beforeBOMPages = Math.ceil(beforeBOMHeight / pdfHeight);
+
+      for (let i = 0; i < beforeBOMPages; i++) {
         if (i > 0) {
           pdf.addPage();
         }
-        // Position image so that each page shows the next section
         const yOffset = -(i * pdfHeight);
-        pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
+        pdf.addImage(beforeBOMCanvas, 'PNG', 0, yOffset, pdfWidth, beforeBOMHeight);
       }
+
+      // Add Bill of Materials on fresh page (Page 3)
+      await addSectionToNewPage(bomSection);
+
+      // Add Terms and Conditions on fresh page (Page 4)
+      await addSectionToNewPage(termsSection);
+
+      // Add Customer Scope on fresh page (Page 5)
+      await addSectionToNewPage(customerScopeSection);
 
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
     } catch (error) {
