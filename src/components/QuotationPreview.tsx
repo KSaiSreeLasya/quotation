@@ -449,6 +449,87 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           .success-row { background: linear-gradient(90deg, #d1fae5 0%, #a7f3d0 100%) !important; font-weight: 600; color: #065f46; }
           .total-row { background: linear-gradient(90deg, #10b981 0%, #059669 100%) !important; color: white; font-weight: 600; }
 
+          /* Bill of Materials Table Styles */
+          .bom-table {
+            width: 100% !important;
+            border-collapse: collapse;
+            margin: 20px 0 30px 0 !important;
+            page-break-inside: avoid;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+          }
+          .bom-table thead {
+            display: table-header-group;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-header-row {
+            page-break-inside: avoid;
+            page-break-after: avoid;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-header-cell {
+            padding: 16px 14px !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            color: white !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none !important;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+          }
+          .bom-row {
+            page-break-inside: avoid;
+            background: white;
+            border-bottom: 1px solid #e5f2ed;
+            transition: background-color 0.2s ease;
+          }
+          .bom-row:nth-child(even) {
+            background: #f8fdfb;
+          }
+          .bom-row:hover {
+            background: #f0fdf4;
+          }
+          .bom-cell {
+            padding: 14px 14px !important;
+            font-size: 12px !important;
+            color: #1a1a1a;
+            border: none !important;
+            page-break-inside: avoid;
+            word-break: keep-all;
+            line-height: 1.6;
+          }
+          .bom-number {
+            font-weight: 700 !important;
+            color: #059669 !important;
+            background: rgba(16, 185, 129, 0.08);
+          }
+          .bom-description {
+            font-weight: 600;
+            color: #065f46;
+          }
+          .bom-make {
+            color: #475569;
+            font-weight: 500;
+          }
+          .bom-uom {
+            color: #1a202c;
+            font-weight: 600;
+          }
+          .bom-quantity {
+            color: #059669;
+            font-weight: 700 !important;
+            background: rgba(16, 185, 129, 0.08);
+          }
+          .bom-table tbody tr:last-child {
+            border-bottom: 2px solid #10b981;
+          }
+
           /* Card Styles */
           .card {
             background: white;
@@ -649,8 +730,8 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
           /* Terms & Scope */
           .terms-item, .scope-item {
-            padding: 12px;
-            margin-bottom: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
             border-left: 4px solid #10b981;
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-radius: 6px;
@@ -659,15 +740,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             break-inside: avoid;
             page-break-after: auto;
             page-break-before: auto;
-            orphans: 5;
-            widows: 5;
+            orphans: 10;
+            widows: 10;
             word-break: keep-all;
           }
           .terms-title {
             font-weight: 800;
             color: #059669;
-            margin-bottom: 6px;
-            font-size: 11px;
+            margin-bottom: 10px;
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             page-break-inside: avoid;
@@ -1007,27 +1088,27 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Bill of Materials - Page 3 -->
-        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 40px 0; margin: 0;">
           <div class="section-header">BILL OF MATERIALS</div>
-          <div style="page-break-inside: avoid; margin-top: 20px;">
-            <table style="page-break-inside: avoid;">
+          <div style="page-break-inside: avoid; margin-top: 30px;">
+            <table class="bom-table" style="page-break-inside: avoid;">
               <thead>
-                <tr>
-                  <th style="width: 40px; text-align: center;">No.</th>
-                  <th>Description</th>
-                  <th style="width: 100px;">Make/Brand</th>
-                  <th style="width: 50px; text-align: center;">Unit</th>
-                  <th style="width: 50px; text-align: center;">Qty</th>
+                <tr class="bom-header-row">
+                  <th class="bom-header-cell" style="width: 50px; text-align: center;">No.</th>
+                  <th class="bom-header-cell" style="text-align: left;">Description</th>
+                  <th class="bom-header-cell" style="width: 120px;">Make/Brand</th>
+                  <th class="bom-header-cell" style="width: 70px; text-align: center;">Unit</th>
+                  <th class="bom-header-cell" style="width: 70px; text-align: center;">Qty</th>
                 </tr>
               </thead>
               <tbody>
                 ${billOfMaterials.map((material, idx) => `
-                  <tr style="page-break-inside: avoid;">
-                    <td class="text-center" style="font-weight: 600; color: #059669;">${idx + 1}</td>
-                    <td>${material.description}</td>
-                    <td>${material.make}</td>
-                    <td class="text-center">${material.uom}</td>
-                    <td class="text-center" style="font-weight: 600;">${material.quantity}</td>
+                  <tr class="bom-row" style="page-break-inside: avoid;">
+                    <td class="bom-cell bom-number" style="text-align: center;">${idx + 1}</td>
+                    <td class="bom-cell bom-description">${material.description}</td>
+                    <td class="bom-cell bom-make">${material.make}</td>
+                    <td class="bom-cell bom-uom" style="text-align: center;">${material.uom}</td>
+                    <td class="bom-cell bom-quantity" style="text-align: center;">${material.quantity}</td>
                   </tr>
                 `).join('')}
               </tbody>
@@ -1036,15 +1117,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; page-break-inside: avoid; padding: 0; margin: 0;">
+        <div style="page-break-before: always; page-break-inside: avoid; padding: 40px 0; margin: 0;">
           <div class="section-header">TERMS AND CONDITIONS</div>
-          <div class="card" style="padding: 20px; margin: 20px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.7;">
+          <div class="card" style="padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
+            <div style="font-size: 11px; color: #2d3748; line-height: 1.8;">
               ${termsConditions.map((item, index) => {
         return `
-                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 12px; padding: 12px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
-                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 8px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
-                    <div class="terms-content" style="font-size: 11px; line-height: 1.6; color: #2d3748;">${item.content}</div>
+                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 16px; padding: 16px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
+                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
+                    <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #2d3748;">${item.content}</div>
                   </div>
                 `;
       }).join('')}
@@ -1053,15 +1134,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Customer Scope - Page 5 with Footer -->
-        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 0; margin: 0;">
+        <div style="page-break-before: always; display: flex; flex-direction: column; padding: 40px 0; margin: 0;">
           <div style="page-break-inside: avoid; flex: 1;">
             <div class="section-header">CUSTOMER SCOPE OF WORK</div>
-            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 20px; margin: 20px 0; page-break-inside: avoid;">
-              <div style="font-size: 11px; color: #78350f; line-height: 1.7;">
+            <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 30px; margin: 30px 0; page-break-inside: avoid;">
+              <div style="font-size: 12px; color: #78350f; line-height: 1.8;">
                 ${customerScope.map((item, index) => `
-                  <div class="scope-item" style="display: flex; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
-                    <span style="font-weight: 800; color: #b45309; min-width: 20px; flex-shrink: 0; font-size: 12px;">${index + 1}</span>
-                    <span style="font-size: 11px; line-height: 1.6; color: #78350f;">${item}</span>
+                  <div class="scope-item" style="display: flex; gap: 14px; margin-bottom: 16px; padding: 16px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
+                    <span style="font-weight: 800; color: #b45309; min-width: 24px; flex-shrink: 0; font-size: 13px;">${index + 1}</span>
+                    <span style="font-size: 12px; line-height: 1.7; color: #78350f;">${item}</span>
                   </div>
                 `).join('')}
               </div>
@@ -1069,16 +1150,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
           </div>
 
           <!-- Footer - Only on Page 5 (appears at bottom) -->
-          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 20px; margin-top: auto;">
-            <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 22px; margin-bottom: 20px;">
-              <div style="font-size: 13px; font-weight: 700; color: #059669; margin-bottom: 10px;">Thank You for Choosing Solar Energy!</div>
-              <div style="font-size: 12px; color: #2d3748; line-height: 1.7;">
+          <div class="footer" style="page-break-inside: avoid; page-break-before: avoid; padding-top: 30px; margin-top: auto;">
+            <div style="background: linear-gradient(90deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #dcfce7; border-radius: 8px; padding: 24px; margin-bottom: 30px; page-break-inside: avoid;">
+              <div style="font-size: 14px; font-weight: 700; color: #059669; margin-bottom: 12px;">Thank You for Choosing Solar Energy!</div>
+              <div style="font-size: 12px; color: #2d3748; line-height: 1.8;">
                 This quotation is valid for <strong>30 days</strong> from the date of issue. For any queries or modifications, please contact our team.<br/>
                 <strong>Warranty:</strong> 5 Years manufacturing defect • 25 Years linear power warranty on modules
               </div>
             </div>
-            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 10px; color: #718096; line-height: 1.6;">
-              <div style="margin-bottom: 8px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 20px; font-size: 11px; color: #718096; line-height: 1.7; page-break-inside: avoid;">
+              <div style="margin-bottom: 10px;">This is a professional quotation generated by AXIVOLT Solar Systems.</div>
               <div>Generated: ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })} at ${new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
           </div>
