@@ -1078,17 +1078,20 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
       `;
 
-      // Get BOM marker positions in HTML to split PDF properly
+      // Get section marker positions in HTML to split PDF properly
       const bomStartMarker = '<!-- Bill of Materials - Page 3 -->';
       const termsStartMarker = '<!-- Terms and Conditions - Page 4 -->';
+      const customerScopeMarker = '<!-- Customer Scope - Page 5 with Footer -->';
 
       const bomStartIndex = html.indexOf(bomStartMarker);
       const termsStartIndex = html.indexOf(termsStartMarker);
+      const customerScopeIndex = html.indexOf(customerScopeMarker);
 
       // Split HTML into sections
       const beforeBOM = html.substring(0, bomStartIndex);
       const bomSection = html.substring(bomStartIndex, termsStartIndex);
-      const afterBOM = html.substring(termsStartIndex);
+      const termsSection = html.substring(termsStartIndex, customerScopeIndex);
+      const customerScopeSection = html.substring(customerScopeIndex);
 
       const pdf = new jsPDF({
         orientation: 'p',
@@ -1134,49 +1137,37 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         return canvas.toDataURL('image/png');
       };
 
-      // Helper function to add image to PDF with automatic pagination
-      const addImageToPages = (imgData: string, pageCount: number, startPageNum: number = 0) => {
-        const imgProps = pdf.getImageProperties(imgData);
-        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        for (let i = 0; i < pageCount; i++) {
-          if (startPageNum > 0 || i > 0) {
-            pdf.addPage();
-          }
-          const yOffset = -(i * pdfHeight);
-          pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
-        }
+      // Helper function to add image section to PDF on fresh page
+      const addSectionToNewPage = async (sectionHtml: string) => {
+        pdf.addPage();
+        const sectionCanvas = await renderSectionToCanvas(sectionHtml);
+        const sectionImgProps = pdf.getImageProperties(sectionCanvas);
+        const sectionHeight = (sectionImgProps.height * pdfWidth) / sectionImgProps.width;
+        pdf.addImage(sectionCanvas, 'PNG', 0, 0, pdfWidth, sectionHeight);
       };
 
-      // Render before BOM content
+      // Render before BOM content (Pages 1-2)
       const beforeBOMCanvas = await renderSectionToCanvas(beforeBOM);
       const beforeBOMImgProps = pdf.getImageProperties(beforeBOMCanvas);
       const beforeBOMHeight = (beforeBOMImgProps.height * pdfWidth) / beforeBOMImgProps.width;
       const beforeBOMPages = Math.ceil(beforeBOMHeight / pdfHeight);
-      addImageToPages(beforeBOMCanvas, beforeBOMPages, 0);
 
-      // Add BOM on fresh page
-      pdf.addPage();
-      const bomCanvas = await renderSectionToCanvas(bomSection);
-      const bomImgProps = pdf.getImageProperties(bomCanvas);
-      const bomHeight = (bomImgProps.height * pdfWidth) / bomImgProps.width;
-      const bomPages = Math.ceil(bomHeight / pdfHeight);
-
-      // Add BOM content - ensuring it fits on the dedicated page
-      const bomYOffset = 0;
-      pdf.addImage(bomCanvas, 'PNG', 0, bomYOffset, pdfWidth, bomHeight);
-
-      // Add remaining content on fresh pages
-      const afterBOMCanvas = await renderSectionToCanvas(afterBOM);
-      const afterBOMImgProps = pdf.getImageProperties(afterBOMCanvas);
-      const afterBOMHeight = (afterBOMImgProps.height * pdfWidth) / afterBOMImgProps.width;
-      const afterBOMPages = Math.ceil(afterBOMHeight / pdfHeight);
-
-      for (let i = 0; i < afterBOMPages; i++) {
-        pdf.addPage();
+      for (let i = 0; i < beforeBOMPages; i++) {
+        if (i > 0) {
+          pdf.addPage();
+        }
         const yOffset = -(i * pdfHeight);
-        pdf.addImage(afterBOMCanvas, 'PNG', 0, yOffset, pdfWidth, afterBOMHeight);
+        pdf.addImage(beforeBOMCanvas, 'PNG', 0, yOffset, pdfWidth, beforeBOMHeight);
       }
+
+      // Add Bill of Materials on fresh page (Page 3)
+      await addSectionToNewPage(bomSection);
+
+      // Add Terms and Conditions on fresh page (Page 4)
+      await addSectionToNewPage(termsSection);
+
+      // Add Customer Scope on fresh page (Page 5)
+      await addSectionToNewPage(customerScopeSection);
 
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
     } catch (error) {
