@@ -744,6 +744,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             widows: 10;
             word-break: keep-all;
           }
+          .terms-serial {
+            font-size: 11px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #10b981;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            page-break-inside: avoid;
+            word-break: keep-all;
+          }
           .terms-title {
             font-weight: 800;
             color: #059669;
@@ -757,9 +767,9 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             overflow-wrap: normal;
           }
           .terms-content {
-            font-size: 10px;
+            font-size: 12px;
             color: #2d3748;
-            line-height: 1.5;
+            line-height: 1.7;
             white-space: pre-wrap;
             page-break-inside: avoid;
             word-break: keep-all;
@@ -1117,14 +1127,15 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; page-break-inside: avoid; padding: 40px 0; margin: 0;">
+        <div style="page-break-before: always; padding: 40px 0 60px 0; margin: 0; min-height: 100vh; display: flex; flex-direction: column;">
           <div class="section-header">TERMS AND CONDITIONS</div>
-          <div class="card" style="padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white; page-break-inside: avoid;">
+          <div style="flex: 1; padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white;">
             <div style="font-size: 11px; color: #2d3748; line-height: 1.8;">
               ${termsConditions.map((item, index) => {
         return `
                   <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 16px; padding: 16px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
-                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${index + 1}. ${item.title}</div>` : ''}
+                    <div class="terms-serial" style="font-size: 11px; margin-bottom: 8px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.3px;">Sl. No. ${index + 1}</div>
+                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${item.title}</div>` : ''}
                     <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #2d3748;">${item.content}</div>
                   </div>
                 `;
