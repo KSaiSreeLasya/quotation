@@ -1078,26 +1078,18 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
       `;
 
-      pdfContainer.innerHTML = html;
-      pdfContainer.style.overflow = 'visible';
-      document.body.appendChild(pdfContainer);
+      // Get BOM marker positions in HTML to split PDF properly
+      const bomStartMarker = '<!-- Bill of Materials - Page 3 -->';
+      const termsStartMarker = '<!-- Terms and Conditions - Page 4 -->';
 
-      // Allow CSS page breaks to take effect
-      await new Promise(resolve => setTimeout(resolve, 300));
+      const bomStartIndex = html.indexOf(bomStartMarker);
+      const termsStartIndex = html.indexOf(termsStartMarker);
 
-      const canvas = await html2canvas(pdfContainer, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        logging: false,
-        windowHeight: pdfContainer.scrollHeight,
-        windowWidth: 900,
-      });
+      // Split HTML into sections
+      const beforeBOM = html.substring(0, bomStartIndex);
+      const bomSection = html.substring(bomStartIndex, termsStartIndex);
+      const afterBOM = html.substring(termsStartIndex);
 
-      document.body.removeChild(pdfContainer);
-
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
@@ -1106,23 +1098,84 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(imgData);
-      const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-      // Calculate total pages needed (Page 5 is the last page with footer)
-      const totalPages = Math.ceil(imgHeight / pdfHeight);
+      // Helper function to render HTML section to canvas
+      const renderSectionToCanvas = async (htmlContent: string): Promise<string> => {
+        const container = document.createElement('div');
+        container.style.position = 'absolute';
+        container.style.left = '-9999px';
+        container.style.width = '900px';
+        container.style.backgroundColor = '#ffffff';
+        container.style.padding = '20px 30px';
+        container.style.fontFamily = '"Segoe UI", Arial, sans-serif';
+        container.style.color = '#1a1a1a';
+        container.style.fontSize = '11px';
+        container.style.lineHeight = '1.5';
+        container.style.margin = '0';
+        container.style.boxSizing = 'border-box';
+        container.style.overflow = 'visible';
 
-      // Limit to maximum 5 pages (Page 1-5) to prevent empty trailing pages
-      const maxPages = Math.min(totalPages, 5);
+        container.innerHTML = htmlContent;
+        document.body.appendChild(container);
 
-      // Add each page with proper positioning
-      for (let i = 0; i < maxPages; i++) {
-        if (i > 0) {
-          pdf.addPage();
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const canvas = await html2canvas(container, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          windowHeight: container.scrollHeight,
+          windowWidth: 900,
+        });
+
+        document.body.removeChild(container);
+        return canvas.toDataURL('image/png');
+      };
+
+      // Helper function to add image to PDF with automatic pagination
+      const addImageToPages = (imgData: string, pageCount: number, startPageNum: number = 0) => {
+        const imgProps = pdf.getImageProperties(imgData);
+        const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        for (let i = 0; i < pageCount; i++) {
+          if (startPageNum > 0 || i > 0) {
+            pdf.addPage();
+          }
+          const yOffset = -(i * pdfHeight);
+          pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
         }
-        // Position image so that each page shows the next section
+      };
+
+      // Render before BOM content
+      const beforeBOMCanvas = await renderSectionToCanvas(beforeBOM);
+      const beforeBOMImgProps = pdf.getImageProperties(beforeBOMCanvas);
+      const beforeBOMHeight = (beforeBOMImgProps.height * pdfWidth) / beforeBOMImgProps.width;
+      const beforeBOMPages = Math.ceil(beforeBOMHeight / pdfHeight);
+      addImageToPages(beforeBOMCanvas, beforeBOMPages, 0);
+
+      // Add BOM on fresh page
+      pdf.addPage();
+      const bomCanvas = await renderSectionToCanvas(bomSection);
+      const bomImgProps = pdf.getImageProperties(bomCanvas);
+      const bomHeight = (bomImgProps.height * pdfWidth) / bomImgProps.width;
+      const bomPages = Math.ceil(bomHeight / pdfHeight);
+
+      // Add BOM content - ensuring it fits on the dedicated page
+      const bomYOffset = 0;
+      pdf.addImage(bomCanvas, 'PNG', 0, bomYOffset, pdfWidth, bomHeight);
+
+      // Add remaining content on fresh pages
+      const afterBOMCanvas = await renderSectionToCanvas(afterBOM);
+      const afterBOMImgProps = pdf.getImageProperties(afterBOMCanvas);
+      const afterBOMHeight = (afterBOMImgProps.height * pdfWidth) / afterBOMImgProps.width;
+      const afterBOMPages = Math.ceil(afterBOMHeight / pdfHeight);
+
+      for (let i = 0; i < afterBOMPages; i++) {
+        pdf.addPage();
         const yOffset = -(i * pdfHeight);
-        pdf.addImage(imgData, 'PNG', 0, yOffset, pdfWidth, imgHeight);
+        pdf.addImage(afterBOMCanvas, 'PNG', 0, yOffset, pdfWidth, afterBOMHeight);
       }
 
       pdf.save(`Solar_Quotation_${new Date().getTime()}.pdf`);
