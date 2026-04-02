@@ -1127,16 +1127,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; padding: 40px 0 60px 0; margin: 0; min-height: 100vh; display: flex; flex-direction: column;">
-          <div class="section-header">TERMS AND CONDITIONS</div>
-          <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 30px; margin: 30px 0; page-break-inside: avoid;">
-            <div style="font-size: 12px; color: #78350f; line-height: 1.8;">
+        <div style="page-break-before: always; padding: 20px 0 30px 0; margin: 0; display: flex; flex-direction: column;">
+          <div class="section-header" style="margin-bottom: 15px;">TERMS AND CONDITIONS</div>
+          <div class="card" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 2px solid #10b981; padding: 15px; margin: 0; page-break-inside: avoid;">
+            <div style="font-size: 11px; color: #065f46; line-height: 1.6;">
               ${termsConditions.map((item, index) => `
-                  <div class="terms-item" style="display: flex; gap: 14px; margin-bottom: 16px; padding: 16px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
-                    <span style="font-weight: 800; color: #b45309; min-width: 24px; flex-shrink: 0; font-size: 13px;">${index + 1}</span>
+                  <div class="terms-item" style="display: flex; gap: 10px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.9); border-radius: 4px; border-left: 3px solid #059669; page-break-inside: avoid; break-inside: avoid;">
+                    <span style="font-weight: 800; color: #047857; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
                     <div style="flex: 1;">
-                      ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 8px; font-weight: 800; color: #78350f;">${item.title}</div>` : ''}
-                      <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #78350f;">${item.content}</div>
+                      ${item.title ? `<div class="terms-title" style="font-size: 11px; margin-bottom: 5px; font-weight: 700; color: #065f46;">${item.title}</div>` : ''}
+                      <div class="terms-content" style="font-size: 10px; line-height: 1.5; color: #065f46;">${item.content}</div>
                     </div>
                   </div>
                 `).join('')}
