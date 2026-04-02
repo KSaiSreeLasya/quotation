@@ -1840,36 +1840,41 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="border-t border-slate-200 pt-8">
               <h3 className="text-lg font-bold text-slate-900 mb-6">Terms and Conditions</h3>
 
-              <div className="bg-slate-50 border border-slate-300 rounded-lg p-4 space-y-4">
-                {termsConditions.map((item, index) => (
-                  <div key={index} className="border border-slate-300 rounded p-4 bg-white hover:shadow-sm transition-shadow">
-                    {item.title && (
-                      <input
-                        type="text"
-                        value={item.title}
-                        onChange={(e) => {
-                          const updated = [...termsConditions];
-                          updated[index].title = e.target.value;
-                          setTermsConditions(updated);
-                        }}
-                        className="w-full font-bold text-slate-900 mb-2 p-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-slate-500 outline-none"
-                        placeholder={`Section ${index + 1} Title`}
-                      />
-                    )}
-                    <textarea
-                      value={item.content}
-                      onChange={(e) => {
-                        const updated = [...termsConditions];
-                        updated[index].content = e.target.value;
-                        setTermsConditions(updated);
-                      }}
-                      className="w-full p-2 border border-slate-300 rounded text-sm resize-none focus:ring-2 focus:ring-slate-500 outline-none"
-                      rows={4}
-                    />
-                  </div>
-                ))}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="space-y-4">
+                  {termsConditions.map((item, index) => (
+                    <div key={index} className="flex gap-3">
+                      <span className="font-bold text-amber-900 min-w-fit">{index + 1}.</span>
+                      <div className="flex-1">
+                        {item.title && (
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => {
+                              const updated = [...termsConditions];
+                              updated[index].title = e.target.value;
+                              setTermsConditions(updated);
+                            }}
+                            className="w-full font-bold text-slate-900 mb-2 p-1 border border-amber-300 rounded text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                            placeholder={`Term ${index + 1} Title`}
+                          />
+                        )}
+                        <textarea
+                          value={item.content}
+                          onChange={(e) => {
+                            const updated = [...termsConditions];
+                            updated[index].content = e.target.value;
+                            setTermsConditions(updated);
+                          }}
+                          className="w-full p-2 border border-amber-300 rounded text-sm resize-none focus:ring-2 focus:ring-amber-500 outline-none"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-amber-700 mt-4 italic">These terms and conditions will appear in the PDF before customer scope</p>
               </div>
-              <p className="text-xs text-slate-600 mt-4 italic">These terms and conditions will appear in the PDF before customer scope</p>
             </div>
 
             {/* Customer Scope Section */}
