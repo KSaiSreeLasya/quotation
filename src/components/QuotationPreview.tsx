@@ -17,6 +17,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const [sent, setSent] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // Editable customer details
+  const [customerName, setCustomerName] = useState(data.customerName || '');
+  const [customerContact, setCustomerContact] = useState(data.customerContact || '');
+
   // Editable quotation fields
   const [panelDescription, setPanelDescription] = useState('Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant');
   const [panelQty, setPanelQty] = useState(data.panelCount);
@@ -841,11 +845,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Customer Name</div>
-            <div class="info-value">${data.customerName || 'N/A'}</div>
+            <div class="info-value">${customerName || 'N/A'}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Contact Number</div>
-            <div class="info-value">${data.customerContact || 'N/A'}</div>
+            <div class="info-value">${customerContact || 'N/A'}</div>
           </div>
           <div class="info-item">
             <div class="info-label">Installation Date</div>
@@ -1130,13 +1134,13 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <div style="page-break-before: always; padding: 20px 0 30px 0; margin: 0; display: flex; flex-direction: column;">
           <div class="section-header" style="margin-bottom: 15px;">TERMS AND CONDITIONS</div>
           <div class="card" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 2px solid #10b981; padding: 15px; margin: 0; page-break-inside: avoid;">
-            <div style="font-size: 11px; color: #065f46; line-height: 1.6;">
+            <div style="font-size: 12px; color: #065f46; line-height: 1.7;">
               ${termsConditions.map((item, index) => `
                   <div class="terms-item" style="display: flex; gap: 10px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.9); border-radius: 4px; border-left: 3px solid #059669; page-break-inside: avoid; break-inside: avoid;">
-                    <span style="font-weight: 800; color: #047857; min-width: 20px; flex-shrink: 0; font-size: 11px;">${index + 1}</span>
+                    <span style="font-weight: 800; color: #047857; min-width: 20px; flex-shrink: 0; font-size: 12px;">${index + 1}</span>
                     <div style="flex: 1;">
-                      ${item.title ? `<div class="terms-title" style="font-size: 11px; margin-bottom: 5px; font-weight: 700; color: #065f46;">${item.title}</div>` : ''}
-                      <div class="terms-content" style="font-size: 10px; line-height: 1.5; color: #065f46;">${item.content}</div>
+                      ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 5px; font-weight: 700; color: #065f46;">${item.title}</div>` : ''}
+                      <div class="terms-content" style="font-size: 11px; line-height: 1.5; color: #065f46;">${item.content}</div>
                     </div>
                   </div>
                 `).join('')}
@@ -1325,8 +1329,26 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="grid grid-cols-2 gap-12">
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Customer Details</h3>
-                <p className="text-lg font-semibold text-slate-900">{data.customerName || 'N/A'}</p>
-                <p className="text-sm text-slate-600">{data.customerContact || 'N/A'}</p>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Customer Name</label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    className="w-full text-lg font-semibold text-slate-900 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter customer name"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Contact Number</label>
+                  <input
+                    type="text"
+                    value={customerContact}
+                    onChange={(e) => setCustomerContact(e.target.value)}
+                    className="w-full text-sm text-slate-600 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter contact number"
+                  />
+                </div>
                 <p className="text-sm text-slate-500 mt-2">{address}</p>
                 <p className="text-sm text-slate-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
               </div>
