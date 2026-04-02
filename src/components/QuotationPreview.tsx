@@ -1129,17 +1129,17 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <!-- Terms and Conditions - Page 4 -->
         <div style="page-break-before: always; padding: 40px 0 60px 0; margin: 0; min-height: 100vh; display: flex; flex-direction: column;">
           <div class="section-header">TERMS AND CONDITIONS</div>
-          <div style="flex: 1; padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white;">
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.8;">
-              ${termsConditions.map((item, index) => {
-        return `
-                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 16px; padding: 16px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
-                    <div class="terms-serial" style="font-size: 11px; margin-bottom: 8px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.3px;">Sl. No. ${index + 1}</div>
-                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${item.title}</div>` : ''}
-                    <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #2d3748;">${item.content}</div>
+          <div class="card" style="background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%); border: 2px solid #fde047; padding: 30px; margin: 30px 0; page-break-inside: avoid;">
+            <div style="font-size: 12px; color: #78350f; line-height: 1.8;">
+              ${termsConditions.map((item, index) => `
+                  <div class="terms-item" style="display: flex; gap: 14px; margin-bottom: 16px; padding: 16px; background: rgba(255,255,255,0.8); border-radius: 6px; border-left: 4px solid #d97706; page-break-inside: avoid; break-inside: avoid; border: 1px solid #fde047;">
+                    <span style="font-weight: 800; color: #b45309; min-width: 24px; flex-shrink: 0; font-size: 13px;">${index + 1}</span>
+                    <div style="flex: 1;">
+                      ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 8px; font-weight: 800; color: #78350f;">${item.title}</div>` : ''}
+                      <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #78350f;">${item.content}</div>
+                    </div>
                   </div>
-                `;
-      }).join('')}
+                `).join('')}
             </div>
           </div>
         </div>
