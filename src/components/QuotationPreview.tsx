@@ -17,6 +17,11 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   const [sent, setSent] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // Editable customer details
+  const [customerName, setCustomerName] = useState(data.customerName || '');
+  const [customerContact, setCustomerContact] = useState(data.customerContact || '');
+  const [customerAddress, setCustomerAddress] = useState(address || '');
+
   // Editable quotation fields
   const [panelDescription, setPanelDescription] = useState('Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant');
   const [panelQty, setPanelQty] = useState(data.panelCount);
@@ -841,12 +846,12 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         <div class="info-grid">
           <div class="info-item">
             <div class="info-label">Customer Name</div>
-            <div class="info-value">${data.customerName || 'N/A'}</div>
+            <div class="info-value">${customerName || 'N/A'}</div>
           </div>
-          <div class="info-item">
+          ${customerContact ? `<div class="info-item">
             <div class="info-label">Contact Number</div>
-            <div class="info-value">${data.customerContact || 'N/A'}</div>
-          </div>
+            <div class="info-value">${customerContact}</div>
+          </div>` : ''}
           <div class="info-item">
             <div class="info-label">Installation Date</div>
             <div class="info-value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
@@ -855,7 +860,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <div class="info-box">
           <div class="info-box-label">Installation Location</div>
-          <div class="info-box-value">${address}</div>
+          <div class="info-box-value">${customerAddress}</div>
         </div>
 
         <!-- System Overview Section -->
@@ -1127,19 +1132,19 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
         </div>
 
         <!-- Terms and Conditions - Page 4 -->
-        <div style="page-break-before: always; padding: 40px 0 60px 0; margin: 0; min-height: 100vh; display: flex; flex-direction: column;">
-          <div class="section-header">TERMS AND CONDITIONS</div>
-          <div style="flex: 1; padding: 30px; margin: 30px 0; border-radius: 10px; border: 2px solid #e2e8f0; background: white;">
-            <div style="font-size: 11px; color: #2d3748; line-height: 1.8;">
-              ${termsConditions.map((item, index) => {
-        return `
-                  <div class="terms-item" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 16px; padding: 16px; border-left: 4px solid #10b981; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 6px;">
-                    <div class="terms-serial" style="font-size: 11px; margin-bottom: 8px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.3px;">Sl. No. ${index + 1}</div>
-                    ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 10px; font-weight: 800; color: #059669; text-transform: uppercase; letter-spacing: 0.3px;">${item.title}</div>` : ''}
-                    <div class="terms-content" style="font-size: 12px; line-height: 1.7; color: #2d3748;">${item.content}</div>
+        <div style="page-break-before: always; padding: 20px 0 30px 0; margin: 0; display: flex; flex-direction: column;">
+          <div class="section-header" style="margin-bottom: 15px;">TERMS AND CONDITIONS</div>
+          <div class="card" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 2px solid #10b981; padding: 15px; margin: 0; page-break-inside: avoid;">
+            <div style="font-size: 12px; color: #065f46; line-height: 1.7;">
+              ${termsConditions.map((item, index) => `
+                  <div class="terms-item" style="display: flex; gap: 10px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.9); border-radius: 4px; border-left: 3px solid #059669; page-break-inside: avoid; break-inside: avoid;">
+                    <span style="font-weight: 800; color: #047857; min-width: 20px; flex-shrink: 0; font-size: 12px;">${index + 1}</span>
+                    <div style="flex: 1;">
+                      ${item.title ? `<div class="terms-title" style="font-size: 12px; margin-bottom: 5px; font-weight: 700; color: #065f46;">${item.title}</div>` : ''}
+                      <div class="terms-content" style="font-size: 11px; line-height: 1.5; color: #065f46;">${item.content}</div>
+                    </div>
                   </div>
-                `;
-      }).join('')}
+                `).join('')}
             </div>
           </div>
         </div>
@@ -1325,9 +1330,36 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="grid grid-cols-2 gap-12">
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">Customer Details</h3>
-                <p className="text-lg font-semibold text-slate-900">{data.customerName || 'N/A'}</p>
-                <p className="text-sm text-slate-600">{data.customerContact || 'N/A'}</p>
-                <p className="text-sm text-slate-500 mt-2">{address}</p>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Customer Name</label>
+                  <input
+                    type="text"
+                    value={customerName}
+                    onChange={(e) => setCustomerName(e.target.value)}
+                    className="w-full text-lg font-semibold text-slate-900 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter customer name"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Contact Number</label>
+                  <input
+                    type="text"
+                    value={customerContact}
+                    onChange={(e) => setCustomerContact(e.target.value)}
+                    className="w-full text-sm text-slate-600 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter contact number"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Address</label>
+                  <input
+                    type="text"
+                    value={customerAddress}
+                    onChange={(e) => setCustomerAddress(e.target.value)}
+                    className="w-full text-sm text-slate-500 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter address"
+                  />
+                </div>
                 <p className="text-sm text-slate-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
               </div>
 
@@ -1840,36 +1872,41 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div className="border-t border-slate-200 pt-8">
               <h3 className="text-lg font-bold text-slate-900 mb-6">Terms and Conditions</h3>
 
-              <div className="bg-slate-50 border border-slate-300 rounded-lg p-4 space-y-4">
-                {termsConditions.map((item, index) => (
-                  <div key={index} className="border border-slate-300 rounded p-4 bg-white hover:shadow-sm transition-shadow">
-                    {item.title && (
-                      <input
-                        type="text"
-                        value={item.title}
-                        onChange={(e) => {
-                          const updated = [...termsConditions];
-                          updated[index].title = e.target.value;
-                          setTermsConditions(updated);
-                        }}
-                        className="w-full font-bold text-slate-900 mb-2 p-1 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-slate-500 outline-none"
-                        placeholder={`Section ${index + 1} Title`}
-                      />
-                    )}
-                    <textarea
-                      value={item.content}
-                      onChange={(e) => {
-                        const updated = [...termsConditions];
-                        updated[index].content = e.target.value;
-                        setTermsConditions(updated);
-                      }}
-                      className="w-full p-2 border border-slate-300 rounded text-sm resize-none focus:ring-2 focus:ring-slate-500 outline-none"
-                      rows={4}
-                    />
-                  </div>
-                ))}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="space-y-4">
+                  {termsConditions.map((item, index) => (
+                    <div key={index} className="flex gap-3">
+                      <span className="font-bold text-amber-900 min-w-fit">{index + 1}.</span>
+                      <div className="flex-1">
+                        {item.title && (
+                          <input
+                            type="text"
+                            value={item.title}
+                            onChange={(e) => {
+                              const updated = [...termsConditions];
+                              updated[index].title = e.target.value;
+                              setTermsConditions(updated);
+                            }}
+                            className="w-full font-bold text-slate-900 mb-2 p-1 border border-amber-300 rounded text-sm focus:ring-2 focus:ring-amber-500 outline-none"
+                            placeholder={`Term ${index + 1} Title`}
+                          />
+                        )}
+                        <textarea
+                          value={item.content}
+                          onChange={(e) => {
+                            const updated = [...termsConditions];
+                            updated[index].content = e.target.value;
+                            setTermsConditions(updated);
+                          }}
+                          className="w-full p-2 border border-amber-300 rounded text-sm resize-none focus:ring-2 focus:ring-amber-500 outline-none"
+                          rows={2}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-amber-700 mt-4 italic">These terms and conditions will appear in the PDF before customer scope</p>
               </div>
-              <p className="text-xs text-slate-600 mt-4 italic">These terms and conditions will appear in the PDF before customer scope</p>
             </div>
 
             {/* Customer Scope Section */}
