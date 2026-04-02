@@ -113,7 +113,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
     },
     {
       title: 'Bank Details',
-      content: 'Account Holder: AXISO GREEN ENERGIES PVT LTD.\nAccount Number: 50200102457732\nIFSC: HDFC0002390\nAccount Type: CURRENT'
+      content: 'Account Holder: AXIVOLT GREEN ENERGY PVT LTD.\nAccount Number: 50200102457732\nIFSC: HDFC0002390\nAccount Type: CURRENT'
     }
   ]);
 
