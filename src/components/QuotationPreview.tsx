@@ -20,6 +20,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
   // Editable customer details
   const [customerName, setCustomerName] = useState(data.customerName || '');
   const [customerContact, setCustomerContact] = useState(data.customerContact || '');
+  const [customerAddress, setCustomerAddress] = useState(address || '');
 
   // Editable quotation fields
   const [panelDescription, setPanelDescription] = useState('Design, Engineering, Supply, Installation and Commissioning of Solar On Grid Power Plant');
@@ -847,10 +848,10 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
             <div class="info-label">Customer Name</div>
             <div class="info-value">${customerName || 'N/A'}</div>
           </div>
-          <div class="info-item">
+          ${customerContact ? `<div class="info-item">
             <div class="info-label">Contact Number</div>
-            <div class="info-value">${customerContact || 'N/A'}</div>
-          </div>
+            <div class="info-value">${customerContact}</div>
+          </div>` : ''}
           <div class="info-item">
             <div class="info-label">Installation Date</div>
             <div class="info-value">${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
@@ -859,7 +860,7 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
 
         <div class="info-box">
           <div class="info-box-label">Installation Location</div>
-          <div class="info-box-value">${address}</div>
+          <div class="info-box-value">${customerAddress}</div>
         </div>
 
         <!-- System Overview Section -->
@@ -1349,7 +1350,16 @@ const QuotationPreview: React.FC<QuotationPreviewProps> = ({ data, address, onCl
                     placeholder="Enter contact number"
                   />
                 </div>
-                <p className="text-sm text-slate-500 mt-2">{address}</p>
+                <div>
+                  <label className="text-xs font-semibold text-slate-600">Address</label>
+                  <input
+                    type="text"
+                    value={customerAddress}
+                    onChange={(e) => setCustomerAddress(e.target.value)}
+                    className="w-full text-sm text-slate-500 border border-slate-300 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-amber-500 outline-none"
+                    placeholder="Enter address"
+                  />
+                </div>
                 <p className="text-sm text-slate-500 mt-1">Date: {new Date().toLocaleDateString()}</p>
               </div>
 
